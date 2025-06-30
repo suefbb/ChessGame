@@ -179,9 +179,7 @@ let boardState = [
   [
     null,
     null,
-    null,
-    // "wN",
-    null,
+    "wN",
     null,
     null,
     null,
@@ -189,7 +187,7 @@ let boardState = [
     null,
     null,
     null,
-    // "wN",
+    "wN",
     null,
     null,
     null,
@@ -435,6 +433,38 @@ function getBishopMoves(row, col, board) {
   return moves;
 }
 
+function getKnightMoves(row, col, board) {
+  const moves = [];
+  const moveOffsets = [
+    { r: -2, c: -1 },
+    { r: -2, c: 1 },
+    { r: -1, c: -2 },
+    { r: -1, c: 2 },
+    { r: 1, c: -2 },
+    { r: 1, c: 2 },
+    { r: 2, c: -1 },
+    { r: 2, c: 1 },
+  ];
+  const pieceColor = board[row][col][0];
+  for (const offset of moveOffsets) {
+    const newRow = row + offset.r;
+    const newCol = col + offset.c;
+    // Boundary checking.
+    if (
+      newRow >= 0 &&
+      newRow < BOARD_DIM &&
+      newCol >= 0 &&
+      newCol < BOARD_DIM
+    ) {
+      const targetSquare = board[newRow][newCol];
+      if (targetSquare == null || targetSquare[0] != pieceColor) {
+        moves.push([newRow, newCol]);
+      }
+    }
+  }
+  return moves;
+}
+
 let selectedPiece = null;
 let legalMoves = [];
 let currentTurn = "w";
@@ -496,6 +526,13 @@ uiBoard.addEventListener("click", (e) => {
         break;
       case "B":
         legalMoves = getBishopMoves(
+          selectedPiece.row,
+          selectedPiece.col,
+          boardState
+        );
+        break;
+      case "N":
+        legalMoves = getKnightMoves(
           selectedPiece.row,
           selectedPiece.col,
           boardState
