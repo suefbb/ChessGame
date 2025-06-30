@@ -1,0 +1,260 @@
+.board{
+    width: fit-content;
+    display: grid;
+    grid-template-columns: 20px repeat(14,43px);
+    grid-template-rows: 20px repeat(14,43px);
+    justify-content: center;
+}
+.it1{
+    background-color: gainsboro;
+    grid-row: 1/16;
+    display: grid;
+    grid-template-columns: 15px;
+    grid-template-rows: repeat(8,43px)
+}
+.it2{
+    background-color: gainsboro;
+    grid-column: 2/16;
+    display: flex;
+    justify-content: space-around;
+}
+.ph{
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    background-color: white;
+}
+.pb,.rb{
+    height: 9px;
+    width: 5.5px;
+    background-color: white;
+}
+.pd,.rd,.rh,.bd,.cd{
+    height: 6.5px;
+    width: 18.5px;
+    background-color: white;
+    border-radius: 3px;  
+}
+.rd,.bd,.nd,.cd,.zd{
+    height: 6.7px;
+    width: 20px;
+    border-radius: 2.2px;  
+}
+.bd,.nd,.cd,.zd{
+    height: 6px;
+    width: 17.5px;
+    background-color: white;
+}
+.nd,.zd{
+    width: 20px;
+}
+.rh{
+    width: 20px;
+    border-radius: 2.2px;  
+}
+.rb{
+    height: 12.5px;
+    width: 10px;
+}
+.pawn,.rook,.bishop,.knight,.crocodile,.zebra{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.cir{
+    height: 26px;
+    width: 26px;
+    border-radius: 13px;
+    background-color: rgb(166, 166, 166);
+    display: none;
+    opacity: 0.55;
+}
+.rw{
+    height: 4.5px;
+    width: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+.rw div{
+    height: 100%;
+    width: 4.5px;
+    background-color: white;
+    position: relative;
+    top: 1px;
+}
+/*bc circle bh head bm mouth bb bd/*/
+.bb{
+    height: 4.5px;
+    width: 5.7px;
+    background-color: white;
+}
+.nb,.zb{
+    width: 7px;
+    height: 6px;
+    background-color: white;
+}
+.nb{
+    position: relative;
+    left: 1.7px;
+}
+.bh{
+    height: 14px;
+    width: 16.5px;
+    border-radius: 50%;
+    background-color: white;
+}
+.bm{
+    height: 3px;
+    width: 9.2px;
+    transform: rotate(-35deg);
+    position: relative;
+    left: 4.3px;top: 3.7px;
+    z-index: 1;
+}
+.bc{
+    height: 5.5px;
+    width: 5.5px;
+    border-radius: 50%;
+    background-color: white;
+    position: relative;
+    right:4px;top: 3.5px;
+}
+.bh,.bb,.bd{
+    position: relative;
+    bottom: 1.5px;
+    z-index: 0.5;
+}
+.nh{
+    height: 10.5px;
+    width: 19.5px;
+    background-color: white;
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+    position: relative;
+    right: 3px;
+}
+.ne{
+    height: 5px;
+    width: 5px;
+    background-color: white;
+    position: relative;
+    left: 3.5px;
+}
+.nI{
+    height: 4px;
+    width: 4px;
+    border-radius: 50%;
+    position: relative;
+    left: 5px;
+    top: 2px;
+}
+.cf{
+    height: 14.5px;
+    width: 30px;
+    background-color: white;
+    border-radius: 9.2px;
+    display: flex;
+    justify-content: space-around;
+    position: relative;
+    top: 2.5px;
+    z-index: 0.5;
+}
+.cIs{
+    height: 12.5px;
+    width: 22px;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    position: relative;
+    top: 3.5px;
+}
+.ce1,.ce2{
+    height: 65%;
+    width: 9.5px;
+    background-color: white;
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    z-index: 0.5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.ce3,.ce4{
+    height: 5px;
+    width: 4px;
+    border-top-left-radius: 40%;
+    border-top-right-radius: 40%;
+    border: 1px solid black;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.ce3 div,.ce4 div{
+    height: 2.25px;
+    width: 2.25px;
+    background-color: black;
+}
+.cn1,.cn2{
+    height: 3px;
+    width: 3px;
+    border-radius: 45%;
+    border: solid 1px black;
+    position: relative;
+    top: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.cn1 div,.cn2 div{
+    height: 1.5px;
+    width: 1.5px;
+    border-radius: 45%;
+    background-color: black;
+}
+.cb{
+    height: 5px;
+    width: 10px;
+    border-top: solid 1.5px black;
+    background-color: white;
+    z-index: 1;
+}
+.zs{
+    height: 14px;
+    width: 15.5px;
+    border-radius: 3px;
+    background-color: white;
+    border: solid 1px black;
+    position: relative;
+    bottom: 5px;
+    z-index: 0;
+}
+.zDs{
+    height: 17px;
+    width: 6px;
+    display: flex;
+    justify-content: space-between;
+    transform: rotate(-45deg);
+    position: relative;
+    top: 5px;
+    left: 4px;
+    z-index: 1;
+}
+.zd1{
+    height: 17px;
+    width: 2.5px;
+    border-radius: 1px;
+    background-color: black;
+}
+.zd2{
+    height: 17px;
+    width: 3px;
+    border-radius: 1px;
+    background-color: rgb(185, 182, 182);
+}
+.zb,.zd{
+    position: relative;
+    bottom: 5px;
+}
