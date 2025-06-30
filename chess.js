@@ -293,7 +293,6 @@ function highlightSquares(squares) {
       `.square[data-row="${squares[i][0]}"][data-col="${squares[i][1]}"]`
     );
     squaresToBeHighlighted[i].classList.add("legal-move");
-    console.log(squaresToBeHighlighted[i]);
   }
 }
 
@@ -311,23 +310,23 @@ function getPawnMoves(row, col, board, typeOfMove = "all") {
 
   // UP
   if (
-    board[row + direction][col] == null &&
-    isValidSquare(row + direction, col)
+    isValidSquare(row + direction, col) &&
+    board[row + direction][col] == null
   ) {
     moves.push([row + direction, col]);
   }
   // UP LEFT
   if (
-    board[row + direction][col - 1] == null ||
-    (board[row + direction][col - 1][0] != pieceColor &&
-      isValidSquare(row + direction, col - 1))
+    isValidSquare(row + direction, col - 1) &&
+    (board[row + direction][col - 1] == null ||
+      board[row + direction][col - 1][0] != pieceColor)
   ) {
     moves.push([row + direction, col - 1]);
   } // UP RIGHT
   if (
-    board[row + direction][col + 1] == null ||
-    (board[row + direction][col + 1][0] != pieceColor &&
-      isValidSquare(row + direction, col + 1))
+    isValidSquare(row + direction, col + 1) &&
+    (board[row + direction][col + 1] == null ||
+      board[row + direction][col + 1][0] != pieceColor)
   ) {
     moves.push([row + direction, col + 1]);
   }
@@ -340,11 +339,11 @@ function getPawnMoves(row, col, board, typeOfMove = "all") {
   return moves;
 }
 
-function getRookMoves(row, col, board) {
+function getRookMoves(row, col, board, color = null, crocodileMode = false) {
   const moves = [];
-  const pieceColor = board[row][col][0];
+  const pieceColor = color ? color : board[row][col][0];
   // UP
-  for (let i = row - 1; i >= 0; i--) {
+  for (let i = crocodileMode ? row : row - 1; i >= 0; i--) {
     const targetSquare = board[i][col];
     if (targetSquare == null) {
       moves.push([i, col]);
@@ -391,6 +390,16 @@ function getRookMoves(row, col, board) {
       } else break;
     }
   }
+  return moves;
+}
+
+function getCrocodileMoves(row, col, board) {
+  let moves = [];
+  let pieceColor = board[row][col][0];
+  if (isValidSquare(row, col + 1))
+    moves.push(...getRookMoves(row, col + 1, board, pieceColor, true));
+  if (isValidSquare(row, col - 1))
+    moves.push(...getRookMoves(row, col - 1, board, pieceColor, true));
   return moves;
 }
 
@@ -473,6 +482,13 @@ uiBoard.addEventListener("click", (e) => {
         break;
       case "R":
         legalMoves = getRookMoves(
+          selectedPiece.row,
+          selectedPiece.col,
+          boardState
+        );
+        break;
+      case "C":
+        legalMoves = getCrocodileMoves(
           selectedPiece.row,
           selectedPiece.col,
           boardState
