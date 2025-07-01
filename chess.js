@@ -6,6 +6,9 @@ import Rook from "./src/pieces/Rook.js";
 import Zebra from "./src/pieces/Zebra.js";
 
 const BOARD_DIM = 14;
+let selectedPiece = null;
+let legalMoves = [];
+let currentTurn = "w";
 
 // This board state represents the entire game board.
 // an empty square is 'null', and every other piece is an object.
@@ -249,6 +252,7 @@ const pieceMap = {
 };
 
 let uiBoard = document.querySelector(".chess-board");
+let draggedPieceElement = null;
 
 function createBoard() {
   for (let i = 0; i < BOARD_DIM; i++) {
@@ -262,6 +266,40 @@ function createBoard() {
       } else {
         square.classList.add("dark-square");
       }
+      // This makes it so that all squares could be dragged on.
+      square.addEventListener("dragover", (e) => {
+        e.preventDefault();
+      });
+
+      square.addEventListener("drop", (e) => {
+        e.preventDefault();
+        if (!legalMoves) return;
+        const pieceRow = JSON.parse(
+          e.dataTransfer.getData("text/plain")
+        ).startRow;
+        const pieceCol = parseInt(
+          JSON.parse(e.dataTransfer.getData("text/plain")).startCol
+        );
+        let targetSquare = e.target.closest(".square");
+        const targetRow = parseInt(targetSquare.dataset.row);
+        const targetCol = parseInt(targetSquare.dataset.col);
+        const isLegalMove = legalMoves.some(
+          (move) => move[0] == targetRow && move[1] == targetCol
+        );
+        if (isLegalMove) {
+          targetSquare.innerHTML = "";
+          targetSquare.appendChild(draggedPieceElement);
+          // Perform the real move
+          const piece = boardState[pieceRow][pieceCol];
+          boardState[targetRow][targetCol] = piece;
+          boardState[pieceRow][pieceCol] = null;
+
+          selectedPiece = null;
+          legalMoves = [];
+          clearHighlights();
+          render();
+        }
+      });
       uiBoard.appendChild(square);
     }
   }
@@ -282,8 +320,35 @@ function render() {
     const piece = boardState[row][col];
     if (piece) {
       const pieceDiv = document.createElement("div");
-      // pieceDiv.classList.add("piece", pieceMap[pieceCode]);
       pieceDiv.classList.add("piece", `${piece.color}-${pieceMap[piece.type]}`);
+      pieceDiv.setAttribute("draggable", "true");
+      pieceDiv.addEventListener("dragstart", (e) => {
+        pieceDiv.classList.add("being-dragged");
+        selectedPiece = { row, col, piece };
+        legalMoves = selectedPiece.piece.getMoves(
+          selectedPiece.row,
+          selectedPiece.col,
+          boardState
+        );
+        highlightSquares(legalMoves);
+        draggedPieceElement = pieceDiv;
+        e.dataTransfer.setData(
+          "text/plain",
+          JSON.stringify({
+            startRow: selectedPiece.row,
+            startCol: selectedPiece.col,
+            pieceType: selectedPiece.piece.type,
+            pieceColor: selectedPiece.piece.color,
+          })
+        );
+        e.dataTransfer.effectAllowed = "move";
+      });
+      pieceDiv.addEventListener("dragend", (e) => {
+        e.target.classList.remove("being-dragged");
+        clearHighlights();
+        selectedPiece = null;
+        legalMoves = [];
+      });
       square.appendChild(pieceDiv);
     }
   });
@@ -306,10 +371,6 @@ function clearHighlights() {
   });
 }
 
-let selectedPiece = null;
-let legalMoves = [];
-let currentTurn = "w";
-
 uiBoard.addEventListener("click", (e) => {
   /*
   There's basically two outcomes.
@@ -320,7 +381,6 @@ uiBoard.addEventListener("click", (e) => {
   if (!square) return;
   const row = parseInt(square.dataset.row);
   const col = parseInt(square.dataset.col);
-
   if (selectedPiece) {
     // I always forget what does the array method 'some' do so I'll explain it breifly
     // It loops through the array and once it finds an element that meets the condition and returns true.

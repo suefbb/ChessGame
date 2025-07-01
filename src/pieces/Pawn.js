@@ -15,6 +15,7 @@ export default class Pawn extends Piece {
       board[row + this.direction][col] == null
     ) {
       moves.push([row + this.direction, col]);
+      // TWO UP
       if (
         this.isValidSquare(row + this.direction * 2, col) &&
         board[row + this.direction * 2][col] == null
@@ -23,21 +24,17 @@ export default class Pawn extends Piece {
     }
     // UP LEFT
     if (
-      this.isValidSquare(row + this.direction, col - 1) &&
-      (board[row + this.direction][col - 1] == null ||
-        (this.isValidSquare(row + this.direction, col - 1) &&
-          board[row + this.direction][col - 1].color != this.color))
+      board[row + this.direction][col - 1] &&
+      board[row + this.direction][col - 1].color != this.color
     ) {
       moves.push([row + this.direction, col - 1]);
     } // UP RIGHT
     if (
-      this.isValidSquare(row + this.direction, col + 1) &&
-      (board[row + this.direction][col + 1] == null ||
-        board[row + this.direction][col + 1].color != this.color)
+      board[row + this.direction][col + 1] &&
+      board[row + this.direction][col + 1].color != this.color
     ) {
       moves.push([row + this.direction, col + 1]);
     }
-    // TWO UP
     return moves;
   }
 }
