@@ -21,7 +21,7 @@
   background-repeat: no-repeat;
   margin: auto;
   cursor: pointer;
-  transition: cubic-bezier(0.075, 0.82, 0.165, 1) 0.2s;
+  transition: cubic-bezier(0.075, 0.82, 0.165, 1) 0.1s;
 }
 .w-pawn {
   background-image: url("assets/w-pawn.svg");

@@ -330,14 +330,23 @@ uiBoard.addEventListener("click", (e) => {
     );
 
     if (isLegalMove) {
-      // We move the square by setting it's value to the destination and reseting its original square.
-      boardState[row][col] = boardState[selectedPiece.row][selectedPiece.col];
-      boardState[selectedPiece.row][selectedPiece.col] = null;
-      // Reset everything.
-      selectedPiece = null;
-      legalMoves = [];
+      // ANIMATION START
+      let pieceToBeMoved = document.querySelector(
+        `.square[data-row="${selectedPiece.row}"][data-col="${selectedPiece.col}"]`
+      ).children[0];
+      pieceToBeMoved.style = `transform: translate(calc((${selectedPiece.col} - ${col}) * 50px * -1), calc((${selectedPiece.row} - ${row}) * 50px * -1));`;
       clearHighlights();
-      render();
+      pieceToBeMoved.addEventListener("transitionend", (_) => {
+        // We move the square by setting it's value to the destination and reseting its original square.
+        boardState[row][col] = boardState[selectedPiece.row][selectedPiece.col];
+        boardState[selectedPiece.row][selectedPiece.col] = null;
+        // Reset everything.
+        selectedPiece = null;
+        legalMoves = [];
+        clearHighlights();
+        render();
+      });
+      // ANIMATION END
     } else {
       // In case the user plays an illegal move,
       // or unselects the current piece.
