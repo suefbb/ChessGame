@@ -1,5 +1,6 @@
 *O=board square *Z=Zibra *main diagonal=A,B,C,D.... *second diagonal=A,b,c,d..... 
 *A in main diagonal and second diagonal *the piece can't jump from A to c and there is a piece in b for example
+*piece move from Z -> A -> B -> C ->....... or from Z -> A -> b -> c -> d ->.......
 
 G  g  O  O  O  O  O  O  O  O  O  O  O  O
 O  F  f  O  O  O  O  O  O  O  O  O  O  F
