@@ -25,14 +25,15 @@ export default class Pawn extends Piece {
     if (
       this.isValidSquare(row + this.direction, col - 1) &&
       (board[row + this.direction][col - 1] == null ||
-        board[row + this.direction][col - 1][0] != this.color)
+        (this.isValidSquare(row + this.direction, col - 1) &&
+          board[row + this.direction][col - 1].color != this.color))
     ) {
       moves.push([row + this.direction, col - 1]);
     } // UP RIGHT
     if (
       this.isValidSquare(row + this.direction, col + 1) &&
       (board[row + this.direction][col + 1] == null ||
-        board[row + this.direction][col + 1][0] != this.color)
+        board[row + this.direction][col + 1].color != this.color)
     ) {
       moves.push([row + this.direction, col + 1]);
     }

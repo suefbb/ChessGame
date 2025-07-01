@@ -4,10 +4,10 @@ export default class Rook extends Piece {
   constructor(color) {
     super(color, "R");
     this.directions = [
-      [-1, 0],
-      [1, 0],
-      [0, -1],
-      [0, 1],
+      [-1, 0], // UP
+      [1, 0], // DOWN
+      [0, -1], // LEFT
+      [0, 1], // RIGHT
     ];
   }
   getMoves(row, col, board) {

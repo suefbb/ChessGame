@@ -4,10 +4,10 @@ export default class Bishop extends Piece {
   constructor(color) {
     super(color, "B");
     this.directions = [
-      [-1, -1],
-      [-1, 1],
-      [1, -1],
-      [1, 1],
+      [-1, -1], // UP LEFT
+      [-1, 1], // UP RIGHT
+      [1, -1], // DOWN LEFT
+      [1, 1], // DOWN RIGHT
     ];
   }
   getMoves(row, col, board) {

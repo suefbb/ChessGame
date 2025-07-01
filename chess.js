@@ -6,6 +6,9 @@ import Rook from "./src/pieces/Rook.js";
 import Zebra from "./src/pieces/Zebra.js";
 
 const BOARD_DIM = 14;
+
+// This board state represents the entire game board.
+// an empty square is 'null', and every other piece is an object.
 let boardState = [
   [
     null,
@@ -233,6 +236,7 @@ let boardState = [
   ],
 ];
 
+// Used for assigning the correct CSS class for each piece.
 const pieceMap = {
   K: "king",
   Q: "queen",
@@ -243,7 +247,9 @@ const pieceMap = {
   C: "crocodile",
   Z: "crocodile",
 };
+
 let uiBoard = document.querySelector(".chess-board");
+
 function createBoard() {
   for (let i = 0; i < BOARD_DIM; i++) {
     for (let j = 0; j < BOARD_DIM; j++) {
@@ -261,6 +267,11 @@ function createBoard() {
   }
 }
 
+/*
+ This is a very important function for this game.
+ This function first removes any piece inside any square,
+ then checks the board state and assigns every square it's correct piece and class.
+*/
 function render() {
   const squares = document.querySelectorAll(".chess-board .square");
   squares.forEach((square, index) => {
@@ -295,16 +306,6 @@ function clearHighlights() {
   });
 }
 
-// function getCrocodileMoves(row, col, board) {
-//   let moves = [];
-//   let pieceColor = board[row][col][0];
-//   if (isValidSquare(row, col + 1))
-//     moves.push(...getRookMoves(row, col + 1, board, pieceColor, true));
-//   if (isValidSquare(row, col - 1))
-//     moves.push(...getRookMoves(row, col - 1, board, pieceColor, true));
-//   return moves;
-// }
-
 let selectedPiece = null;
 let legalMoves = [];
 let currentTurn = "w";
@@ -321,10 +322,15 @@ uiBoard.addEventListener("click", (e) => {
   const col = parseInt(square.dataset.col);
 
   if (selectedPiece) {
+    // I always forget what does the array method 'some' do so I'll explain it breifly
+    // It loops through the array and once it finds an element that meets the condition and returns true.
+    // In this case it sees if the selected move is a legal square to move to.
     const isLegalMove = legalMoves.some(
       (move) => move[0] == row && move[1] == col
     );
+
     if (isLegalMove) {
+      // We move the square by setting it's value to the destination and reseting its original square.
       boardState[row][col] = boardState[selectedPiece.row][selectedPiece.col];
       boardState[selectedPiece.row][selectedPiece.col] = null;
       // Reset everything.
@@ -333,13 +339,16 @@ uiBoard.addEventListener("click", (e) => {
       clearHighlights();
       render();
     } else {
-      // In case the user plays an illegal move.
+      // In case the user plays an illegal move,
+      // or unselects the current piece.
       selectedPiece = null;
       legalMoves = [];
       clearHighlights();
       render();
     }
   } else {
+    // This means that the user is choosing a piece.
+    // We'll display its moves and highlight them.
     selectedPiece = { row, col, piece: boardState[row][col] };
     legalMoves = [
       ...selectedPiece.piece.getMoves(

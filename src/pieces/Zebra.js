@@ -13,8 +13,10 @@ export default class Zebra extends Piece {
 
   getMoves(row, col, board) {
     let moves = [];
+    // Getting the normal bishop moves.
     moves.push(...this.getRayMoves(row, col, this.NORMAL_DIR, board));
 
+    // this is just moving up one square and putting a bishop that can only look for UP LEFT and UP RIGHT.
     if (this.isValidSquare(row - 1, col))
       moves.push(
         ...this.getRayMoves(
@@ -27,6 +29,7 @@ export default class Zebra extends Piece {
           board
         )
       );
+    // The same as the above but looking only for DOWN LEFT and DOWN RIGHT.
     if (this.isValidSquare(row + 1, col))
       moves.push(
         ...this.getRayMoves(
