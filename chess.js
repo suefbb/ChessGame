@@ -1,3 +1,10 @@
+import Bishop from "./src/pieces/Bishop.js";
+import Crocodile from "./src/pieces/Crocodile.js";
+import Knight from "./src/pieces/Knight.js";
+import Pawn from "./src/pieces/Pawn.js";
+import Rook from "./src/pieces/Rook.js";
+import Zebra from "./src/pieces/Zebra.js";
+
 const BOARD_DIM = 14;
 let boardState = [
   [
@@ -179,7 +186,7 @@ let boardState = [
   [
     null,
     null,
-    "wN",
+    new Knight("w"),
     null,
     null,
     null,
@@ -187,59 +194,54 @@ let boardState = [
     null,
     null,
     null,
-    "wN",
+    new Knight("w"),
     null,
     null,
     null,
   ],
   [
-    "wP",
-    "wP",
-    "wP",
-    "wP",
-    "wP",
-    "wP",
-    "wP",
-    "wP",
-    "wP",
-    "wP",
-    "wP",
-    "wP",
-    "wP",
-    "wP",
+    new Pawn("w"),
+    new Pawn("w"),
+    new Pawn("w"),
+    new Pawn("w"),
+    new Pawn("w"),
+    new Pawn("w"),
+    new Pawn("w"),
+    new Pawn("w"),
+    new Pawn("w"),
+    new Pawn("w"),
+    new Pawn("w"),
+    new Pawn("w"),
+    new Pawn("w"),
+    new Pawn("w"),
   ],
   [
-    "wR",
+    new Rook("w"),
     null,
-    "wB",
-    "wC",
-    null,
-    null,
+    new Bishop("w"),
+    new Crocodile("w"),
     null,
     null,
     null,
     null,
-    "wZ",
-    "wB",
     null,
-    "wR",
+    null,
+    new Zebra("w"),
+    new Bishop("w"),
+    null,
+    new Rook("w"),
   ],
 ];
 
 const pieceMap = {
-  wK: "w-king",
-  wQ: "w-queen",
-  wR: "w-rook",
-  wB: "w-bishop",
-  wN: "w-knight",
-  wP: "w-pawn",
-  bK: "b-king",
-  bQ: "b-queen",
-  bR: "b-rook",
-  bB: "b-bishop",
-  bN: "b-knight",
-  bP: "b-pawn",
-  wC: "w-crocodile",
+  K: "king",
+  Q: "queen",
+  R: "rook",
+  B: "bishop",
+  N: "knight",
+  P: "pawn",
+  C: "crocodile",
+  Z: "crocodile",
 };
 let uiBoard = document.querySelector(".chess-board");
 function createBoard() {
@@ -266,22 +268,14 @@ function render() {
     square.innerHTML = "";
     const row = Math.floor(index / BOARD_DIM);
     const col = index % BOARD_DIM;
-    const pieceCode = boardState[row][col];
-    if (pieceCode) {
+    const piece = boardState[row][col];
+    if (piece) {
       const pieceDiv = document.createElement("div");
-      pieceDiv.classList.add("piece", pieceMap[pieceCode]);
+      // pieceDiv.classList.add("piece", pieceMap[pieceCode]);
+      pieceDiv.classList.add("piece", `${piece.color}-${pieceMap[piece.type]}`);
       square.appendChild(pieceDiv);
     }
   });
-}
-
-function getPieceType(row, col, board) {
-  if (board[row][col] == null) return null;
-  return board[row][col][1];
-}
-
-function isValidSquare(row, col) {
-  return row >= 0 && row < BOARD_DIM && col >= 0 && col < BOARD_DIM;
 }
 
 function highlightSquares(squares) {
@@ -301,169 +295,15 @@ function clearHighlights() {
   });
 }
 
-function getPawnMoves(row, col, board, typeOfMove = "all") {
-  let moves = [];
-  const pieceColor = board[row][col][0];
-  let direction = pieceColor == "w" ? -1 : 1;
-
-  // UP
-  if (
-    isValidSquare(row + direction, col) &&
-    board[row + direction][col] == null
-  ) {
-    moves.push([row + direction, col]);
-  }
-  // UP LEFT
-  if (
-    isValidSquare(row + direction, col - 1) &&
-    (board[row + direction][col - 1] == null ||
-      board[row + direction][col - 1][0] != pieceColor)
-  ) {
-    moves.push([row + direction, col - 1]);
-  } // UP RIGHT
-  if (
-    isValidSquare(row + direction, col + 1) &&
-    (board[row + direction][col + 1] == null ||
-      board[row + direction][col + 1][0] != pieceColor)
-  ) {
-    moves.push([row + direction, col + 1]);
-  }
-  // TWO UP
-  if (
-    isValidSquare(row + direction * 2, col) &&
-    board[row + direction * 2][col] == null
-  )
-    moves.push([row + direction * 2, col]);
-  return moves;
-}
-
-function getRookMoves(row, col, board, color = null, crocodileMode = false) {
-  const moves = [];
-  const pieceColor = color ? color : board[row][col][0];
-  // UP
-  for (let i = crocodileMode ? row : row - 1; i >= 0; i--) {
-    const targetSquare = board[i][col];
-    if (targetSquare == null) {
-      moves.push([i, col]);
-    } else {
-      if (targetSquare[0] != pieceColor) {
-        moves.push([i, col]);
-        break;
-      } else break;
-    }
-  }
-  // DOWN
-  for (let i = row + 1; i < BOARD_DIM; i++) {
-    const targetSquare = board[i][col];
-    if (targetSquare == null) {
-      moves.push([i, col]);
-    } else {
-      if (targetSquare[0] != pieceColor) {
-        moves.push([i, col]);
-        break;
-      } else break;
-    }
-  }
-  // LEFT
-  for (let i = col - 1; i >= 0; i--) {
-    const targetSquare = board[row][i];
-    if (targetSquare == null) {
-      moves.push([row, i]);
-    } else {
-      if (targetSquare[0] != pieceColor) {
-        moves.push([row, i]);
-        break;
-      } else break;
-    }
-  }
-  // RIGHT
-  for (let i = col + 1; i < BOARD_DIM; i++) {
-    const targetSquare = board[row][i];
-    if (targetSquare == null) {
-      moves.push([row, i]);
-    } else {
-      if (targetSquare[0] != pieceColor) {
-        moves.push([row, i]);
-        break;
-      } else break;
-    }
-  }
-  return moves;
-}
-
-function getCrocodileMoves(row, col, board) {
-  let moves = [];
-  let pieceColor = board[row][col][0];
-  if (isValidSquare(row, col + 1))
-    moves.push(...getRookMoves(row, col + 1, board, pieceColor, true));
-  if (isValidSquare(row, col - 1))
-    moves.push(...getRookMoves(row, col - 1, board, pieceColor, true));
-  return moves;
-}
-
-function getBishopMoves(row, col, board) {
-  let moves = [];
-  const pieceColor = board[row][col][0];
-  const directions = [
-    [-1, -1], // UP LEFT
-    [-1, 1], // UP RIGHT
-    [1, -1], // DOWN LEFT
-    [1, 1], // DOWN RIGHT
-  ];
-  for (const [dr, dc] of directions) {
-    for (let i = 1; ; i++) /* i represents distance from current piece.*/ {
-      const newRow = row + dr * i;
-      const newCol = col + dc * i;
-      if (!isValidSquare(newRow, newCol)) {
-        break;
-      }
-      const targetSquare = board[newRow][newCol];
-      if (targetSquare == null) {
-        moves.push([newRow, newCol]);
-      } else {
-        if (targetSquare[0] != pieceColor) {
-          moves.push([newRow, newCol]);
-          break;
-        } else {
-          break;
-        }
-      }
-    }
-  }
-  return moves;
-}
-
-function getKnightMoves(row, col, board) {
-  const moves = [];
-  const moveOffsets = [
-    { r: -2, c: -1 },
-    { r: -2, c: 1 },
-    { r: -1, c: -2 },
-    { r: -1, c: 2 },
-    { r: 1, c: -2 },
-    { r: 1, c: 2 },
-    { r: 2, c: -1 },
-    { r: 2, c: 1 },
-  ];
-  const pieceColor = board[row][col][0];
-  for (const offset of moveOffsets) {
-    const newRow = row + offset.r;
-    const newCol = col + offset.c;
-    // Boundary checking.
-    if (
-      newRow >= 0 &&
-      newRow < BOARD_DIM &&
-      newCol >= 0 &&
-      newCol < BOARD_DIM
-    ) {
-      const targetSquare = board[newRow][newCol];
-      if (targetSquare == null || targetSquare[0] != pieceColor) {
-        moves.push([newRow, newCol]);
-      }
-    }
-  }
-  return moves;
-}
+// function getCrocodileMoves(row, col, board) {
+//   let moves = [];
+//   let pieceColor = board[row][col][0];
+//   if (isValidSquare(row, col + 1))
+//     moves.push(...getRookMoves(row, col + 1, board, pieceColor, true));
+//   if (isValidSquare(row, col - 1))
+//     moves.push(...getRookMoves(row, col - 1, board, pieceColor, true));
+//   return moves;
+// }
 
 let selectedPiece = null;
 let legalMoves = [];
@@ -501,47 +341,14 @@ uiBoard.addEventListener("click", (e) => {
     }
   } else {
     selectedPiece = { row, col, piece: boardState[row][col] };
+    legalMoves = [
+      ...selectedPiece.piece.getMoves(
+        selectedPiece.row,
+        selectedPiece.col,
+        boardState
+      ),
+    ];
 
-    switch (getPieceType(selectedPiece.row, selectedPiece.col, boardState)) {
-      case "P":
-        legalMoves = getPawnMoves(
-          selectedPiece.row,
-          selectedPiece.col,
-          boardState
-        );
-        break;
-      case "R":
-        legalMoves = getRookMoves(
-          selectedPiece.row,
-          selectedPiece.col,
-          boardState
-        );
-        break;
-      case "C":
-        legalMoves = getCrocodileMoves(
-          selectedPiece.row,
-          selectedPiece.col,
-          boardState
-        );
-        break;
-      case "B":
-        legalMoves = getBishopMoves(
-          selectedPiece.row,
-          selectedPiece.col,
-          boardState
-        );
-        break;
-      case "N":
-        legalMoves = getKnightMoves(
-          selectedPiece.row,
-          selectedPiece.col,
-          boardState
-        );
-        break;
-      default:
-        legalMoves = [];
-        break;
-    }
     highlightSquares(legalMoves);
   }
 });

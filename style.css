@@ -9,10 +9,10 @@
   height: 50px;
 }
 .light-square {
-  background-color: wheat;
+  background-color: beige;
 }
 .dark-square {
-  background-color: maroon;
+  background-color: green;
 }
 .piece {
   width: 100%;
