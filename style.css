@@ -21,25 +21,43 @@
   background-repeat: no-repeat;
   margin: auto;
   cursor: pointer;
-  transition: cubic-bezier(0.075, 0.82, 0.165, 1) 0.1s;
+  /* transition: cubic-bezier(0.075, 0.82, 0.165, 1) 0.1s; */
+  transition: transform ease-in 0.1s;
 }
 .w-pawn {
   background-image: url("assets/w-pawn.svg");
 }
+.b-pawn {
+  background-image: url("assets/b-pawn.svg");
+}
 .w-crocodile {
   background-image: url("assets/w-crocodile.svg");
+}
+.b-crocodile {
+  background-image: url("assets/b-crocodile.svg");
 }
 .w-rook {
   background-image: url("assets/w-rook.svg");
 }
+.b-rook {
+  background-image: url("assets/b-rook.svg");
+}
 .w-bishop {
   background-image: url("assets/w-bishop.svg");
+}
+.b-bishop {
+  background-image: url("assets/b-bishop.svg");
 }
 
 .w-knight {
   /* temporary */
   background-image: url("assets/w-crocodile.svg");
 }
+.b-knight {
+  /* temporary */
+  background-image: url("assets/b-crocodile.svg");
+}
+
 .legal-move {
   /* background-color: lightskyblue; */
   /* background: radial-gradient(rgba(20, 85, 30, 0.5) 19%, rgba(0, 0, 0, 0) 20%); */
