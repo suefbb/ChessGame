@@ -11,16 +11,22 @@ let ppn = ''
 let cc = ''
 var a =0
 let b5= false
+let imgn_sqr = document.getElementById("is")
 for(sqr=1;sqr<199;sqr++){
     if (sqr > 2){
-        p.innerHTML+='<div class="f" onClick="" style="display:flex;justify-content:center;align-items:center;"><div class="cir" id="3" onClick="movepiece(ppn,this.id,childclass[197])"></div></div>'
+        p.innerHTML+='<div class="f" style="display:flex;justify-content:center;align-items:center;" onClick="hello()"><div class="cir" id="3" onClick="movepiece(ppn,this.id,childclass[197])"></div></div>'
+        imgn_sqr.innerHTML+='<div class="imsqp" onContextmenu=""><div class="imsq"></div></div>'
+        imgn_sqr.children[sqr-1].setAttribute('onContextmenu','show_imgnsqr(this.id)')
         cirs=document.getElementsByClassName("cir")
         cirs[sqr-3].id=String(sqr)
+        imgn_sqr.children[sqr-1].id=String(sqr-1)
     }
     if (sqr==1){
+        is.innerHTML+='<div class="itt1"></div>'        
         p.innerHTML+='<div class="f"><p>14</p><p>13</p><p>12</p><p>11</p><p>10</p><p>9</p><p>8</p><p>7</p><p>6</p><p>5</p><p>4</p><p>3</p><p>2</p><p>1</p></div>'        
     }
     if (sqr==2){
+        is.innerHTML+='<div class="itt2"></div>' 
         p.innerHTML+='<div class="f"><p>a</p><p>b</p><p>c</p><p>d</p><p>e</p><p>f</p><p>g</p><p>h</p><p>i</p><p>j</p><p>k</p><p>l</p><p>m</p><p>n</p></div>'        
     }    
     childclass=document.getElementsByClassName("f")
@@ -158,7 +164,6 @@ for(sqr=1;sqr<199;sqr++){
             snake=document.getElementsByClassName("snake")
             snake[0].classList.add("snake1")
             snake[0].setAttribute('onClick','movesnake(1,gf2)')
-            console.log(childclass[sqr-1]);
         }}
     }   
 }
@@ -528,7 +533,6 @@ function movezebra(mm,...gf2){
     for (let rci = 0; rci < 13; rci++) {
         a=a+13;
         if(a>198){break}
-        console.log(a,childclass[a].children);
         if(childclass[a].children.length>1 || b5==true){
             childclass[a].children[0].style.display='none'
             b5=true
@@ -595,17 +599,50 @@ function movesnake(){
         }
     }
     pieces[22].style.backgroundColor= "rgb(195, 220, 85)"
+    ppn = pieces[22].parentElement.classList[1].slice(2,pieces[22].parentElement.classList[1].length)
+    for(s3=2;s3<198;s3++){
+    if(Number(childclass[s3].id.slice(1,childclass[s3].id.length))-Number(pieces[22].parentElement.id.slice(1,pieces[22].parentElement.id.length))==1){
+        if ((alpha.indexOf(childclass[s3].id[0])-alpha.indexOf(pieces[22].parentElement.id[0]))%4==2 || (alpha.indexOf(pieces[22].parentElement.id[0])-alpha.indexOf(childclass[s3].id[0]))%4==2) {
+            childclass[s3].children[0].style.display='block'  
+        }}
+    else if(Number(childclass[s3].id.slice(1,childclass[s3].id.length))-Number(pieces[22].parentElement.id.slice(1,pieces[22].parentElement.id.length))==-1){
+        if ((alpha.indexOf(childclass[s3].id[0])-alpha.indexOf(pieces[22].parentElement.id[0]))%4==2 || (alpha.indexOf(pieces[22].parentElement.id[0])-alpha.indexOf(childclass[s3].id[0]))%4==2) {
+            childclass[s3].children[0].style.display='block'  
+        }}
+    else if(Number(childclass[s3].id.slice(1,childclass[s3].id.length))-Number(pieces[22].parentElement.id.slice(1,pieces[22].parentElement.id.length))==0 && childclass[s3].id[0]==pieces[22].parentElement.id[0]){
+            childclass[s3].children[0].style.display='block'  
+        }
+    else if(Number(childclass[s3].id.slice(1,childclass[s3].id.length))-Number(pieces[22].parentElement.id.slice(1,pieces[22].parentElement.id.length))==0){
+        if ((alpha.indexOf(childclass[s3].id[0])-alpha.indexOf(pieces[22].parentElement.id[0]))%4==0) {
+            childclass[s3].children[0].style.display='block'  
+        }}
+    //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    else if(alpha.indexOf(childclass[s3].id[0])-alpha.indexOf(pieces[22].parentElement.id[0])==1){
+        if ((Number(childclass[s3].id.slice(1,childclass[s3].id.length))-Number(pieces[22].parentElement.id.slice(1,pieces[22].parentElement.id.length)))%4==2 || (alpha.indexOf(pieces[22].parentElement.id[0])-alpha.indexOf(childclass[s3].id[0]))%4==2) {
+            childclass[s3].children[0].style.display='block'  
+        }}
+    else if(alpha.indexOf(childclass[s3].id[0])-alpha.indexOf(pieces[22].parentElement.id[0])==-1){
+        if ((Number(childclass[s3].id.slice(1,childclass[s3].id.length))-Number(pieces[22].parentElement.id.slice(1,pieces[22].parentElement.id.length)))%4==2 || (alpha.indexOf(pieces[22].parentElement.id[0])-alpha.indexOf(childclass[s3].id[0]))%4==2) {
+            childclass[s3].children[0].style.display='block'  
+        }}
+    else if(Number(childclass[s3].id.slice(1,childclass[s3].id.length))-Number(pieces[22].parentElement.id.slice(1,pieces[22].parentElement.id.length))==0 && childclass[s3].id[0]==pieces[22].parentElement.id[0]){
+            childclass[s3].children[0].style.display='block'  
+        }
+    else if((alpha.indexOf(childclass[s3].id[0])-alpha.indexOf(pieces[22].parentElement.id[0]))==0){
+        if (Number(childclass[s3].id.slice(1,childclass[s3].id.length))-Number(pieces[22].parentElement.id.slice(1,pieces[22].parentElement.id.length))%4==0) {
+            childclass[s3].children[0].style.display='block'  
+        }
+    }}
     a=Array.prototype.indexOf.call(childclass,pieces[22].parentElement)
     b5 = false
     if(a>15){
         for (let rci = 0; rci < 6; rci++) {
             if(rci%2==0){a=a-12;}
             else{a=a+16}
-            console.log(rci%2==1,a);
             if(childclass[a].children.length>1 || b5==true){
                 childclass[a].children[0].style.display='none'
                 b5=true
-            }else{childclass[a].children[0].style.display='block'}
+            }
             if(childclass[a].id[0]=='n' || childclass[a].id[1]+childclass[a].id[2]=='14'){break}
         }}
 }
@@ -617,7 +654,7 @@ function movepiece(cn,gg,last){//cn هو ايتم المربع gg هو اي دي
                     if(Number(childclass[f].children[0].id)==Number(gg)){
                         cc=childclass[f]
                     }
-                }                          //198 
+                }                         //198 
                 for (let ff = -2; ff < childclass.length-2; ff++) {
                     if(ff==197){childclass[ff+2]=last}
                     if(Number(childclass[ff+2].classList[1].slice(2,childclass[ff+2].classList[1].length))==Number(cn)){
@@ -642,3 +679,28 @@ function movepiece(cn,gg,last){//cn هو ايتم المربع gg هو اي دي
         }
     }
 }
+//بداية كود الدوائر
+let back_color= document.getElementById("back_color")
+let is_active=document.getElementById("is_active")
+let button= document.getElementById("button1")
+function show_imgnsqr(i) {
+    if(is_active.value=='T'){p.style.setProperty('z-index','1000');imgn_sqr.style.setProperty('display','none');imgn_sqr.style.setProperty('z-index','800');
+        console.log(p.style.zIndex);
+        console.log(imgn_sqr.style.zIndex);}
+    imgn_sqr.children[i].children[0].style.display="block"
+    imgn_sqr.children[i].children[0].style.borderColor=back_color.value
+}
+function rmv() {
+    for (let e = 0; e < imgn_sqr.children.length-2; e++) {
+        imgn_sqr.children[e+2].children[0].style.display="none"
+    }
+}
+function hello() {
+    console.log(is_active.value=="F");
+    if(is_active.value=="F"){
+        p.style.setProperty('z-index','0.5');imgn_sqr.style.setProperty('display','grid');imgn_sqr.style.setProperty('z-index','800')
+        console.log(p.style.zIndex);
+        console.log(imgn_sqr.style.zIndex);
+        console.log(imgn_sqr.style.display);}    
+}
+//نهايته

@@ -1,18 +1,19 @@
-.board{
+.board,.board2{
     width: fit-content;
     display: grid;
     grid-template-columns: 20px repeat(14,43px);
     grid-template-rows: 20px repeat(14,43px);
     justify-content: center;
 }
-.it1{
+.board2{display: none;}
+.it1,.itt1{
     background-color: gainsboro;
     grid-row: 1/16;
     display: grid;
     grid-template-columns: 15px;
     grid-template-rows: repeat(8,43px)
 }
-.it2{
+.it2,.itt2{
     background-color: gainsboro;
     grid-column: 2/16;
     display: flex;
@@ -70,6 +71,7 @@
     background-color: rgb(166, 166, 166);
     display: none;
     opacity: 0.55;
+    z-index: 1;
 }
 .rw{
     height: 4.5px;
@@ -257,4 +259,40 @@
 .zb,.zd{
     position: relative;
     bottom: 5px;
+}
+/*.board2 فوق
+  البداية
+*/
+#is{
+    opacity: 0.4;
+    position: relative;
+    bottom: 622px;
+}
+.imsq{
+    height:25px;
+    width:25px;
+    border-radius: 15px;
+    border: 5px solid gray;
+    display: none;
+}
+.imsqp{
+    height: 43px;
+    width: 43px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+button{
+    height: 30px;
+    width: 80px;
+    background-color: green;
+    position: relative;
+    top:10px;
+}
+select{
+    height: 30px;
+    width: 80px;
+    background-color: gray;
+    position: relative;
+    top: 10px;
 }
