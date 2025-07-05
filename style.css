@@ -19,44 +19,6 @@
     display: flex;
     justify-content: space-around;
 }
-.ph{
-    height: 12px;
-    width: 12px;
-    border-radius: 50%;
-    background-color: white;
-}
-.pb,.rb{
-    height: 9px;
-    width: 5.5px;
-    background-color: white;
-}
-.pd,.rd,.rh,.bd,.cd{
-    height: 6.5px;
-    width: 18.5px;
-    background-color: white;
-    border-radius: 3px;  
-}
-.rd,.bd,.nd,.cd,.zd{
-    height: 6.7px;
-    width: 20px;
-    border-radius: 2.2px;  
-}
-.bd,.nd,.cd,.zd{
-    height: 6px;
-    width: 17.5px;
-    background-color: white;
-}
-.nd,.zd{
-    width: 20px;
-}
-.rh{
-    width: 20px;
-    border-radius: 2.2px;  
-}
-.rb{
-    height: 12.5px;
-    width: 10px;
-}
 .pawn,.rook,.bishop,.knight,.crocodile,.zebra{
     height: 100%;
     display: flex;
@@ -295,4 +257,28 @@ select{
     background-color: gray;
     position: relative;
     top: 10px;
+}
+.btimer{
+    height: 40px;
+    width: 80px;
+    background-color: black;
+    border-radius: 8px;
+    border: 2px solid white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: x-large;
+}
+.wtimer{
+    margin-top: 20px;
+    height: 40px;
+    width: 80px;
+    background-color: white;
+    border-radius: 8px;
+    border: 2px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: x-large;
 }
