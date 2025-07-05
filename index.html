@@ -7,6 +7,22 @@
     <script type="module" src="chess.js" defer></script>
   </head>
   <body>
-    <div class="chess-board"></div>
+    <div class="chess-board">
+      <svg class="svg-layer">
+        <defs>
+          <marker
+            id="arrowhead"
+            markerWidth="4"
+            markerHeight="4"
+            refX="2"
+            refY="2"
+            orient="auto"
+            markerUnits="storkeWidth"
+          >
+            <path d="M0,0 V4 L3,2 Z" fill="rgba(255, 0, 0, 0.6)" />
+          </marker>
+        </defs>
+      </svg>
+    </div>
   </body>
 </html>
