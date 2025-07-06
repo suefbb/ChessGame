@@ -346,6 +346,31 @@ function getBishopMoves(row, col, board) {
   let moves = [...getSlideMoves(row, col, directions, board)];
   return moves;
 }
+function getKnightMoves(row, col, board) {
+  let moves = [];
+  const directions = [
+    { r: -2, c: -1 },
+    { r: -2, c: 1 },
+    { r: 2, c: -1 },
+    { r: 2, c: 1 },
+    { r: -1, c: -2 },
+    { r: 1, c: -2 },
+    { r: -1, c: 2 },
+    { r: 1, c: 2 },
+  ];
+  for (const direction of directions) {
+    const newRow = row + direction.r;
+    const newCol = col + direction.c;
+
+    if (isValidSquare(newRow, newCol)) {
+      const targetSquare = board[newRow][newCol];
+      if (targetSquare == null || targetSquare.color != this.color) {
+        moves.push([newRow, newCol]);
+      }
+    }
+  }
+  return moves;
+}
 createBoard();
 render();
 
@@ -365,6 +390,8 @@ board.addEventListener("click", (e) => {
       case "B":
         console.log(getBishopMoves(row, col, childclass));
         break;
+      case "N":
+        console.log(getKnightMoves(row, col, childclass));
       default:
         console.log("Not programmed yet.");
     }
