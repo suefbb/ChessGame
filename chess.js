@@ -7,7 +7,7 @@ var childclass=[
       '<img src="Bbishop.png" height="30px" width="31px">',
       '<img src="Bcrocodile.png" height="43px" width="43px">',
       '',
-      '',
+      '<img src="تصميم_بدون_عنوان__2_-removebg-preview.png" height="43px" width=""43px>',
       '',
       '',
       '',
@@ -206,20 +206,20 @@ var childclass=[
     ],
     [
       2,
-      '<div><img src="Wpawn.png" height="43px" width="40px"></div>',
-      '<div><img src="Wpawn.png" height="43px" width="40px"></div>',
-      '<div><img src="Wpawn.png" height="43px" width="40px"></div>',
-      '<div><img src="Wpawn.png" height="43px" width="40px"></div>',
-      '<div><img src="Wpawn.png" height="43px" width="40px"></div>',
-      '<div><img src="Wpawn.png" height="43px" width="40px"></div>',
-      '<div><img src="Wpawn.png" height="43px" width="40px"></div>',
-      '<div><img src="Wpawn.png" height="43px" width="40px"></div>',
-      '<div><img src="Wpawn.png" height="43px" width="40px"></div>',
-      '<div><img src="Wpawn.png" height="43px" width="40px"></div>',
-      '<div><img src="Wpawn.png" height="43px" width="40px"></div>',
-      '<div><img src="Wpawn.png" height="43px" width="40px"></div>',
-      '<div><img src="Wpawn.png" height="43px" width="40px"></div>',
-      '<div><img src="Wpawn.png" height="43px" width="40px"></div>',
+      '<img src="Wpawn.png" onclick="" height="43px" width="40px">',
+      '<img src="Wpawn.png" onclick="" height="43px" width="40px">',
+      '<img src="Wpawn.png" onclick="" height="43px" width="40px">',
+      '<img src="Wpawn.png" onclick="" height="43px" width="40px">',
+      '<img src="Wpawn.png" onclick="" height="43px" width="40px">',
+      '<img src="Wpawn.png" onclick="" height="43px" width="40px">',
+      '<img src="Wpawn.png" onclick="" height="43px" width="40px">',
+      '<img src="Wpawn.png" onclick="" height="43px" width="40px">',
+      '<img src="Wpawn.png" onclick="" height="43px" width="40px">',
+      '<img src="Wpawn.png" onclick="" height="43px" width="40px">',
+      '<img src="Wpawn.png" onclick="" height="43px" width="40px">',
+      '<img src="Wpawn.png" onclick="" height="43px" width="40px">',
+      '<img src="Wpawn.png" onclick="" height="43px" width="40px">',
+      '<img src="Wpawn.png" onclick="" height="43px" width="40px">',
     ],
     [
       1,
@@ -228,7 +228,7 @@ var childclass=[
       '<div><img src="Wbishop.png" height="42px" width="37px"></div>',
       '<div><img src="Wcrocodile.png" height="43px" width="43px"></div>',
       '',
-      '',
+      '<img src="تصميم_بدون_عنوان__2_-removebg-preview.png" height="43px" width="43px">',
       '',
       '',
       '',
@@ -239,22 +239,23 @@ var childclass=[
       '<div><img src="Wrook.png" height="43px" width="43px"></div>',
     ],
   ];
-let board=document.getElementById('pp')
-  for (let i = 0; i < childclass.length; i++) {
-    for (let j = 0; j < childclass.length; j++) {
-        let square=document.createElement("div")
-        square.innerHTML=childclass[i][j]
-        board.appendChild(square)
-        square.dataset.row=15-i
-        square.dataset.colmn=j
-        if ((i+j)%2==0) {
-            square.style.backgroundColor='wheat'
-        }
-        else{square.style.backgroundColor='brown'}
+  let board=document.getElementById('pp')
+    for (let i = 0; i < childclass.length; i++) {
+      for (let j = 0; j < childclass.length; j++) {
+          let square=document.createElement("div")
+          square.innerHTML=childclass[i][j]
+          board.appendChild(square)
+          square.dataset.row=15-i
+          square.dataset.colmn=j
+          if ((i+j)%2==0) {
+              square.style.backgroundColor='wheat'
+          }
+          else{square.style.backgroundColor='brown'}
+      }
     }
-  }
 //end
-function movepawn(mm){
+function movepawn(pawnRow){
+    console.log(pawnRow);
 }
 function moverook(mm,...gf2){
     for (let pi2 = 0; pi2< pieces.length; pi2++) {
