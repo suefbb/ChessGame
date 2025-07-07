@@ -1,28 +1,36 @@
 <!DOCTYPE html>
+
 <html>
-  <head>
-    <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
-    <title>!Hello, World</title>
-    <link rel="stylesheet" href="style.css" />
-    <script type="module" src="chess.js" defer></script>
-  </head>
-  <body>
-    <div class="chess-board">
-      <svg class="svg-layer">
-        <defs>
-          <marker
-            id="arrowhead"
-            markerWidth="4"
-            markerHeight="4"
-            refX="2"
-            refY="2"
-            orient="auto"
-            markerUnits="storkeWidth"
-          >
-            <path d="M0,0 V4 L3,2 Z" fill="rgba(255, 0, 0, 0.6)" />
-          </marker>
-        </defs>
-      </svg>
-    </div>
-  </body>
+<head>
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+  <title>!Hello, World</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="btimer">
+    <p id="min">9</p>
+    <p>:</p>
+    <p id="tensec">5</p>
+    <p id="sec">9</p>
+  </div>
+  <!--start-->
+  <div class="board" id="pp">
+  </div>
+  <div class="board2" id="is">
+  </div>
+  <button onclick="rmv()" id="button1">remove</button>
+  <select name="bc" id="back_color">
+    <option value="gray">gray</option>
+    <option value="red">red</option>
+    <option value="green">green</option>
+    <option value="blue">blue</option>
+  </select>
+  <select name="active" id="is_active">
+    <option value="T">move</option>
+    <option value="F">explain</option>
+  </select>
+  <script src="chess.js"></script>
+  <!--end-->
+  <div class="wtimer"></div>
+</body>
 </html>

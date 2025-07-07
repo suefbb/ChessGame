@@ -1,93 +1,291 @@
-.chess-board {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(14, 50px);
-  grid-template-rows: repeat(14, 50px);
-  width: fit-content;
+.board,.board2{
+    width: fit-content;
+    display: grid;
+    grid-template-columns: 20px repeat(14,43px);
+    grid-template-rows: 20px repeat(14,43px);
+    justify-content: center;
 }
-
-.chess-board .square {
-  height: 50px;
+.Wp{
+    position: relative;
+    bottom: 0px;
 }
-.light-square {
-  background-color: beige;
+.Wp:hover{
+    transition:bottom 1s linear;
 }
-.dark-square {
-  background-color: green;
+.board2{display: none;}
+.it1,.itt1{
+    background-color: gainsboro;
+    grid-row: 1/16;
+    display: grid;
+    grid-template-columns: 15px;
+    grid-template-rows: repeat(8,43px)
 }
-.piece {
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-repeat: no-repeat;
-  margin: auto;
-  cursor: pointer;
-  /* transition: cubic-bezier(0.075, 0.82, 0.165, 1) 0.1s; */
-  transition: transform ease-in 0.1s;
+.it2,.itt2{
+    background-color: gainsboro;
+    grid-column: 2/16;
+    display: flex;
+    justify-content: space-around;
 }
-.w-pawn {
-  background-image: url("assets/w-pawn.svg");
+.pawn,.rook,.bishop,.knight,.crocodile,.zebra{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
-.b-pawn {
-  background-image: url("assets/b-pawn.svg");
+.cir{
+    height: 26px;
+    width: 26px;
+    border-radius: 13px;
+    background-color: rgb(166, 166, 166);
+    display: none;
+    opacity: 0.55;
+    z-index: 1;
 }
-.w-crocodile {
-  background-image: url("assets/w-crocodile.svg");
+.rw{
+    height: 4.5px;
+    width: 20px;
+    display: flex;
+    justify-content: space-between;
 }
-.b-crocodile {
-  background-image: url("assets/b-crocodile.svg");
+.rw div{
+    height: 100%;
+    width: 4.5px;
+    background-color: white;
+    position: relative;
+    top: 1px;
 }
-.w-rook {
-  background-image: url("assets/w-rook.svg");
+/*bc circle bh head bm mouth bb bd/*/
+.bb{
+    height: 4.5px;
+    width: 5.7px;
+    background-color: white;
 }
-.b-rook {
-  background-image: url("assets/b-rook.svg");
+.nb,.zb{
+    width: 7px;
+    height: 6px;
+    background-color: white;
 }
-.w-bishop {
-  background-image: url("assets/w-bishop.svg");
+.nb{
+    position: relative;
+    left: 1.7px;
 }
-.b-bishop {
-  background-image: url("assets/b-bishop.svg");
+.bh{
+    height: 14px;
+    width: 16.5px;
+    border-radius: 50%;
+    background-color: white;
 }
-
-.w-knight {
-  /* temporary */
-  background-image: url("assets/w-crocodile.svg");
+.bm{
+    height: 3px;
+    width: 9.2px;
+    transform: rotate(-35deg);
+    position: relative;
+    left: 4.3px;top: 3.7px;
+    z-index: 1;
 }
-.b-knight {
-  /* temporary */
-  background-image: url("assets/b-crocodile.svg");
+.bc{
+    height: 5.5px;
+    width: 5.5px;
+    border-radius: 50%;
+    background-color: white;
+    position: relative;
+    right:4px;top: 3.5px;
 }
-
-.legal-move {
-  /* background-color: lightskyblue; */
-  background-image: radial-gradient(
-    rgba(20, 85, 30, 0.5) 50%,
-    rgba(0, 0, 0, 0) 10%
-  );
-  /* box-shadow: inset 1px 1px 5px 10px lightskyblue; */
-  cursor: pointer;
+.bh,.bb,.bd{
+    position: relative;
+    bottom: 1.5px;
+    z-index: 0.5;
 }
-
-/* .being-dragged {
-  width: 60px;
-  height: 60px;
-} */
-
-.highlighted-square {
-  /* background-image: radial-gradient(
-    rgba(20, 85, 30, 0.5) 50%,
-    rgba(0, 0, 0, 0) 10%
-  ); */
-  background-color: darkgoldenrod;
-  border: 0.2px solid goldenrod;
+.nh{
+    height: 10.5px;
+    width: 19.5px;
+    background-color: white;
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+    position: relative;
+    right: 3px;
 }
-
-.svg-layer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
+.ne{
+    height: 5px;
+    width: 5px;
+    background-color: white;
+    position: relative;
+    left: 3.5px;
+}
+.nI{
+    height: 4px;
+    width: 4px;
+    border-radius: 50%;
+    position: relative;
+    left: 5px;
+    top: 2px;
+}
+.cf{
+    height: 14.5px;
+    width: 30px;
+    background-color: white;
+    border-radius: 9.2px;
+    display: flex;
+    justify-content: space-around;
+    position: relative;
+    top: 2.5px;
+    z-index: 0.5;
+}
+.cIs{
+    height: 12.5px;
+    width: 22px;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    position: relative;
+    top: 3.5px;
+}
+.ce1,.ce2{
+    height: 65%;
+    width: 9.5px;
+    background-color: white;
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    z-index: 0.5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.ce3,.ce4{
+    height: 5px;
+    width: 4px;
+    border-top-left-radius: 40%;
+    border-top-right-radius: 40%;
+    border: 1px solid black;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.ce3 div,.ce4 div{
+    height: 2.25px;
+    width: 2.25px;
+    background-color: black;
+}
+.cn1,.cn2{
+    height: 3px;
+    width: 3px;
+    border-radius: 45%;
+    border: solid 1px black;
+    position: relative;
+    top: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.cn1 div,.cn2 div{
+    height: 1.5px;
+    width: 1.5px;
+    border-radius: 45%;
+    background-color: black;
+}
+.cb{
+    height: 5px;
+    width: 10px;
+    border-top: solid 1.5px black;
+    background-color: white;
+    z-index: 1;
+}
+.zs{
+    height: 14px;
+    width: 15.5px;
+    border-radius: 3px;
+    background-color: white;
+    border: solid 1px black;
+    position: relative;
+    bottom: 5px;
+    z-index: 0;
+}
+.zDs{
+    height: 17px;
+    width: 6px;
+    display: flex;
+    justify-content: space-between;
+    transform: rotate(-45deg);
+    position: relative;
+    top: 5px;
+    left: 4px;
+    z-index: 1;
+}
+.zd1{
+    height: 17px;
+    width: 2.5px;
+    border-radius: 1px;
+    background-color: black;
+}
+.zd2{
+    height: 17px;
+    width: 3px;
+    border-radius: 1px;
+    background-color: rgb(185, 182, 182);
+}
+.zb,.zd{
+    position: relative;
+    bottom: 5px;
+}
+/*.board2 فوق
+  البداية
+*/
+#is{
+    opacity: 0.4;
+    position: relative;
+    bottom: 622px;
+}
+.imsq{
+    height:25px;
+    width:25px;
+    border-radius: 15px;
+    border: 5px solid gray;
+    display: none;
+}
+.imsqp{
+    height: 43px;
+    width: 43px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+button{
+    height: 30px;
+    width: 80px;
+    background-color: green;
+    position: relative;
+    top:10px;
+}
+select{
+    height: 30px;
+    width: 80px;
+    background-color: gray;
+    position: relative;
+    top: 10px;
+}
+.btimer{
+    height: 40px;
+    width: 80px;
+    background-color: black;
+    border-radius: 8px;
+    border: 2px solid white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: x-large;
+}
+.wtimer{
+    margin-top: 20px;
+    height: 40px;
+    width: 80px;
+    background-color: white;
+    border-radius: 8px;
+    border: 2px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: x-large;
 }
