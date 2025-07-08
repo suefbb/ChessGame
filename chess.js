@@ -1,44 +1,45 @@
+let turn = 'W'
 var childclass=[
     ['','a','b','c','d','e','f','g','h','i','j','k','l','m','n'],
     [
       14,
-      '<img src="Brook.png" height="43px" width="43px">',
+      '<img src="Brook.png" class="Br" height="43px" width="43px">',
       '',
-      '<img src="Bbishop.png" height="30px" width="31px">',
-      '<img src="Bcrocodile.png" height="43px" width="43px">',
+      '<img src="Bbishop.png" class="Bb" height="30px" width="31px">',
+      '<img src="Bcrocodile.png" class="Br" height="43px" width="43px">',
       '',
-      '<img src="تصميم_بدون_عنوان__2_-removebg-preview.png" height="43px" width=""43px>',
+      '<img src="تصميم_بدون_عنوان__2_-removebg-preview.png" class="Bs" height="43px" width=""43px>',
       '',
       '',
       '',
       '',
       'imgZ',
-      '<img src="Bbishop.png" height="30px" width="31px">',
+      '<img src="Bbishop.png" class="Br" height="30px" width="31px">',
       '',
-      '<img src="Brook.png" height="43px" width="43px">',
+      '<img src="Brook.png" class="Br" height="43px" width="43px">',
     ],
     [
       13,
-      '<img src="Bpawn.png" height="45px" width="42px">',
-      '<img src="Bpawn.png" height="45px" width="42px">',
-      '<img src="Bpawn.png" height="45px" width="42px">',
-      '<img src="Bpawn.png" height="45px" width="42px">',
-      '<img src="Bpawn.png" height="45px" width="42px">',
-      '<img src="Bpawn.png" height="45px" width="42px">',
-      '<img src="Bpawn.png" height="45px" width="42px">',
-      '<img src="Bpawn.png" height="45px" width="42px">',
-      '<img src="Bpawn.png" height="45px" width="42px">',
-      '<img src="Bpawn.png" height="45px" width="42px">',
-      '<img src="Bpawn.png" height="45px" width="42px">',
-      '<img src="Bpawn.png" height="45px" width="42px">',
-      '<img src="Bpawn.png" height="45px" width="42px">',
-      '<img src="Bpawn.png" height="45px" width="42px">',
+      '<img src="Bpawn.png" class="Bp" height="45px" width="42px">',
+      '<img src="Bpawn.png" class="Bp" height="45px" width="42px">',
+      '<img src="Bpawn.png" class="Bp" height="45px" width="42px">',
+      '<img src="Bpawn.png" class="Bp" height="45px" width="42px">',
+      '<img src="Bpawn.png" class="Bp" height="45px" width="42px">',
+      '<img src="Bpawn.png" class="Bp" height="45px" width="42px">',
+      '<img src="Bpawn.png" class="Bp" height="45px" width="42px">',
+      '<img src="Bpawn.png" class="Bp" height="45px" width="42px">',
+      '<img src="Bpawn.png" class="Bp" height="45px" width="42px">',
+      '<img src="Bpawn.png" class="Bp" height="45px" width="42px">',
+      '<img src="Bpawn.png" class="Bp" height="45px" width="42px">',
+      '<img src="Bpawn.png" class="Bp" height="45px" width="42px">',
+      '<img src="Bpawn.png" class="Bp" height="45px" width="42px">',
+      '<img src="Bpawn.png" class="Bp" height="45px" width="42px">',
     ],
     [
       12,
       '',
       '',
-      '<img src="Bknight.png" height="43px" width="43px">',
+      '<img src="Bknight.png" class="Bn" height="43px" width="43px">',
       '',
       '',
       '',
@@ -47,7 +48,7 @@ var childclass=[
       '',
       '',
       '',
-      '<img src="Bknight.png" height="43px" width="43px">',
+      '<img src="Bknight.png" class="Bn" height="43px" width="43px">',
       '',
       '',
     ],
@@ -191,7 +192,7 @@ var childclass=[
       3,
       '',
       '',
-      '<img src="Wknight.png" height="43px" width="43px">',
+      '<img src="Wknight.png" class="Wn" height="43px" width="43px">',
       '',
       '',
       '',
@@ -200,7 +201,7 @@ var childclass=[
       '',
       '',
       '',
-      '<img src="Wknight.png" height="43px" width="43px">',
+      '<img src="Wknight.png" class="Wn" height="43px" width="43px">',
       '',
       '',
     ],
@@ -223,20 +224,20 @@ var childclass=[
     ],
     [
       1,
-      '<div><img src="Wrook.png" height="43px" width="43px"></div>',
+      '<div><img src="Wrook.png" class="Wr" height="43px" width="43px"></div>',
       '',
-      '<div><img src="Wbishop.png" height="42px" width="37px"></div>',
-      '<div><img src="Wcrocodile.png" height="43px" width="43px"></div>',
+      '<div><img src="Wbishop.png" class="Wb" height="42px" width="37px"></div>',
+      '<div><img src="Wcrocodile.png" class="Wc" height="43px" width="43px"></div>',
       '',
-      '<img src="تصميم_بدون_عنوان__2_-removebg-preview.png" height="43px" width="43px">',
+      '<img src="تصميم_بدون_عنوان__2_-removebg-preview.png" class="Ws" height="43px" width="43px">',
       '',
       '',
       '',
       '',
       'imgZ',
-      '<div><img src="Wbishop.png" height="42px" width="37px"></div>',
+      '<div><img src="Wbishop.png" class="Wb" height="42px" width="37px"></div>',
       '',
-      '<div><img src="Wrook.png" height="43px" width="43px"></div>',
+      '<div><img src="Wrook.png" class="Wr" height="43px" width="43px"></div>',
     ],
 ];
 let legalMove=[]
@@ -256,49 +257,102 @@ for (let i = 0; i < childclass.length; i++) {
         if (i==13 && j>0) {
             square.children[0].setAttribute('onClick','movepawn(this.parentElement.getAttribute("data-row"),this.parentElement.getAttribute("data-colmn"))')
         }
+        if (i==2 && j>0) {
+            square.children[0].setAttribute('onClick','moveBpawn(this.parentElement.getAttribute("data-row"),this.parentElement.getAttribute("data-colmn"))')
+        }
     }
 }
-const Wpawns= document.getElementsByClassName('Wp')
 //end
 board.addEventListener('click',(e)=>{
-console.log('a');
 let square=e.target.closest(".square")
 for (let legal =legalMove.length-1; legal >=0; legal--) {
-    console.log(legalMove[legal][0]==square.getAttribute('data-row')&& legalMove[legal][1]==square.getAttribute('data-colmn'))
+    //is legalmove
     if(legalMove[legal][0]==square.getAttribute('data-row')&& legalMove[legal][1]==square.getAttribute('data-colmn')){ 
-        console.log(NPr+(legal-legalMove.length),NPc);
-        console.log(NPr,NPc);
-        if(square.getAttribute('data-row')==Wpawns[NPc-1].parentElement.getAttribute('data-row')){
-            childclass[NPr+(legal-2)][NPc]=Wpawns[NPc-1]
-            childclass[NPr][NPc]=''}
-        else{childclass[NPr+1][NPc+(2*legal)-1]=Wpawns[NPc-1]
-            childclass[NPr][NPc]=''}
-        square.appendChild(Wpawns[NPc-1])
-        board.children[NPr*15+NPc].innerHTML=childclass[NPr][NPc]
-        console.log(Wpawns)
+        //is straight move
+        if(square.getAttribute('data-colmn')==board.children[PieceRow*15+PieceColmn].getAttribute('data-clomn')){
+            childclass[PieceRow+(legal-2)][PieceColmn]=board.children[PieceRow*15+PieceColmn].children[0]
+            childclass[PieceRow][PieceColmn]=''}
+        else if(square.getAttribute('data-colmn')!==board.children[PieceRow*15+PieceColmn].getAttribute('data-clomn') && square.getAttribute('data-row')!==board.children[PieceRow*15+PieceColmn].getAttribute('data-row') && square.innerHTML=='' && legalMove.includes([square.getAttribute('data-row'),square.getAttribute('data-colmn')])){
+            console.log(square.getAttribute('data-colmn')!==board.children[PieceRow*15+PieceColmn].getAttribute('data-clomn') && square.getAttribute('data-row')!==board.children[PieceRow*15+PieceColmn].getAttribute('data-row') && square.innerHTML=='')
+            childclass[PieceRow][Number(square.getAttribute('data-colmn'))]=''
+            console.log(board.children[PieceRow*15+Number(square.getAttribute('data-colmn'))])
+            board.children[PieceRow*15+Number(square.getAttribute('data-colmn'))].removeChild(board.children[PieceRow*15+Number(square.getAttribute('data-colmn'))].children[0])
+        }
+        //is capture move   capture move row    capture move colmn
+        else{if(childclass[legalMove[legal][0]][legalMove[legal][1]]!==''){
+            //is captured peice black
+            console.log(square.children[0].classList[0][0]=='B');
+            if(square.children[0].classList[0][0]!==childclass[PieceRow][PieceColmn].classList[0][0]){
+                childclass[PieceRow-1][PieceColmn+(-2*legal)+1]=board.children[PieceRow*15+PieceColmn].children[0]
+                childclass[PieceRow][PieceColmn]=''
+                console.log(board.children[PieceRow*15+PieceColmn]);}
+            else{continue}}}
+        console.log(square.getAttribute('data-colmn')!==board.children[PieceRow*15+PieceColmn].getAttribute('data-clomn') && square.getAttribute('data-row')!==board.children[PieceRow*15+PieceColmn].getAttribute('data-row') && square.innerHTML=='')
+        square.appendChild(board.children[PieceRow*15+PieceColmn].children[0])
+        board.children[PieceRow*15+PieceColmn].innerHTML=''
+        if(square.children.length>1){square.removeChild(square.children[0])}
+        console.log(turn=='B')
+        if(turn=='B'){turn='W'}
+        else{turn='B'}
         break
     }
     }})
-var NPr =0//2
-var NPc =0
+var PieceRow =0
+var PieceColmn=0
 function movepawn(pawnRow,pawncol){
+    if(turn=='W'){
     legalMove=[]
     console.log(pawnRow,pawncol);
-    NPr = Number(pawnRow)
-    NPc = Number(pawncol)
-    if(board.children[(NPr-1)*15+NPc].innerHTML==''){
-        legalMove.splice(0,0,[NPr-1,NPc])
+    PieceRow = Number(pawnRow)
+    PieceColmn = Number(pawncol)
+    if(board.children[(PieceRow-1)*15+PieceColmn].innerHTML==''){
+        legalMove.splice(0,0,[PieceRow-1,PieceColmn])
     }
-    if(board.children[(NPr-2)*15+NPc].innerHTML=='' && board.children[(NPr-1)*15+NPc].innerHTML==''){
-        legalMove.splice(0,0,[NPr-2,NPc])
+    if(board.children[(PieceRow-2)*15+PieceColmn].innerHTML=='' && board.children[(PieceRow-1)*15+PieceColmn].innerHTML==''){
+        legalMove.splice(0,0,[PieceRow-2,PieceColmn])
     }
-    if(board.children[(NPr-1)*15+NPc+1].innerHTML!==''){
-        legalMove.splice(0,0,[NPr-1,NPc-1])
+    if(board.children[(PieceRow-1)*15+PieceColmn+1].innerHTML!==''){
+        legalMove.splice(0,0,[PieceRow-1,PieceColmn+1])
     }
-    if(board.children[(NPr-1)*15+NPc-1].innerHTML!==''){
-        legalMove.splice(0,0,[NPr-1,NPc+1])
+    if(board.children[(PieceRow-1)*15+PieceColmn-1].innerHTML!==''){
+        legalMove.splice(0,0,[PieceRow-1,PieceColmn-1])
     }
-    console.log(legalMove);
+    if(board.children[(PieceRow)*15+PieceColmn-1].innerHTML!=='' && PieceRow==4){
+        console.log(childclass[PieceRow][PieceColmn+1].classList)
+        legalMove.splice(0,0,[PieceRow-1,PieceColmn-1])
+    }
+    if(board.children[(PieceRow)*15+PieceColmn+1].innerHTML!=='' && PieceRow==4){
+        legalMove.splice(0,0,[PieceRow-1,PieceColmn+1])
+    }
+    console.log(legalMove);}
+    console.log(turn)
+}
+function moveBpawn(pawnRow,pawncol){
+    if(turn=='B'){
+    legalMove=[]
+    console.log(pawnRow,pawncol);
+    PieceRow = Number(pawnRow)
+    PieceColmn = Number(pawncol)
+    if(board.children[(PieceRow+1)*15+PieceColmn].innerHTML==''){
+        legalMove.splice(0,0,[PieceRow+1,PieceColmn])
+    }
+    if(board.children[(PieceRow+2)*15+PieceColmn].innerHTML=='' && board.children[(PieceRow+1)*15+PieceColmn].innerHTML==''){
+        legalMove.splice(0,0,[PieceRow+2,PieceColmn])
+    }
+    if(board.children[(PieceRow+1)*15+PieceColmn+1].innerHTML!==''){
+        legalMove.splice(0,0,[PieceRow+1,PieceColmn+1])
+    }
+    if(board.children[(PieceRow+1)*15+PieceColmn-1].innerHTML!==''){
+        legalMove.splice(0,0,[PieceRow+1,PieceColmn-1])
+    }
+    if(board.children[(PieceRow)*15+PieceColmn-1].innerHTML!=='' && PieceRow==11){
+        legalMove.splice(0,0,[PieceRow+1,PieceColmn-1])
+    }
+    if(board.children[(PieceRow)*15+PieceColmn+1].innerHTML!=='' && PieceRow==11){
+        legalMove.splice(0,0,[PieceRow+1,PieceColmn+1])
+    }
+    console.log(legalMove);}
+    console.log(board.children[(PieceRow)*15+PieceColmn+1].innerHTML!=='' && PieceRow==4)
 }
 function moverook(mm,...gf2){
     for (let pi2 = 0; pi2< pieces.length; pi2++) {
