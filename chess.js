@@ -254,6 +254,7 @@ for (let i = 0; i < childclass.length; i++) {
             square.style.backgroundColor='wheat'
         }
         else{square.style.backgroundColor='brown'}
+        //when you click pawn do the function
         if (i==13 && j>0) {
             square.children[0].setAttribute('onClick','movepawn(this.parentElement.getAttribute("data-row"),this.parentElement.getAttribute("data-colmn"))')
         }
@@ -273,25 +274,20 @@ for (let legal =legalMove.length-1; legal >=0; legal--) {
             childclass[PieceRow+(legal-2)][PieceColmn]=board.children[PieceRow*15+PieceColmn].children[0]
             childclass[PieceRow][PieceColmn]=''}
         else if(square.getAttribute('data-colmn')!==board.children[PieceRow*15+PieceColmn].getAttribute('data-clomn') && square.getAttribute('data-row')!==board.children[PieceRow*15+PieceColmn].getAttribute('data-row') && square.innerHTML=='' && legalMove.includes([square.getAttribute('data-row'),square.getAttribute('data-colmn')])){
-            console.log(square.getAttribute('data-colmn')!==board.children[PieceRow*15+PieceColmn].getAttribute('data-clomn') && square.getAttribute('data-row')!==board.children[PieceRow*15+PieceColmn].getAttribute('data-row') && square.innerHTML=='')
             childclass[PieceRow][Number(square.getAttribute('data-colmn'))]=''
-            console.log(board.children[PieceRow*15+Number(square.getAttribute('data-colmn'))])
             board.children[PieceRow*15+Number(square.getAttribute('data-colmn'))].removeChild(board.children[PieceRow*15+Number(square.getAttribute('data-colmn'))].children[0])
         }
         //is capture move   capture move row    capture move colmn
         else{if(childclass[legalMove[legal][0]][legalMove[legal][1]]!==''){
-            //is captured peice black
-            console.log(square.children[0].classList[0][0]=='B');
+            //is captured piece has different color
             if(square.children[0].classList[0][0]!==childclass[PieceRow][PieceColmn].classList[0][0]){
                 childclass[PieceRow-1][PieceColmn+(-2*legal)+1]=board.children[PieceRow*15+PieceColmn].children[0]
-                childclass[PieceRow][PieceColmn]=''
-                console.log(board.children[PieceRow*15+PieceColmn]);}
+                childclass[PieceRow][PieceColmn]=''}
+            //if it is the same color
             else{continue}}}
-        console.log(square.getAttribute('data-colmn')!==board.children[PieceRow*15+PieceColmn].getAttribute('data-clomn') && square.getAttribute('data-row')!==board.children[PieceRow*15+PieceColmn].getAttribute('data-row') && square.innerHTML=='')
         square.appendChild(board.children[PieceRow*15+PieceColmn].children[0])
         board.children[PieceRow*15+PieceColmn].innerHTML=''
         if(square.children.length>1){square.removeChild(square.children[0])}
-        console.log(turn=='B')
         if(turn=='B'){turn='W'}
         else{turn='B'}
         break
@@ -300,9 +296,9 @@ for (let legal =legalMove.length-1; legal >=0; legal--) {
 var PieceRow =0
 var PieceColmn=0
 function movepawn(pawnRow,pawncol){
+    //if white to move
     if(turn=='W'){
     legalMove=[]
-    console.log(pawnRow,pawncol);
     PieceRow = Number(pawnRow)
     PieceColmn = Number(pawncol)
     if(board.children[(PieceRow-1)*15+PieceColmn].innerHTML==''){
@@ -323,9 +319,7 @@ function movepawn(pawnRow,pawncol){
     }
     if(board.children[(PieceRow)*15+PieceColmn+1].innerHTML!=='' && PieceRow==4){
         legalMove.splice(0,0,[PieceRow-1,PieceColmn+1])
-    }
-    console.log(legalMove);}
-    console.log(turn)
+    }}
 }
 function moveBpawn(pawnRow,pawncol){
     if(turn=='B'){

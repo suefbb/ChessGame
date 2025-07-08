@@ -427,6 +427,10 @@ board.addEventListener("click", (e) => {
         break;
       case "N":
         console.log(getKnightMoves(row, col, childclass));
+        break
+      case "Z":
+        console.log(getZebraMoves(row, col, childclass));
+        break
       default:
         console.log("Not programmed yet.");
     }
