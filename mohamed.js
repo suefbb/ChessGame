@@ -293,7 +293,7 @@ function render() {
     }
   });
 }
-function ZebMoves(row, col, directions, board) {
+function getSlideMoves(row, col, directions, board) {
   const pieceColor = board[row][col][0];
   const moves = [];
 
