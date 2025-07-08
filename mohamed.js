@@ -293,10 +293,7 @@ function render() {
     }
   });
 }
-function isValidSquare(row, col) {
-  return row >= 1 && row < BOARD_DIM && col >= 1 && col < BOARD_DIM;
-}
-function getSlideMoves(row, col, directions, board) {
+function ZebMoves(row, col, directions, board) {
   const pieceColor = board[row][col][0];
   const moves = [];
 
@@ -305,19 +302,31 @@ function getSlideMoves(row, col, directions, board) {
       // i represents distance from current piece.
       const newRow = row + dr * i;
       const newCol = col + dc * i;
-
-      if(i>1 && childclass[row][col][1]=='Z'){
-        let directions=[
-            [-1,0],
-            [0,1],
-            [0,-1],
-            [1,0],
-            [-1,-1],
-            [-1,1],
-            [1,-1],
-            [1,1]
-        ]
+      
+      if(i==2 && childclass[row][col][1]=='Z'){
+          let directions=[
+              [-1,-1],//main diagonal top left
+              [-1,0],//second diagonal top left
+              [-1,1],//main diagonal top right
+              [0,1],//second diagonal top right
+              [1,-1],//main diagonal bottom left
+              [0,-1],//second diagonal bottom left
+              [1,1],//main diagonal bottom right
+              [1,0]//second diagonal bottom right
+          ]
       }
+      else if(i!==2 && childclass[row][col][1]=='Z'){
+        let directions=[
+            [-1,-1],//main diagonal top left
+            [-1,0],//second diagonal top left
+            [-1,1],//main diagonal top right
+            [0,1],//second diagonal top right
+            [1,-1],//main diagonal bottom left
+            [0,-1],//second diagonal bottom left
+            [1,1],//main diagonal bottom right
+            [1,0]//second diagonal bottom right
+        ]
+     }
 
       // If we're getting out of the board's boundaries then stop.
       if (!isValidSquare(newRow, newCol)) break;
@@ -361,8 +370,12 @@ function getBishopMoves(row, col, board) {
 function getZebraMoves(row, col, board) {
   let directions = [
     [-1, -1],
+    [-1, -1],
+    [-1, 1],
     [-1, 1],
     [1, -1],
+    [1, -1],
+    [1, 1],
     [1, 1],
   ];
   let moves = [...getSlideMoves(row, col, directions, board)];
