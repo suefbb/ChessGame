@@ -1,8 +1,6 @@
 <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-<mask id="path-1-inside-1_12_13" fill="white">
-<path d="M30 31.5C30 29.2457 28.9464 27.0837 27.0711 25.4896C25.1957 23.8955 22.6522 23 20 23C17.3478 23 14.8043 23.8955 12.9289 25.4896C11.0536 27.0837 10 29.2457 10 31.5L20 31.5H30Z"/>
-</mask>
-<path d="M30 31.5C30 29.2457 28.9464 27.0837 27.0711 25.4896C25.1957 23.8955 22.6522 23 20 23C17.3478 23 14.8043 23.8955 12.9289 25.4896C11.0536 27.0837 10 29.2457 10 31.5L20 31.5H30Z" fill="white" stroke="black" mask="url(#path-1-inside-1_12_13)"/>
-<circle cx="20" cy="20" r="5.75" fill="white" stroke="black" stroke-width="0.5"/>
-<path d="M20 10.25C21.5634 10.25 22.75 11.2981 22.75 12.5C22.75 13.7019 21.5634 14.75 20 14.75C18.4366 14.75 17.25 13.7019 17.25 12.5C17.25 11.2981 18.4366 10.25 20 10.25Z" fill="white" stroke="black" stroke-width="0.5"/>
+<path d="M30 35.5C28.5 30 21.8 29.9 23 27.5H17C18.6 29.1 12 29.6667 11 35.5H30Z" fill="white" stroke="black" stroke-width="0.6"/>
+<path d="M10 35.25H31C31.4142 35.25 31.75 35.5858 31.75 36V38.75H9.25V36C9.25 35.5858 9.58579 35.25 10 35.25Z" fill="white" stroke="black" stroke-width="0.5"/>
+<path d="M26.7002 26.2998V27.7002H13.2998V26.2998H26.7002Z" fill="white" stroke="black" stroke-width="0.6"/>
+<circle cx="20" cy="19" r="6.65" fill="white" stroke="black" stroke-width="0.7"/>
 </svg>

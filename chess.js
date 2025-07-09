@@ -347,24 +347,25 @@ function getBishopMoves(row, col, board) {
   return moves;
 }
 function getKnightMoves(row, col, board) {
+  const pieceColor = board[row][col][0];
   let moves = [];
   const directions = [
-    { r: -2, c: -1 },
-    { r: -2, c: 1 },
-    { r: 2, c: -1 },
-    { r: 2, c: 1 },
-    { r: -1, c: -2 },
-    { r: 1, c: -2 },
-    { r: -1, c: 2 },
-    { r: 1, c: 2 },
+    [-2, -1],
+    [-2, 1],
+    [2, -1],
+    [2, 1],
+    [-1, -2],
+    [1, -2],
+    [-1, 2],
+    [1, 2],
   ];
-  for (const direction of directions) {
-    const newRow = row + direction.r;
-    const newCol = col + direction.c;
+  for (const [dr, dc] of directions) {
+    const newRow = row + dr;
+    const newCol = col + dc;
 
     if (isValidSquare(newRow, newCol)) {
       const targetSquare = board[newRow][newCol];
-      if (targetSquare == null || targetSquare.color != this.color) {
+      if (targetSquare == null || targetSquare[0] != pieceColor) {
         moves.push([newRow, newCol]);
       }
     }
@@ -374,26 +375,60 @@ function getKnightMoves(row, col, board) {
 createBoard();
 render();
 
+let selecetedPiece = null;
+let legalMoves = [];
+let currentTurn = "w";
 board.addEventListener("click", (e) => {
   let square = e.target.closest(".square");
   if (!square) return;
-  if (square.children.length > 0) {
-    const row = parseInt(square.dataset.row);
-    const col = parseInt(square.dataset.col);
-    console.log(row);
-    console.log(col);
-    console.log(childclass[row][col]);
-    switch (childclass[row][col][1]) {
+  const row = parseInt(square.dataset.row);
+  const col = parseInt(square.dataset.col);
+  if (!selecetedPiece) {
+    if (!square.children.length > 0) return;
+    if (childclass[row][col][0] != currentTurn) return;
+    selecetedPiece = {
+      row,
+      col,
+      piece: childclass[row][col],
+      color: childclass[row][col][0],
+      type: childclass[row][col][1],
+    };
+    switch (selecetedPiece.type) {
       case "R":
-        console.log(getRookMoves(row, col, childclass));
+        legalMoves = [
+          ...getRookMoves(selecetedPiece.row, selecetedPiece.col, childclass),
+        ];
         break;
       case "B":
-        console.log(getBishopMoves(row, col, childclass));
+        legalMoves = [
+          ...getBishopMoves(selecetedPiece.row, selecetedPiece.col, childclass),
+        ];
         break;
       case "N":
-        console.log(getKnightMoves(row, col, childclass));
+        legalMoves = [
+          ...getKnightMoves(selecetedPiece.row, selecetedPiece.col, childclass),
+        ];
+        break;
       default:
         console.log("Not programmed yet.");
+    }
+  } else {
+    const isLegalMove = legalMoves.some((move) => {
+      return move[0] == row && move[1] == col;
+    });
+    if (isLegalMove) {
+      childclass[row][col] = selecetedPiece.piece;
+      childclass[selecetedPiece.row][selecetedPiece.col] = null;
+      currentTurn = currentTurn == "w" ? "b" : "w";
+      selecetedPiece = null;
+      legalMoves = [];
+      render();
+    } else {
+      console.log("Not a legal Move");
+      console.log(legalMoves);
+      selecetedPiece = null;
+      legalMoves = [];
+      render();
     }
   }
 });
