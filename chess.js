@@ -309,32 +309,63 @@ function getSlideMoves(row, col, directions, board) {
       const newRow = row + dr * i;
       const newCol = col + dc * i;
 
-      if (i == 2 && childclass[row][col][1] == "Z") {
-        let directions = [
-          [-1, -1], //main diagonal top left
-          [-1, 0], //second diagonal top left
-          [-1, 1], //main diagonal top right
-          [0, 1], //second diagonal top right
-          [1, -1], //main diagonal bottom left
-          [0, -1], //second diagonal bottom left
-          [1, 1], //main diagonal bottom right
-          [1, 0], //second diagonal bottom right
-        ];
-      } else if (i !== 2 && childclass[row][col][1] == "Z") {
-        let directions = [
-          [-1, -1], //main diagonal top left
-          [-1, 0], //second diagonal top left
-          [-1, 1], //main diagonal top right
-          [0, 1], //second diagonal top right
-          [1, -1], //main diagonal bottom left
-          [0, -1], //second diagonal bottom left
-          [1, 1], //main diagonal bottom right
-          [1, 0], //second diagonal bottom right
-        ];
-      }
-
       // If we're getting out of the board's boundaries then stop.
       if (!isValidSquare(newRow, newCol)) break;
+
+      const targetPiece = board[newRow][newCol];
+      // If it's an empty square then add it to the available moves and continue looping.
+      if (targetPiece == null) moves.push([newRow, newCol]);
+      // It it's of an other color, add it and stop looping.
+      // else, it's of the same color. Don't add it and stop looping.
+      else {
+        if (targetPiece[0] != pieceColor) {
+          moves.push([newRow, newCol]);
+          break;
+        }
+        break;
+      }
+    }
+  }
+  return moves;
+}
+function getZSlideMoves(row, col, directions, board) {
+  const pieceColor = board[row][col][0];
+  const moves = [];
+  let z = -1
+  for (const [dr, dc] of directions) {
+    for (let i = 1; ; i++) {
+      if(i==1){z++;
+        directions = [
+          [-1, -1],
+          [-1, -1],
+          [-1, 1],
+          [-1, 1],
+          [1, -1],
+          [1, -1],
+          [1, 1],
+          [1, 1],
+        ];}
+      console.log(i>=2 && childclass[row][col][1]=='Z');
+      if(i>=2 && childclass[row][col][1]=='Z'){
+        directions=[
+          [-1,-1],//main diagonal top left
+          [-1,-(i-1)/i],//second diagonal top left
+          [-1,1],//main diagonal top right
+          [-(i-1)/i,1],//second diagonal top right
+          [1,-1],//main diagonal bottom left
+          [(i-1)/i,-1],//second diagonal bottom left
+          [1,1],//main diagonal bottom right
+          [1,(i-1)/i]//second diagonal bottom right
+        ]
+      }
+      // i represents distance from current piece.
+      const newRow = row + directions[z][0] * i;
+      const newCol = col + directions[z][1] * i;
+      console.log(directions[z][0] * i , directions[z][0] , z , -(i-1)/i , i );
+      
+
+      // If we're getting out of the board's boundaries then stop.
+      if (!isValidSquare(newRow, newCol))break;
 
       const targetPiece = board[newRow][newCol];
       // If it's an empty square then add it to the available moves and continue looping.
@@ -410,7 +441,7 @@ function getZebraMoves(row, col, board) {
     [1, 1],
     [1, 1],
   ];
-  let moves = [...getSlideMoves(row, col, directions, board)];
+  let moves = [...getZSlideMoves(row, col, directions, board)];
   return moves;
 }
 function getPawnMoves(row, col, board) {
