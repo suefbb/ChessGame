@@ -331,9 +331,11 @@ function getSlideMoves(row, col, directions, board) {
 function getZSlideMoves(row, col, directions, board) {
   const pieceColor = board[row][col][0];
   const moves = [];
+  // z is an index in directions 
   let z = -1
   for (const [dr, dc] of directions) {
     for (let i = 1; ; i++) {
+      //get top left , top right , bottom left and bottom right squares by setting directions to bishop directions
       if(i==1){z++;
         directions = [
           [-1, -1],
@@ -345,7 +347,8 @@ function getZSlideMoves(row, col, directions, board) {
           [1, 1],
           [1, 1],
         ];}
-      console.log(i>=2 && childclass[row][col][1]=='Z');
+      // get fan squares and diagonals by repeating 1 or -1 another time 
+      // newRow = row -1 , row -1 , row -2 , row -3 , row -4 .....
       if(i>=2 && childclass[row][col][1]=='Z'){
         directions=[
           [-1,-1],//main diagonal top left
