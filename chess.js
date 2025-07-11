@@ -328,6 +328,63 @@ function getSlideMoves(row, col, directions, board) {
   }
   return moves;
 }
+//ssss
+function getSSlideMoves(row, col, directions, board) {
+  const pieceColor = board[row][col][0];
+  const moves = [];
+  let z = -1
+  for (const [dr, dc] of directions) {
+    z++
+    for (let i = 1; ; i++) {
+      if(i%2==0){
+        directions = [
+          [-2, 0],
+          [-2, 0],
+          [0, 2],
+          [0, 2],
+          [0, -2],
+          [0, -2],
+          [2, 0],
+          [2, 0],
+        ];}
+      else{
+        directions=[
+          [-2, -1/i],
+          [-2, 1/i],
+          [-1/i, 2],
+          [1/i, 2],
+          [-1/i, -2],
+          [1/i, -2],
+          [2, -1/i],
+          [2, 1/i]
+        ]}
+      // i represents distance from current piece.
+      console.log(z);
+      const newRow = row + directions[z][0] * i;
+      const newCol = col + directions[z][1] * i;
+      console.log(newCol , newRow);
+      
+
+      // If we're getting out of the board's boundaries then stop.
+      if (!isValidSquare(newRow, newCol))break;
+
+      const targetPiece = board[newRow][newCol];
+      // If it's an empty square then add it to the available moves and continue looping.
+      if (targetPiece == null) moves.push([newRow, newCol]);
+      // It it's of an other color, add it and stop looping.
+      // else, it's of the same color. Don't add it and stop looping.
+      else {
+        if (targetPiece[0] != pieceColor) {
+          moves.push([newRow, newCol]);
+          break;
+        }
+        break;
+      }
+    }
+  }
+  return moves;
+}
+//ssss
 function getZSlideMoves(row, col, directions, board) {
   const pieceColor = board[row][col][0];
   const moves = [];
@@ -447,6 +504,22 @@ function getZebraMoves(row, col, board) {
   let moves = [...getZSlideMoves(row, col, directions, board)];
   return moves;
 }
+//ssss
+function getSnakeMoves(row, col, board) {
+  let directions = [
+    [-2, -1],
+    [-2, 1],
+    [-1, 2],
+    [1, 2],
+    [-1, -2],
+    [1, -2],
+    [2, -1],
+    [2, 1],
+  ];
+  let moves = [...getSSlideMoves(row, col, directions, board)];
+  return moves;
+}
+//ssss
 function getPawnMoves(row, col, board) {
   let moves = [];
   const pieceColor = board[row][col][0];
@@ -536,6 +609,13 @@ board.addEventListener("click", (e) => {
           ...getPawnMoves(selectedPiece.row, selectedPiece.col, childclass),
         ];
         break;
+        //ssss
+        case "S":
+          legalMoves = [
+            ...getSnakeMoves(selectedPiece.row, selectedPiece.col, childclass),
+          ];
+        break;
+        //ssss
       default:
         console.log("Not programmed yet.");
     }
