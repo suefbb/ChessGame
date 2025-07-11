@@ -347,8 +347,8 @@ function getZSlideMoves(row, col, directions, board) {
           [1, 1],
           [1, 1],
         ];}
-      // get fan squares and diagonals by repeating 1 or -1 another time 
-      // newRow = row -1 , row -1 , row -2 , row -3 , row -4 .....
+      // get fan squares and diagonals by repeating 1 or -1 another time in just second diagonals 
+      // newRow = row -1 , row -1 , row -2 , row -3 , row -4 ..... 
       if(i>=2 && childclass[row][col][1]=='Z'){
         directions=[
           [-1,-1],//main diagonal top left
