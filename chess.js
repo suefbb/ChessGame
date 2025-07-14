@@ -20,7 +20,7 @@ var childclass = [
     "bZ",
     null,
     "bS",
-    null,
+    "bQ",
     null,
     null,
     null,
@@ -241,7 +241,7 @@ var childclass = [
     "wZ",
     null,
     "wS",
-    null,
+    "wQ",
     null,
     null,
     null,
@@ -332,11 +332,11 @@ function getSlideMoves(row, col, directions, board) {
 function getSSlideMoves(row, col, directions, board) {
   const pieceColor = board[row][col][0];
   const moves = [];
-  let z = -1
+  let z = -1;
   for (const [dr, dc] of directions) {
-    z++
+    z++;
     for (let i = 1; ; i++) {
-      if(i%2==0){
+      if (i % 2 == 0) {
         directions = [
           [-2, 0],
           [-2, 0],
@@ -346,27 +346,27 @@ function getSSlideMoves(row, col, directions, board) {
           [0, -2],
           [2, 0],
           [2, 0],
-        ];}
-      else{
-        directions=[
-          [-2, -1/i],
-          [-2, 1/i],
-          [-1/i, 2],
-          [1/i, 2],
-          [-1/i, -2],
-          [1/i, -2],
-          [2, -1/i],
-          [2, 1/i]
-        ]}
+        ];
+      } else {
+        directions = [
+          [-2, -1 / i],
+          [-2, 1 / i],
+          [-1 / i, 2],
+          [1 / i, 2],
+          [-1 / i, -2],
+          [1 / i, -2],
+          [2, -1 / i],
+          [2, 1 / i],
+        ];
+      }
       // i represents distance from current piece.
       console.log(z);
       const newRow = row + directions[z][0] * i;
       const newCol = col + directions[z][1] * i;
-      console.log(newCol , newRow);
-      
+      console.log(newCol, newRow);
 
       // If we're getting out of the board's boundaries then stop.
-      if (!isValidSquare(newRow, newCol))break;
+      if (!isValidSquare(newRow, newCol)) break;
 
       const targetPiece = board[newRow][newCol];
       // If it's an empty square then add it to the available moves and continue looping.
@@ -388,12 +388,13 @@ function getSSlideMoves(row, col, directions, board) {
 function getZSlideMoves(row, col, directions, board) {
   const pieceColor = board[row][col][0];
   const moves = [];
-  // z is an index in directions 
-  let z = -1
+  // z is an index in directions
+  let z = -1;
   for (const [dr, dc] of directions) {
     for (let i = 1; ; i++) {
       //get top left , top right , bottom left and bottom right squares by setting directions to bishop directions
-      if(i==1){z++;
+      if (i == 1) {
+        z++;
         directions = [
           [-1, -1],
           [-1, -1],
@@ -403,29 +404,29 @@ function getZSlideMoves(row, col, directions, board) {
           [1, -1],
           [1, 1],
           [1, 1],
-        ];}
-      // get fan squares and diagonals by repeating 1 or -1 another time in just second diagonals 
-      // newRow = row -1 , row -1 , row -2 , row -3 , row -4 ..... 
-      if(i>=2 && childclass[row][col][1]=='Z'){
-        directions=[
-          [-1,-1],//main diagonal top left
-          [-1,-(i-1)/i],//second diagonal top left
-          [-1,1],//main diagonal top right
-          [-(i-1)/i,1],//second diagonal top right
-          [1,-1],//main diagonal bottom left
-          [(i-1)/i,-1],//second diagonal bottom left
-          [1,1],//main diagonal bottom right
-          [1,(i-1)/i]//second diagonal bottom right
-        ]
+        ];
+      }
+      // get fan squares and diagonals by repeating 1 or -1 another time in just second diagonals
+      // newRow = row -1 , row -1 , row -2 , row -3 , row -4 .....
+      if (i >= 2 && childclass[row][col][1] == "Z") {
+        directions = [
+          [-1, -1], //main diagonal top left
+          [-1, -(i - 1) / i], //second diagonal top left
+          [-1, 1], //main diagonal top right
+          [-(i - 1) / i, 1], //second diagonal top right
+          [1, -1], //main diagonal bottom left
+          [(i - 1) / i, -1], //second diagonal bottom left
+          [1, 1], //main diagonal bottom right
+          [1, (i - 1) / i], //second diagonal bottom right
+        ];
       }
       // i represents distance from current piece.
       const newRow = row + directions[z][0] * i;
       const newCol = col + directions[z][1] * i;
-      console.log(directions[z][0] * i , directions[z][0] , z , -(i-1)/i , i );
-      
+      console.log(directions[z][0] * i, directions[z][0], z, -(i - 1) / i, i);
 
       // If we're getting out of the board's boundaries then stop.
-      if (!isValidSquare(newRow, newCol))break;
+      if (!isValidSquare(newRow, newCol)) break;
 
       const targetPiece = board[newRow][newCol];
       // If it's an empty square then add it to the available moves and continue looping.
@@ -562,6 +563,24 @@ function getPawnMoves(row, col, board) {
   }
   return moves;
 }
+
+function getQueenMoves(row, col, board) {
+  let moves = [];
+  const directions = [
+    [-1, 0],
+    [1, 0],
+    [0, -1],
+    [0, 1],
+    [-1, -1],
+    [-1, 1],
+    [1, -1],
+    [1, 1],
+  ];
+
+  moves = getSlideMoves(row, col, directions, board);
+  return moves;
+}
+
 createBoard();
 render();
 
@@ -609,13 +628,18 @@ board.addEventListener("click", (e) => {
           ...getPawnMoves(selectedPiece.row, selectedPiece.col, childclass),
         ];
         break;
-        //ssss
-        case "S":
-          legalMoves = [
-            ...getSnakeMoves(selectedPiece.row, selectedPiece.col, childclass),
-          ];
+      //ssss
+      case "S":
+        legalMoves = [
+          ...getSnakeMoves(selectedPiece.row, selectedPiece.col, childclass),
+        ];
         break;
-        //ssss
+      //ssss
+      case "Q":
+        legalMoves = [
+          ...getQueenMoves(selectedPiece.row, selectedPiece.col, childclass),
+        ];
+        break;
       default:
         console.log("Not programmed yet.");
     }
