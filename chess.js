@@ -328,6 +328,34 @@ function getSlideMoves(row, col, directions, board) {
   }
   return moves;
 }
+
+function getKnightMoves(row, col, board) {
+  const pieceColor = board[row][col][0];
+  let moves = [];
+  const directions = [
+    [-2, -1],
+    [-2, 1],
+    [2, -1],
+    [2, 1],
+    [-1, -2],
+    [1, -2],
+    [-1, 2],
+    [1, 2],
+  ];
+  for (const [dr, dc] of directions) {
+    const newRow = row + dr;
+    const newCol = col + dc;
+
+    if (isValidSquare(newRow, newCol)) {
+      const targetSquare = board[newRow][newCol];
+      if (targetSquare == null || targetSquare[0] != pieceColor) {
+        moves.push([newRow, newCol]);
+      }
+    }
+  }
+  return moves;
+}
+
 //ssss
 function getSSlideMoves(row, col, directions, board) {
   const pieceColor = board[row][col][0];
@@ -464,32 +492,6 @@ function getBishopMoves(row, col, board) {
   let moves = [...getSlideMoves(row, col, directions, board)];
   return moves;
 }
-function getKnightMoves(row, col, board) {
-  const pieceColor = board[row][col][0];
-  let moves = [];
-  const directions = [
-    [-2, -1],
-    [-2, 1],
-    [2, -1],
-    [2, 1],
-    [-1, -2],
-    [1, -2],
-    [-1, 2],
-    [1, 2],
-  ];
-  for (const [dr, dc] of directions) {
-    const newRow = row + dr;
-    const newCol = col + dc;
-
-    if (isValidSquare(newRow, newCol)) {
-      const targetSquare = board[newRow][newCol];
-      if (targetSquare == null || targetSquare[0] != pieceColor) {
-        moves.push([newRow, newCol]);
-      }
-    }
-  }
-  return moves;
-}
 
 function getZebraMoves(row, col, board) {
   let directions = [
@@ -599,7 +601,6 @@ board.addEventListener("click", (e) => {
       row,
       col,
       piece: childclass[row][col],
-
       type: childclass[row][col][1],
     };
     switch (selectedPiece.type) {
@@ -642,7 +643,9 @@ board.addEventListener("click", (e) => {
         break;
       default:
         console.log("Not programmed yet.");
+        break;
     }
+    showHints(legalMoves);
   } else {
     const isLegalMove = legalMoves.some((move) => {
       return move[0] == row && move[1] == col;
@@ -650,6 +653,7 @@ board.addEventListener("click", (e) => {
     if (isLegalMove) {
       childclass[row][col] = selectedPiece.piece;
       childclass[selectedPiece.row][selectedPiece.col] = null;
+      clearHints(legalMoves);
       currentTurn = currentTurn == "w" ? "b" : "w";
       selectedPiece = null;
       legalMoves = [];
@@ -657,6 +661,7 @@ board.addEventListener("click", (e) => {
     } else {
       console.log("Not a legal Move");
       console.log(legalMoves);
+      clearHints(legalMoves);
       selectedPiece = null;
       legalMoves = [];
       render();
@@ -716,3 +721,45 @@ let sec = document.getElementById("sec");
 //          console.log(min.innerHTML,':',tensec.innerHTML,sec.innerHTML)
 //        },1000)}}
 //}
+
+function showHints(coords) {
+  const squares = getSquaresByCoords(coords);
+  squares.forEach((square, index) => {
+    const [row, col] = coords[index];
+    if (isCapture(row, col, currentTurn)) {
+      square.classList.add("capture-hint");
+    } else {
+      square.classList.add("move-hint");
+    }
+    square.classList.add("hint");
+  });
+}
+
+function clearHints(coords) {
+  const squares = getSquaresByCoords(coords);
+  squares.forEach((square) => {
+    square.classList.remove("move-hint");
+    square.classList.remove("capture-hint");
+    square.classList.remove("hint");
+  });
+}
+
+function getSquaresByCoords(coords) {
+  let squares = [];
+  for (i = 0; i < coords.length; i++) {
+    squares.push(
+      document.querySelector(
+        `.square[data-row="${coords[i][0]}"][data-col="${coords[i][1]}"]`
+      )
+    );
+  }
+  return squares;
+}
+
+function isCapture(row, col, color) {
+  return (
+    isValidSquare(row, col) &&
+    childclass[row][col] &&
+    childclass[row][col][0] != color
+  );
+}

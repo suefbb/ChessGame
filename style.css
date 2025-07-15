@@ -5,16 +5,26 @@
   grid-template-rows: 20px repeat(14, 43px);
   justify-content: center;
 }
-.square {
+/* .square {
   width: 43px;
   height: 43px;
-}
+} */
 
 .light-square {
   background-color: wheat;
 }
 .dark-square {
   background-color: brown;
+}
+
+.move-hint {
+  background-color: aquamarine;
+}
+.capture-hint {
+  background-color: red;
+}
+.hint {
+  border: 1px solid black;
 }
 /*.board2 فوق
   البداية
