@@ -692,38 +692,6 @@ board.addEventListener("click", (e) => {
     }
   }
 });
-//بداية كود الدوائر
-let back_color = document.getElementById("back_color");
-let is_active = document.getElementById("is_active");
-let button = document.getElementById("button1");
-function show_imgnsqr(i) {
-  if (is_active.value == "T") {
-    p.style.setProperty("z-index", "1000");
-    imgn_sqr.style.setProperty("display", "none");
-    imgn_sqr.style.setProperty("z-index", "800");
-    console.log(p.style.zIndex);
-    console.log(imgn_sqr.style.zIndex);
-  }
-  imgn_sqr.children[i].children[0].style.display = "block";
-  imgn_sqr.children[i].children[0].style.borderColor = back_color.value;
-}
-function rmv() {
-  for (let e = 0; e < imgn_sqr.children.length - 2; e++) {
-    imgn_sqr.children[e + 2].children[0].style.display = "none";
-  }
-}
-function hello() {
-  console.log(is_active.value == "F");
-  if (is_active.value == "F") {
-    p.style.setProperty("z-index", "0.5");
-    imgn_sqr.style.setProperty("display", "grid");
-    imgn_sqr.style.setProperty("z-index", "800");
-    console.log(p.style.zIndex);
-    console.log(imgn_sqr.style.zIndex);
-    console.log(imgn_sqr.style.display);
-  }
-}
-//نهايته
 let min = document.getElementById("min");
 let tensec = document.getElementById("tensec");
 let sec = document.getElementById("sec");
