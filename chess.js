@@ -302,19 +302,34 @@ function isValidSquare(row, col) {
 function getSlideMoves(row, col, directions, board) {
   const pieceColor = board[row][col][0];
   const moves = [];
-
+  // i made the z let becuase dr and dc are the fake directions
+  let z = -1
   for (const [dr, dc] of directions) {
+    z++
     for (let i = 1; ; i++) {
+      //when you move a crocodile make the directions let = crocodile direction
+      if(childclass[row][col][1] == 'C'){
+        directions = [
+          [0, 1],
+          [(i-1)/i, 1/i],
+          [(i-1)/i, -1/i],
+          [0, -1],
+          [(-i+1)/i , -1/i],
+          [(-i+1/i) , 1/i]
+        ];}
+      console.log(directions);
       // i represents distance from current piece.
-      const newRow = row + dr * i;
-      const newCol = col + dc * i;
+      const newRow = row + directions[z][0] * i;
+      const newCol = col + directions[z][1] * i;
+      console.log(newRow , newCol);
 
       // If we're getting out of the board's boundaries then stop.
-      if (!isValidSquare(newRow, newCol)) break;
+      if (!isValidSquare(newRow, newCol))break;
 
       const targetPiece = board[newRow][newCol];
       // If it's an empty square then add it to the available moves and continue looping.
-      if (targetPiece == null) moves.push([newRow, newCol]);
+      if (targetPiece == null) {moves.push([newRow, newCol]);
+        console.log(moves);}
       // It it's of an other color, add it and stop looping.
       // else, it's of the same color. Don't add it and stop looping.
       else {
@@ -328,7 +343,6 @@ function getSlideMoves(row, col, directions, board) {
   }
   return moves;
 }
-
 function getKnightMoves(row, col, board) {
   const pieceColor = board[row][col][0];
   let moves = [];
@@ -582,6 +596,12 @@ function getQueenMoves(row, col, board) {
   moves = getSlideMoves(row, col, directions, board);
   return moves;
 }
+function getCrocodileMoves(row, col, board) {
+  //i wrote any directions becuase i can't put the real dircetions here becuase i is not defiend
+  let directions = [[0,1],[1,1],[1,-1],[0,-1],[-1,-1],[-1,1]]
+  let moves = [...getSlideMoves(row, col, directions, board)];
+  return moves;
+}
 
 createBoard();
 render();
@@ -635,10 +655,14 @@ board.addEventListener("click", (e) => {
           ...getSnakeMoves(selectedPiece.row, selectedPiece.col, childclass),
         ];
         break;
-      //ssss
       case "Q":
         legalMoves = [
           ...getQueenMoves(selectedPiece.row, selectedPiece.col, childclass),
+        ];
+        break;
+      case "C":
+        legalMoves = [
+          ...getCrocodileMoves(selectedPiece.row, selectedPiece.col, childclass),
         ];
         break;
       default:
