@@ -315,7 +315,7 @@ function getSlideMoves(row, col, directions, board) {
           [(i-1)/i, -1/i],
           [0, -1],
           [(-i+1)/i , -1/i],
-          [(-i+1/i) , 1/i]
+          [(-i+1)/i , 1/i]
         ];}
       console.log(directions);
       // i represents distance from current piece.
