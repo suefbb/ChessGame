@@ -315,20 +315,13 @@ function getSlideMoves(row, col, directions, board) {
       if (!isValidSquare(newRow, newCol)) break;
 
       const targetPiece = board[newRow][newCol];
-      // If it's an empty square then add it to the available moves and continue looping.
-      if (targetPiece == null) {
+      if (targetPiece && targetPiece[0] != pieceColor) {
         moves.push([newRow, newCol]);
-        console.log(moves);
-      }
-      // It it's of an other color, add it and stop looping.
-      // else, it's of the same color. Don't add it and stop looping.
-      else {
-        if (targetPiece[0] != pieceColor) {
-          moves.push([newRow, newCol]);
-          break;
-        }
         break;
       }
+      if (targetPiece && targetPiece[0] == pieceColor) break;
+      moves.push([newRow, newCol]);
+      console.log(moves);
     }
   }
   return moves;
@@ -347,22 +340,14 @@ function getCSlideMoves(row, col, pieceColor, directions, board) {
 
       // If we're getting out of the board's boundaries then stop.
       if (!isValidSquare(newRow, newCol)) break;
-
       const targetPiece = board[newRow][newCol];
-      // If it's an empty square then add it to the available moves and continue looping.
-      if (targetPiece == null) {
+      if (targetPiece && targetPiece[0] != pieceColor) {
         moves.push([newRow, newCol]);
-        console.log(moves);
-      }
-      // It it's of an other color, add it and stop looping.
-      // else, it's of the same color. Don't add it and stop looping.
-      else {
-        if (targetPiece[0] != pieceColor) {
-          moves.push([newRow, newCol]);
-          break;
-        }
         break;
       }
+      if (targetPiece && targetPiece[0] == pieceColor) break;
+      moves.push([newRow, newCol]);
+      console.log(moves);
     }
   }
   return moves;
