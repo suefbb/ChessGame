@@ -302,34 +302,58 @@ function isValidSquare(row, col) {
 function getSlideMoves(row, col, directions, board) {
   const pieceColor = board[row][col][0];
   const moves = [];
-  // i made the z let becuase dr and dc are the fake directions
-  let z = -1
   for (const [dr, dc] of directions) {
-    z++
     for (let i = 1; ; i++) {
       //when you move a crocodile make the directions let = crocodile direction
-      if(childclass[row][col][1] == 'C'){
-        directions = [
-          [0, 1],
-          [(i-1)/i, 1/i],
-          [(i-1)/i, -1/i],
-          [0, -1],
-          [(-i+1)/i , -1/i],
-          [(-i+1)/i , 1/i]
-        ];}
       console.log(directions);
       // i represents distance from current piece.
-      const newRow = row + directions[z][0] * i;
-      const newCol = col + directions[z][1] * i;
-      console.log(newRow , newCol);
+      const newRow = row + dr * i;
+      const newCol = col + dc * i;
+      console.log(newRow, newCol);
 
       // If we're getting out of the board's boundaries then stop.
-      if (!isValidSquare(newRow, newCol))break;
+      if (!isValidSquare(newRow, newCol)) break;
 
       const targetPiece = board[newRow][newCol];
       // If it's an empty square then add it to the available moves and continue looping.
-      if (targetPiece == null) {moves.push([newRow, newCol]);
-        console.log(moves);}
+      if (targetPiece == null) {
+        moves.push([newRow, newCol]);
+        console.log(moves);
+      }
+      // It it's of an other color, add it and stop looping.
+      // else, it's of the same color. Don't add it and stop looping.
+      else {
+        if (targetPiece[0] != pieceColor) {
+          moves.push([newRow, newCol]);
+          break;
+        }
+        break;
+      }
+    }
+  }
+  return moves;
+}
+
+function getCSlideMoves(row, col, pieceColor, directions, board) {
+  const moves = [];
+  for (const [dr, dc] of directions) {
+    for (let i = 0; ; i++) {
+      //when you move a crocodile make the directions let = crocodile direction
+      console.log(directions);
+      // i represents distance from current piece.
+      const newRow = row + dr * i;
+      const newCol = col + dc * i;
+      console.log(newRow, newCol);
+
+      // If we're getting out of the board's boundaries then stop.
+      if (!isValidSquare(newRow, newCol)) break;
+
+      const targetPiece = board[newRow][newCol];
+      // If it's an empty square then add it to the available moves and continue looping.
+      if (targetPiece == null) {
+        moves.push([newRow, newCol]);
+        console.log(moves);
+      }
       // It it's of an other color, add it and stop looping.
       // else, it's of the same color. Don't add it and stop looping.
       else {
@@ -463,9 +487,9 @@ function getZSlideMoves(row, col, directions, board) {
         ];
       }
       // i represents distance from current piece.
-      const newRow = row + directions[z][0] * i;
-      const newCol = col + directions[z][1] * i;
-      console.log(directions[z][0] * i, directions[z][0], z, -(i - 1) / i, i);
+      const newRow = row + dr * i;
+      const newCol = col + dc * i;
+      console.log(dr * i, dr, z, -(i - 1) / i, i);
 
       // If we're getting out of the board's boundaries then stop.
       if (!isValidSquare(newRow, newCol)) break;
@@ -552,12 +576,14 @@ function getPawnMoves(row, col, board) {
     }
   }
   if (
+    isValidSquare(row + direction, col - 1) &&
     board[row + direction][col - 1] &&
     board[row + direction][col - 1][0] !== pieceColor
   ) {
     moves.push([row + direction, col - 1]);
   }
   if (
+    isValidSquare(row + direction, col + 1) &&
     board[row + direction][col + 1] &&
     board[row + direction][col + 1][0] !== pieceColor
   ) {
@@ -597,9 +623,30 @@ function getQueenMoves(row, col, board) {
   return moves;
 }
 function getCrocodileMoves(row, col, board) {
-  //i wrote any directions becuase i can't put the real dircetions here becuase i is not defiend
-  let directions = [[0,1],[1,1],[1,-1],[0,-1],[-1,-1],[-1,1]]
-  let moves = [...getSlideMoves(row, col, directions, board)];
+  // Bruh, dude I'm not a maths teacher.
+  const pieceColor = board[row][col][0];
+  let moves = [];
+  let leftSideDirections = [
+    [-1, 0],
+    [1, 0],
+    [0, -1],
+  ];
+  let rightSideDirections = [
+    [-1, 0],
+    [1, 0],
+    [0, 1],
+  ];
+  let leftSide, rightSide;
+  if (isValidSquare(row, col - 1)) leftSide = board[row][col - 1];
+  if (isValidSquare(row, col + 1)) rightSide = board[row][col + 1];
+  if (!leftSide)
+    moves.push(
+      ...getCSlideMoves(row, col - 1, pieceColor, leftSideDirections, board)
+    );
+  if (!rightSide)
+    moves.push(
+      ...getCSlideMoves(row, col + 1, pieceColor, rightSideDirections, board)
+    );
   return moves;
 }
 
@@ -612,11 +659,11 @@ let currentTurn = "w";
 board.addEventListener("click", (e) => {
   let square = e.target.closest(".square");
   if (!square) return;
-  const row = parseInt(square.dataset.row);
-  const col = parseInt(square.dataset.col);
+  const row = Number(square.dataset.row);
+  const col = Number(square.dataset.col);
   if (!selectedPiece) {
-    if (!square.children.length > 0) return;
-    if (childclass[row][col][0] != currentTurn) return;
+    if (!square.children.length > 0 || childclass[row][col][0] != currentTurn)
+      return;
     selectedPiece = {
       row,
       col,
@@ -662,7 +709,11 @@ board.addEventListener("click", (e) => {
         break;
       case "C":
         legalMoves = [
-          ...getCrocodileMoves(selectedPiece.row, selectedPiece.col, childclass),
+          ...getCrocodileMoves(
+            selectedPiece.row,
+            selectedPiece.col,
+            childclass
+          ),
         ];
         break;
       default:
@@ -670,49 +721,28 @@ board.addEventListener("click", (e) => {
         break;
     }
     showHints(legalMoves);
-  } else {
-    const isLegalMove = legalMoves.some((move) => {
-      return move[0] == row && move[1] == col;
-    });
-    if (isLegalMove) {
-      childclass[row][col] = selectedPiece.piece;
-      childclass[selectedPiece.row][selectedPiece.col] = null;
-      clearHints(legalMoves);
-      currentTurn = currentTurn == "w" ? "b" : "w";
-      selectedPiece = null;
-      legalMoves = [];
-      render();
-    } else {
-      console.log("Not a legal Move");
-      console.log(legalMoves);
-      clearHints(legalMoves);
-      selectedPiece = null;
-      legalMoves = [];
-      render();
-    }
+    return;
   }
+  const isLegalMove = legalMoves.some((move) => {
+    return move[0] == row && move[1] == col;
+  });
+  if (!isLegalMove) {
+    console.log("Not a legal Move");
+    console.log(legalMoves);
+    clearHints(legalMoves);
+    selectedPiece = null;
+    legalMoves = [];
+    render();
+    return;
+  }
+  childclass[row][col] = selectedPiece.piece;
+  childclass[selectedPiece.row][selectedPiece.col] = null;
+  clearHints(legalMoves);
+  currentTurn = currentTurn == "w" ? "b" : "w";
+  selectedPiece = null;
+  legalMoves = [];
+  render();
 });
-let min = document.getElementById("min");
-let tensec = document.getElementById("tensec");
-let sec = document.getElementById("sec");
-//for (let tm = 0; tm < 1; tm++) {
-//    if(sec.innerHTML=='0' && tensec.innerHTML=='0'){
-//    setInterval(function setmin() {
-//      min.innerHTML=String(Number(min.innerHTML)-1)
-//      tensec.innerHTML='5'
-//    },1000)}
-//    for (let tts = 0; tts < 1; tts++) {
-//        if(sec.innerHTML=='0'){
-//        setInterval(function settensec() {
-//          tensec.innerHTML=String(Number(tensec.innerHTML)-1)
-//          sec.innerHTML='9'
-//        },1000)}
-//        for (let ti = 0; ti < 1; ti++) {
-//        setInterval(function setsec() {
-//          sec.innerHTML=String(Number(sec.innerHTML)-1)
-//          console.log(min.innerHTML,':',tensec.innerHTML,sec.innerHTML)
-//        },1000)}}
-//}
 
 function showHints(coords) {
   const squares = getSquaresByCoords(coords);
@@ -754,4 +784,36 @@ function isCapture(row, col, color) {
     childclass[row][col] &&
     childclass[row][col][0] != color
   );
+}
+
+function switchTurn(currentTurn) {
+  return currentTurn == "w" ? "b" : "w";
+}
+
+function getPieceType(r, c, board) {
+  return board[r][c][1];
+}
+
+function movePiece([fromR, fromC], [toR, toC], board) {
+  // Code for en passant.
+  // if (isEnPassant(fromR, fromC, toR, toC, board)) {
+  //   board[fromR][toC] = null;
+  // }
+  if (isEnPassant([fromR, fromC], [toR, toC], board)) {
+    board[fromR][toC] = null;
+  }
+  board[toR][toC] = board[fromR][fromC];
+  board[fromR][fromC] = null;
+}
+
+function isEnPassant([fromR, fromC], [toR, toC], board) {
+  console.log(fromR, fromC, toR, toC);
+  const piece = board[fromR][fromC];
+  console.log(piece);
+  const isPawn = getPieceType(fromR, fromC, board) == "P";
+  const forwardDirection = piece[0] == "w" ? -1 : 1;
+  if (isPawn && Math.abs(fromC - toC) == 1 && toR - fromR == forwardDirection) {
+    return true;
+  }
+  return false;
 }
