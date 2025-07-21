@@ -590,6 +590,7 @@ function getPawnMoves(row, col, board) {
     moves.push([row + direction, col + 1]);
   }
   if (
+    isValidSquare(row, col - 1) &&
     board[row][col - 1] &&
     board[row][col - 1][0] !== pieceColor &&
     row == enPassantRow
@@ -597,6 +598,7 @@ function getPawnMoves(row, col, board) {
     moves.push([row + direction, col - 1]);
   }
   if (
+    isValidSquare(row, col + 1) &&
     board[row][col + 1] &&
     board[row][col + 1][0] !== pieceColor &&
     row == enPassantRow
