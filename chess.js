@@ -838,3 +838,89 @@ function isEnPassant([fromR, fromC], [toR, toC], board) {
   }
   return false;
 }
+let Btime = ''
+let BtimeNumbers = [1,3,0,0]
+let Bmin = document.getElementById("Bmin")
+let Btensec = document.getElementById("Btensec")
+let Bsec = document.getElementById("Bsec")
+let Bmlsec = document.getElementById("Bmlsec")
+function Btimer() {
+  Btime = setInterval(()=>{
+  Bmin.innerHTML= BtimeNumbers[0]
+  Btensec.innerHTML = BtimeNumbers[1]
+  Bsec.innerHTML = BtimeNumbers[2]
+  if (BtimeNumbers[0] == 0 && BtimeNumbers[1] < 4) {
+    Bmlsec.innerHTML = '.' + BtimeNumbers[3]
+  }
+  if (BtimeNumbers[3] !== 0) {
+    BtimeNumbers[3]--
+  }
+  else if (BtimeNumbers[3] == 0 && BtimeNumbers[2] !== 0) {
+    clearInterval(Btime)
+    BtimeNumbers[3] = 9
+    BtimeNumbers[2] --
+    Btimer()
+  }
+  else if (BtimeNumbers[3] == 0 && BtimeNumbers[2] == 0 && BtimeNumbers[1] !== 0) {
+    clearInterval(Btime)
+    BtimeNumbers[3] = 9
+    BtimeNumbers[2] = 9
+    BtimeNumbers[1] --
+    Btimer()
+  }
+  else if (BtimeNumbers[3] == 0 && BtimeNumbers[2] == 0 && BtimeNumbers[1] == 0 && BtimeNumbers[0] !== 0) {
+    clearInterval(Btime)
+    BtimeNumbers[3] = 9
+    BtimeNumbers[2] = 9
+    BtimeNumbers[1] = 5
+    BtimeNumbers[0] --
+    Btimer()
+  }
+  else if(BtimeNumbers[3] == 0 && BtimeNumbers[2] == 0 && BtimeNumbers[1] == 0 && BtimeNumbers[0] == 0) {
+    clearInterval(Btime)
+  }
+  }, 100)
+}
+let Wtime = ''
+let WtimeNumbers = [1,3,0,0]
+let Wmin = document.getElementsByClassName("Wmin")
+let Wtensec = document.getElementsByClassName("Wtensec")
+let Wsec = document.getElementsByClassName("Wsec")
+let Wmlsec = document.getElementsByClassName("Wmlsec")
+function Wtimer() {
+  Wtime = setInterval(()=>{
+  Wmin[0].innerHTML= WtimeNumbers[0]
+  Wtensec[0].innerHTML = WtimeNumbers[1]
+  Wsec[0].innerHTML = WtimeNumbers[2]
+  if (WtimeNumbers[0] == 0 && WtimeNumbers[1] < 4) {
+    Wmlsec[0].innerHTML = '.' + WtimeNumbers[3]
+  }
+  if (WtimeNumbers[3] !== 0) {
+    WtimeNumbers[3]--
+  }
+  else if (WtimeNumbers[3] == 0 && WtimeNumbers[2] !== 0) {
+    clearInterval(Wtime)
+    WtimeNumbers[3] = 9
+    WtimeNumbers[2] --
+    Wtimer()
+  }
+  else if (WtimeNumbers[3] == 0 && WtimeNumbers[2] == 0 && WtimeNumbers[1] !== 0) {
+    clearInterval(Wtime)
+    WtimeNumbers[3] = 9
+    WtimeNumbers[2] = 9
+    WtimeNumbers[1] --
+    Wtimer()
+  }
+  else if (WtimeNumbers[3] == 0 && WtimeNumbers[2] == 0 && WtimeNumbers[1] == 0 && WtimeNumbers[0] !== 0) {
+    clearInterval(Wtime)
+    WtimeNumbers[3] = 9
+    WtimeNumbers[2] = 9
+    WtimeNumbers[1] = 5
+    WtimeNumbers[0] --
+    Wtimer()
+  }
+  else if(WtimeNumbers[3] == 0 && WtimeNumbers[2] == 0 && WtimeNumbers[1] == 0 && WtimeNumbers[0] == 0) {
+    clearInterval(Wtime)
+  }
+  }, 100)
+}
