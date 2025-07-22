@@ -846,7 +846,7 @@ function isEnPassant([fromR, fromC], [toR, toC], board) {
   return false;
 }
 let Btime = ''
-let BtimeNumbers = [1,3,0,0]
+let BtimeNumbers = [10,0,0,0]
 let Bmin = document.getElementById("Bmin")
 let Btensec = document.getElementById("Btensec")
 let Bsec = document.getElementById("Bsec")
@@ -889,7 +889,7 @@ function Btimer() {
   }, 100)
 }
 let Wtime = ''
-let WtimeNumbers = [1,3,0,0]
+let WtimeNumbers = [10,0,0,0]
 let Wmin = document.getElementsByClassName("Wmin")
 let Wtensec = document.getElementsByClassName("Wtensec")
 let Wsec = document.getElementsByClassName("Wsec")
