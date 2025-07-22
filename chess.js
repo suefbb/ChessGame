@@ -25,7 +25,7 @@ var childclass = [
     "bZ",
     null,
     "bS",
-    null,
+    "bQ",
     null,
     "bO",
     "bW",
@@ -246,7 +246,7 @@ var childclass = [
     "wZ",
     null,
     "wS",
-    null,
+    "wQ",
     null,
     "wO",
     "wW",
@@ -902,6 +902,11 @@ board.addEventListener("click", (e) => {
       case "S":
         legalMoves = [
           ...getSnakeMoves(selectedPiece.row, selectedPiece.col, childclass),
+        ];
+        break;
+      case "Q":
+        legalMoves = [
+          ...getQueenMoves(selectedPiece.row, selectedPiece.col, childclass),
         ];
         break;
       case "C":
