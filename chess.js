@@ -302,56 +302,51 @@ function isValidSquare(row, col) {
 function getSlideMoves(row, col, directions, board) {
   const pieceColor = board[row][col][0];
   const moves = [];
+  // i made the z let becuase dr and dc are the fake directions
+  let z = -1;
   for (const [dr, dc] of directions) {
+    z++;
     for (let i = 1; ; i++) {
       //when you move a crocodile make the directions let = crocodile direction
+      if (childclass[row][col][1] == "C") {
+        directions = [
+          [0, 1],
+          [(i - 1) / i, 1 / i],
+          [(i - 1) / i, -1 / i],
+          [0, -1],
+          [(-i + 1) / i, -1 / i],
+          [(-i + 1) / i, 1 / i],
+        ];
+      }
       console.log(directions);
       // i represents distance from current piece.
-      const newRow = row + dr * i;
-      const newCol = col + dc * i;
+      const newRow = row + directions[z][0] * i;
+      const newCol = col + directions[z][1] * i;
       console.log(newRow, newCol);
 
       // If we're getting out of the board's boundaries then stop.
       if (!isValidSquare(newRow, newCol)) break;
 
       const targetPiece = board[newRow][newCol];
-      if (targetPiece && targetPiece[0] != pieceColor) {
+      // If it's an empty square then add it to the available moves and continue looping.
+      if (targetPiece == null) {
         moves.push([newRow, newCol]);
+        console.log(moves);
+      }
+      // It it's of an other color, add it and stop looping.
+      // else, it's of the same color. Don't add it and stop looping.
+      else {
+        if (targetPiece[0] != pieceColor) {
+          moves.push([newRow, newCol]);
+          break;
+        }
         break;
       }
-      if (targetPiece && targetPiece[0] == pieceColor) break;
-      moves.push([newRow, newCol]);
-      console.log(moves);
     }
   }
   return moves;
 }
 
-function getCSlideMoves(row, col, pieceColor, directions, board) {
-  const moves = [];
-  for (const [dr, dc] of directions) {
-    for (let i = 0; ; i++) {
-      //when you move a crocodile make the directions let = crocodile direction
-      console.log(directions);
-      // i represents distance from current piece.
-      const newRow = row + dr * i;
-      const newCol = col + dc * i;
-      console.log(newRow, newCol);
-
-      // If we're getting out of the board's boundaries then stop.
-      if (!isValidSquare(newRow, newCol)) break;
-      const targetPiece = board[newRow][newCol];
-      if (targetPiece && targetPiece[0] != pieceColor) {
-        moves.push([newRow, newCol]);
-        break;
-      }
-      if (targetPiece && targetPiece[0] == pieceColor) break;
-      moves.push([newRow, newCol]);
-      console.log(moves);
-    }
-  }
-  return moves;
-}
 function getKnightMoves(row, col, board) {
   const pieceColor = board[row][col][0];
   let moves = [];
@@ -513,6 +508,174 @@ function getCrocodileMoves(row, col, board) {
   return moves;
 }
 
+//ssss
+function getSSlideMoves(row, col, directions, board) {
+  const pieceColor = board[row][col][0];
+  const moves = [];
+  let z = -1;
+  for (const [dr, dc] of directions) {
+    z++;
+    for (let i = 1; ; i++) {
+      if (i % 2 == 0) {
+        directions = [
+          [-2, 0],
+          [-2, 0],
+          [0, 2],
+          [0, 2],
+          [0, -2],
+          [0, -2],
+          [2, 0],
+          [2, 0],
+        ];
+      } else {
+        directions = [
+          [-2, -1 / i],
+          [-2, 1 / i],
+          [-1 / i, 2],
+          [1 / i, 2],
+          [-1 / i, -2],
+          [1 / i, -2],
+          [2, -1 / i],
+          [2, 1 / i],
+        ];
+      }
+      // i represents distance from current piece.
+      console.log(z);
+      const newRow = row + directions[z][0] * i;
+      const newCol = col + directions[z][1] * i;
+      console.log(newCol, newRow);
+
+      // If we're getting out of the board's boundaries then stop.
+      if (!isValidSquare(newRow, newCol)) break;
+
+      const targetPiece = board[newRow][newCol];
+      // If it's an empty square then add it to the available moves and continue looping.
+      if (targetPiece == null) moves.push([newRow, newCol]);
+      // It it's of an other color, add it and stop looping.
+      // else, it's of the same color. Don't add it and stop looping.
+      else {
+        if (targetPiece[0] != pieceColor) {
+          moves.push([newRow, newCol]);
+          break;
+        }
+        break;
+      }
+    }
+  }
+  return moves;
+}
+//ssss
+function getZSlideMoves(row, col, directions, board) {
+  const pieceColor = board[row][col][0];
+  const moves = [];
+  // z is an index in directions
+  let z = -1;
+  for (const [dr, dc] of directions) {
+    for (let i = 1; ; i++) {
+      //get top left , top right , bottom left and bottom right squares by setting directions to bishop directions
+      if (i == 1) {
+        z++;
+        directions = [
+          [-1, -1],
+          [-1, -1],
+          [-1, 1],
+          [-1, 1],
+          [1, -1],
+          [1, -1],
+          [1, 1],
+          [1, 1],
+        ];
+      }
+      // get fan squares and diagonals by repeating 1 or -1 another time in just second diagonals
+      // newRow = row -1 , row -1 , row -2 , row -3 , row -4 .....
+      if (i >= 2 && childclass[row][col][1] == "Z") {
+        directions = [
+          [-1, -1], //main diagonal top left
+          [-1, -(i - 1) / i], //second diagonal top left
+          [-1, 1], //main diagonal top right
+          [-(i - 1) / i, 1], //second diagonal top right
+          [1, -1], //main diagonal bottom left
+          [(i - 1) / i, -1], //second diagonal bottom left
+          [1, 1], //main diagonal bottom right
+          [1, (i - 1) / i], //second diagonal bottom right
+        ];
+      }
+      // i represents distance from current piece.
+      const newRow = row + directions[z][0] * i;
+      const newCol = col + directions[z][1] * i;
+      console.log(directions[z][0] * i, directions[z][0], z, -(i - 1) / i, i);
+
+      // If we're getting out of the board's boundaries then stop.
+      if (!isValidSquare(newRow, newCol)) break;
+
+      const targetPiece = board[newRow][newCol];
+      // If it's an empty square then add it to the available moves and continue looping.
+      if (targetPiece == null) moves.push([newRow, newCol]);
+      // It it's of an other color, add it and stop looping.
+      // else, it's of the same color. Don't add it and stop looping.
+      else {
+        if (targetPiece[0] != pieceColor) {
+          moves.push([newRow, newCol]);
+          break;
+        }
+        break;
+      }
+    }
+  }
+  return moves;
+}
+function getRookMoves(row, col, board) {
+  let directions = [
+    [-1, 0],
+    [1, 0],
+    [0, -1],
+    [0, 1],
+  ];
+  let moves = [...getSlideMoves(row, col, directions, board)];
+  return moves;
+}
+function getBishopMoves(row, col, board) {
+  let directions = [
+    [-1, -1],
+    [-1, 1],
+    [1, -1],
+    [1, 1],
+  ];
+  let moves = [...getSlideMoves(row, col, directions, board)];
+  return moves;
+}
+
+function getZebraMoves(row, col, board) {
+  let directions = [
+    [-1, -1],
+    [-1, -1],
+    [-1, 1],
+    [-1, 1],
+    [1, -1],
+    [1, -1],
+    [1, 1],
+    [1, 1],
+  ];
+  let moves = [...getZSlideMoves(row, col, directions, board)];
+  return moves;
+}
+//ssss
+function getSnakeMoves(row, col, board) {
+  let directions = [
+    [-2, -1],
+    [-2, 1],
+    [-1, 2],
+    [1, 2],
+    [-1, -2],
+    [1, -2],
+    [2, -1],
+    [2, 1],
+  ];
+  let moves = [...getSSlideMoves(row, col, directions, board)];
+  return moves;
+}
+//ssss
+
 createBoard();
 render();
 
@@ -522,8 +685,8 @@ let currentTurn = "w";
 board.addEventListener("click", (e) => {
   let square = e.target.closest(".square");
   if (!square) return;
-  const row = parseInt(square.dataset.row);
-  const col = parseInt(square.dataset.col);
+  const row = Number(square.dataset.row);
+  const col = Number(square.dataset.col);
   if (!selectedPiece) {
     if (!square.children.length > 0) return;
     if (childclass[row][col][0] != currentTurn) return;
@@ -584,27 +747,26 @@ board.addEventListener("click", (e) => {
         break;
     }
     showHints(legalMoves);
-  } else {
-    const isLegalMove = legalMoves.some((move) => {
-      return move[0] == row && move[1] == col;
-    });
-    if (isLegalMove) {
-      childclass[row][col] = selectedPiece.piece;
-      childclass[selectedPiece.row][selectedPiece.col] = null;
-      clearHints(legalMoves);
-      currentTurn = currentTurn == "w" ? "b" : "w";
-      selectedPiece = null;
-      legalMoves = [];
-      render();
-    } else {
-      console.log("Not a legal Move");
-      console.log(legalMoves);
-      clearHints(legalMoves);
-      selectedPiece = null;
-      legalMoves = [];
-      render();
-    }
+    return;
   }
+  const isLegalMove = legalMoves.some((move) => {
+    return move[0] == row && move[1] == col;
+  });
+  if (!isLegalMove) {
+    console.log("Not a legal Move");
+    console.log(legalMoves);
+    clearHints(legalMoves);
+    selectedPiece = null;
+    legalMoves = [];
+    render();
+    return;
+  }
+  movePiece([selectedPiece.row, selectedPiece.col], [row, col], childclass);
+  clearHints(legalMoves);
+  currentTurn = currentTurn == "w" ? "b" : "w";
+  selectedPiece = null;
+  legalMoves = [];
+  render();
 });
 
 function showHints(coords) {
