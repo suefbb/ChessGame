@@ -761,6 +761,13 @@ board.addEventListener("click", (e) => {
     render();
     return;
   }
+  else{
+      if (currentTurn == 'w') {
+        Btimer()
+        clearInterval(Wtime)
+      }
+      else{Wtimer()
+          clearInterval(Btime)}}
   movePiece([selectedPiece.row, selectedPiece.col], [row, col], childclass);
   clearHints(legalMoves);
   currentTurn = currentTurn == "w" ? "b" : "w";
