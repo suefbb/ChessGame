@@ -367,8 +367,6 @@ function getSlideMoves(row, col, directions, board) {
 }
 
 function getKnightMoves(row, col, board) {
-  const pieceColor = board[row][col][0];
-  let moves = [];
   const directions = [
     [-2, -1],
     [-2, 1],
@@ -379,18 +377,7 @@ function getKnightMoves(row, col, board) {
     [-1, 2],
     [1, 2],
   ];
-  for (const [dr, dc] of directions) {
-    const newRow = row + dr;
-    const newCol = col + dc;
-
-    if (isValidSquare(newRow, newCol)) {
-      const targetSquare = board[newRow][newCol];
-      if (targetSquare == null || targetSquare[0] != pieceColor) {
-        moves.push([newRow, newCol]);
-      }
-    }
-  }
-  return moves;
+  return getJumpingMoves(row, col, directions, board);
 }
 
 //ssss
@@ -585,6 +572,23 @@ function getZSlideMoves(row, col, directions, board) {
   }
   return moves;
 }
+
+function getJumpingMoves(row, col, directions, board) {
+  const pieceColor = board[row][col][0];
+  let moves = [];
+  for (const [dr, dc] of directions) {
+    const newRow = row + dr;
+    const newCol = col + dc;
+
+    if (isValidSquare(newRow, newCol)) {
+      const targetSquare = board[newRow][newCol];
+      if (targetSquare == null || targetSquare[0] != pieceColor) {
+        moves.push([newRow, newCol]);
+      }
+    }
+  }
+  return moves;
+}
 function getRookMoves(row, col, board) {
   let directions = [
     [-1, 0],
@@ -665,7 +669,7 @@ function getWallMoves(row, col, board) {
       [2, 0],
       [2, 1],
       [2, -1],
-      [2, -2]
+      [2, -2],
     );
   } else {
     directions.push(
@@ -678,21 +682,10 @@ function getWallMoves(row, col, board) {
       [3, 2],
       [3, -1],
       [3, -2],
-      [3, -3]
+      [3, -3],
     );
   }
-  for (const [dr, dc] of directions) {
-    const newRow = row + dr;
-    const newCol = col + dc;
-
-    if (isValidSquare(newRow, newCol)) {
-      const targetSquare = board[newRow][newCol];
-      if (targetSquare == null || targetSquare[0] != this.color) {
-        moves.push([newRow, newCol]);
-      }
-    }
-  }
-  return moves;
+  return [...getJumpingMoves(row, col, directions, board)];
 }
 function getPigeonMoves(row, col, board) {
   return [
@@ -714,7 +707,7 @@ function getOctopusMoves(row, col, board) {
     [-1, 1],
   ];
   moves = [...getSlideMoves(row, col, directions, board)];
-  const Jumpdirections = [
+  const jumpDirections = [
     [-3, -2],
     [-3, 2],
     [3, -2],
@@ -724,17 +717,7 @@ function getOctopusMoves(row, col, board) {
     [-2, 3],
     [2, 3],
   ];
-  for (const [dr, dc] of Jumpdirections) {
-    const newRow = row + dr;
-    const newCol = col + dc;
-
-    if (isValidSquare(newRow, newCol)) {
-      const targetSquare = board[newRow][newCol];
-      if (targetSquare == null || targetSquare[0] != this.color) {
-        moves.push([newRow, newCol]);
-      }
-    }
-  }
+  moves.push(...getJumpingMoves(row, col, jumpDirections, board));
   return moves;
 }
 
@@ -799,7 +782,7 @@ board.addEventListener("click", (e) => {
           ...getCrocodileMoves(
             selectedPiece.row,
             selectedPiece.col,
-            childclass
+            childclass,
           ),
         ];
         break;
@@ -877,8 +860,8 @@ function getSquaresByCoords(coords) {
   for (i = 0; i < coords.length; i++) {
     squares.push(
       document.querySelector(
-        `.square[data-row="${coords[i][0]}"][data-col="${coords[i][1]}"]`
-      )
+        `.square[data-row="${coords[i][0]}"][data-col="${coords[i][1]}"]`,
+      ),
     );
   }
   return squares;
