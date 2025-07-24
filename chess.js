@@ -638,38 +638,7 @@ function getSnakeMoves(row, col, board) {
 //ssss
 
 function getElephantMoves(row, col, board) {
-  let moves = [];
-  const directions = [
-    [0, 1],
-    [0, -1],
-    [-1, 0],
-    [1, 0],
-  ];
-  moves = [...getSlideMoves(row, col, directions, board)];
-  const Ndirections = [
-    [-2, -1],
-    [-2, 1],
-    [2, -1],
-    [2, 1],
-    [-1, -2],
-    [1, -2],
-    [-1, 2],
-    [1, 2],
-  ];
-  for (const [dr, dc] of Ndirections) {
-    const newRow = row + dr;
-    const newCol = col + dc;
-
-    if (isValidSquare(newRow, newCol)) {
-      const targetSquare = board[newRow][newCol];
-      if (targetSquare !== null) {
-      }
-      if (targetSquare == null || targetSquare[0] != this.color) {
-        moves.push([newRow, newCol]);
-      }
-    }
-  }
-  return moves;
+  return [...getRookMoves(row, col, board), ...getKnightMoves(row, col, board)];
 }
 function getWallMoves(row, col, board) {
   let moves = [];
