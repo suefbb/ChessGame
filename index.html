@@ -1,13 +1,58 @@
 <!DOCTYPE html>
-
 <html>
-  <head>
-    <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
-    <title>!Hello, World</title>
-    <link rel="stylesheet" href="style.css" />
-    <script defer src="chess.js"></script>
-  </head>
-  <body>
-    <div class="board"></div>
-  </body>
+<head>
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+  <title>!Hello, World</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!--things on the left-->
+  <div>
+    <!--start-->
+    <div class="board" id="pp">
+    </div>
+    <!--end-->
+  </div>
+  <!--things on the right-->
+  <div class="rightthings">
+    <div class="btimer">
+      <p id="Bmin">10</p>
+      <p>:</p>
+      <p id="Btensec">0</p>
+      <p id="Bsec">0</p>
+      <p id="Bmlsec"></p>
+    </div>
+    <div>SUEFB(1846)(B)</div>
+    <div></div>
+    <div>
+      <div class="PGN"></div>
+      <div style="display: flex;">
+        <button onclick="rmv()" id="button1">remove</button>
+        <select name="bc" id="back_color">
+          <option value="gray">gray</option>
+          <option value="red">red</option>
+          <option value="green">green</option>
+          <option value="blue">blue</option>
+        </select>
+        <select name="active" id="is_active">
+          <option value="T">move</option>
+          <option value="F">explain</option>
+        </select></div>
+        <div class="options" style="height: 70px; display: flex; justify-content: space-around;">
+          <p id="lastMove"><</p>
+          <p id="nextMove">></p>
+          <p>D</p>
+          <p>R</p></div>
+      </div>
+    <div class="Wtimer">
+      <p class="Wmin">10</p>
+      <p>:</p>
+      <p class="Wtensec">0</p>
+      <p class="Wsec">0</p>
+      <p class="Wmlsec"></p>
+    </div>
+    <div>MOHAMEDCHESS(1670)(W)</div>
+  </div>
+  <script src="mohamed.js"></script>
+</body>
 </html>
