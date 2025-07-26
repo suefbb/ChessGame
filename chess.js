@@ -15,6 +15,7 @@ const pieceMap = {
   C: "crocodile",
   P: "pigeon",
 };
+let pgnMoves = []
 var childclass = [
   ["", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n"],
   [
@@ -258,7 +259,9 @@ var childclass = [
 ];
 
 const board = document.querySelector(".board");
-
+let nextMove = document.querySelector("#nextMove")
+let lastMove = document.querySelector("#lastMove")
+let moveIndex = -1
 function createBoard() {
   for (let i = 0; i < childclass.length; i++) {
     for (let j = 0; j < childclass.length; j++) {
@@ -342,7 +345,6 @@ function getSlideMoves(row, col, directions, board) {
       // i represents distance from current piece.
       const newRow = row + directions[z][0] * i;
       const newCol = col + directions[z][1] * i;
-      console.log(newRow, newCol);
 
       // If we're getting out of the board's boundaries then stop.
       if (!isValidSquare(newRow, newCol)) break;
@@ -420,11 +422,8 @@ function getSSlideMoves(row, col, directions, board) {
         ];
       }
       // i represents distance from current piece.
-      console.log(z);
       const newRow = row + directions[z][0] * i;
       const newCol = col + directions[z][1] * i;
-      console.log(newCol, newRow);
-
       // If we're getting out of the board's boundaries then stop.
       if (!isValidSquare(newRow, newCol)) break;
 
@@ -449,7 +448,7 @@ function getPawnMoves(row, col, board) {
   let moves = [];
   const pieceColor = board[row][col][0];
   const direction = pieceColor == "w" ? -1 : 1;
-  const enPassantRow = pieceColor == "w" ? 11 : 4;
+  const enPassantRow = pieceColor == "w" ? 9 : 6;
   if (isValidSquare(row + direction, col) && !board[row + direction][col]) {
     moves.push([row + direction, col]);
     if (
@@ -559,7 +558,6 @@ function getZSlideMoves(row, col, directions, board) {
       // i represents distance from current piece.
       const newRow = row + directions[z][0] * i;
       const newCol = col + directions[z][1] * i;
-      console.log(directions[z][0] * i, directions[z][0], z, -(i - 1) / i, i);
 
       // If we're getting out of the board's boundaries then stop.
       if (!isValidSquare(newRow, newCol)) break;
@@ -823,6 +821,29 @@ board.addEventListener("click", (e) => {
   const isLegalMove = legalMoves.some((move) => {
     return move[0] == row && move[1] == col;
   });
+  if (isLegalMove) {
+      moveIndex++
+      pgnMoves.push([childclass[selectedPiece.row][selectedPiece.col],[row,col],[selectedPiece.row,selectedPiece.col],childclass[row][col]])
+      if (moveIndex !== pgnMoves.length-1) {
+        if(pgnMoves !== []){
+          for (let RM = 0; RM < pgnMoves.length; RM++) {
+            if(moveIndex !== pgnMoves.length-1){
+              pgnMoves.splice(pgnMoves.length-2 , 1)
+              console.log(pgnMoves);
+            }
+            else{break}
+          }}
+      }
+      console.log(pgnMoves);
+      childclass[row][col] = selectedPiece.piece;
+      childclass[selectedPiece.row][selectedPiece.col] = null;
+      if (currentTurn == 'w') {
+        Btimer()
+        clearInterval(Wtime)
+      }
+      else{Wtimer()
+          clearInterval(Btime)}
+  }
   if (!isLegalMove) {
     console.log("Not a legal Move");
     console.log(legalMoves);
@@ -909,3 +930,102 @@ function isEnPassant([fromR, fromC], [toR, toC], board) {
   }
   return false;
 }
+let Btime = ''
+let BtimeNumbers = [10,0,0,0]
+let Bmin = document.getElementById("Bmin")
+let Btensec = document.getElementById("Btensec")
+let Bsec = document.getElementById("Bsec")
+let Bmlsec = document.getElementById("Bmlsec")
+function Btimer() {
+  Btime = setInterval(()=>{
+  Bmin.innerHTML= BtimeNumbers[0]
+  Btensec.innerHTML = BtimeNumbers[1]
+  Bsec.innerHTML = BtimeNumbers[2]
+  if (BtimeNumbers[0] == 0 && BtimeNumbers[1] < 4) {
+    Bmlsec.innerHTML = '.' + BtimeNumbers[3]
+  }
+  if (BtimeNumbers[3] !== 0) {
+    BtimeNumbers[3]--
+  }
+  else if (BtimeNumbers[3] == 0 && BtimeNumbers[2] !== 0) {
+    clearInterval(Btime)
+    BtimeNumbers[3] = 9
+    BtimeNumbers[2] --
+    Btimer()
+  }
+  else if (BtimeNumbers[3] == 0 && BtimeNumbers[2] == 0 && BtimeNumbers[1] !== 0) {
+    clearInterval(Btime)
+    BtimeNumbers[3] = 9
+    BtimeNumbers[2] = 9
+    BtimeNumbers[1] --
+    Btimer()
+  }
+  else if (BtimeNumbers[3] == 0 && BtimeNumbers[2] == 0 && BtimeNumbers[1] == 0 && BtimeNumbers[0] !== 0) {
+    clearInterval(Btime)
+    BtimeNumbers[3] = 9
+    BtimeNumbers[2] = 9
+    BtimeNumbers[1] = 5
+    BtimeNumbers[0] --
+    Btimer()
+  }
+  else if(BtimeNumbers[3] == 0 && BtimeNumbers[2] == 0 && BtimeNumbers[1] == 0 && BtimeNumbers[0] == 0) {
+    clearInterval(Btime)
+  }
+  }, 100)
+}
+let Wtime = ''
+let WtimeNumbers = [10,0,0,0]
+let Wmin = document.getElementsByClassName("Wmin")
+let Wtensec = document.getElementsByClassName("Wtensec")
+let Wsec = document.getElementsByClassName("Wsec")
+let Wmlsec = document.getElementsByClassName("Wmlsec")
+function Wtimer() {
+  Wtime = setInterval(()=>{
+  Wmin[0].innerHTML= WtimeNumbers[0]
+  Wtensec[0].innerHTML = WtimeNumbers[1]
+  Wsec[0].innerHTML = WtimeNumbers[2]
+  if (WtimeNumbers[0] == 0 && WtimeNumbers[1] < 4) {
+    Wmlsec[0].innerHTML = '.' + WtimeNumbers[3]
+  }
+  if (WtimeNumbers[3] !== 0) {
+    WtimeNumbers[3]--
+  }
+  else if (WtimeNumbers[3] == 0 && WtimeNumbers[2] !== 0) {
+    clearInterval(Wtime)
+    WtimeNumbers[3] = 9
+    WtimeNumbers[2] --
+    Wtimer()
+  }
+  else if (WtimeNumbers[3] == 0 && WtimeNumbers[2] == 0 && WtimeNumbers[1] !== 0) {
+    clearInterval(Wtime)
+    WtimeNumbers[3] = 9
+    WtimeNumbers[2] = 9
+    WtimeNumbers[1] --
+    Wtimer()
+  }
+  else if (WtimeNumbers[3] == 0 && WtimeNumbers[2] == 0 && WtimeNumbers[1] == 0 && WtimeNumbers[0] !== 0) {
+    clearInterval(Wtime)
+    WtimeNumbers[3] = 9
+    WtimeNumbers[2] = 9
+    WtimeNumbers[1] = 5
+    WtimeNumbers[0] --
+    Wtimer()
+  }
+  else if(WtimeNumbers[3] == 0 && WtimeNumbers[2] == 0 && WtimeNumbers[1] == 0 && WtimeNumbers[0] == 0) {
+    clearInterval(Wtime)
+  }
+  }, 100)
+}
+lastMove.addEventListener('click', ()=>{
+  childclass[pgnMoves[moveIndex][2][0]][pgnMoves[moveIndex][2][1]] =pgnMoves[moveIndex][0]
+  childclass[pgnMoves[moveIndex][1][0]][pgnMoves[moveIndex][1][1]] =pgnMoves[moveIndex][3]
+  console.log(pgnMoves);
+  render()
+  if (currentTurn == 'w') {
+    currentTurn = 'b'
+  }
+  else{currentTurn = 'w'}
+  moveIndex--
+  console.log(moveIndex);
+  console.log(pgnMoves);
+})
