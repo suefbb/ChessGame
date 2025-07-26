@@ -591,6 +591,9 @@ function getWallMoves(row, col, board) {
     [1,-3],
     [2,-3],
   ];
+  if (childclass[row][col][0]=='w') {
+    directions.push([-3,-3],[-3,-2],[-3,-1],[-3,0],[-3,1],[-3,2],[2,-2],[2,-1],[2,0],[2,1])    
+  }else{directions.push([3,-3],[3,-2],[3,-1],[3,0],[3,1],[3,2],[-2,-2],[-2,-1],[-2,0],[-2,1])}
   return [...getJumpingMoves(row, col, directions, board)];
 }
 function getPigeonMoves(row, col, board) {
