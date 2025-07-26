@@ -23,7 +23,7 @@ var childclass = [
     "bE",
     "bB",
     "bZ",
-    null,
+    "bF",
     "bS",
     "bQ",
     null,
@@ -244,7 +244,7 @@ var childclass = [
     "wE",
     "wB",
     "wZ",
-    null,
+    "wF",
     "wS",
     "wQ",
     null,
@@ -380,7 +380,15 @@ function getKnightMoves(row, col, board) {
   return getJumpingMoves(row, col, directions, board);
 }
 
-//ssss
+function getFrogMoves(row, col, board) {
+  const directions = [
+    [4, -2], [4, -3], [5, -2], [5, -3], [-2, 4], [-3, 4], [-2, 5], [-3, 5],
+    [-4, -2],[-4, -3],[-5, -2],[-5, -3],[-2, -4],[-3, -4],[-2, -5],[-3, -5],
+    [-4, 2], [-4, 3], [-5, 2], [-5, 3], [2, -4], [3, -4], [2, -5], [3, -5],
+    [4, 2],  [4, 3],  [5, 2],  [5, 3],  [2, 4],  [3, 4],  [2, 5],  [3, 5]
+  ];
+  return getJumpingMoves(row, col, directions, board);
+}
 function getSSlideMoves(row, col, directions, board) {
   const pieceColor = board[row][col][0];
   const moves = [];
@@ -624,7 +632,6 @@ function getZebraMoves(row, col, board) {
   let moves = [...getZSlideMoves(row, col, directions, board)];
   return moves;
 }
-//ssss
 function getSnakeMoves(row, col, board) {
   let directions = [
     [-2, -1],
@@ -639,7 +646,6 @@ function getSnakeMoves(row, col, board) {
   let moves = [...getSSlideMoves(row, col, directions, board)];
   return moves;
 }
-//ssss
 
 function getElephantMoves(row, col, board) {
   return [...getRookMoves(row, col, board), ...getKnightMoves(row, col, board)];
@@ -779,11 +785,7 @@ board.addEventListener("click", (e) => {
         break;
       case "C":
         legalMoves = [
-          ...getCrocodileMoves(
-            selectedPiece.row,
-            selectedPiece.col,
-            childclass,
-          ),
+          ...getCrocodileMoves(selectedPiece.row, selectedPiece.col, childclass),
         ];
         break;
       case "E":
@@ -804,6 +806,11 @@ board.addEventListener("click", (e) => {
       case "O":
         legalMoves = [
           ...getOctopusMoves(selectedPiece.row, selectedPiece.col, childclass),
+        ];
+        break;
+      case "F":
+        legalMoves = [
+          ...getFrogMoves(selectedPiece.row, selectedPiece.col, childclass),
         ];
         break;
       default:
