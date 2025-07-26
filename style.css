@@ -1,3 +1,13 @@
+body{display: flex;}
+body div{
+    display: grid;
+}
+.rightthings{
+    flex-grow: 1;
+    height: 100vh;
+    grid-template-columns: 1fr 4fr;
+    grid-template-rows: 1fr 7fr 1fr;
+}
 .board {
   width: fit-content;
   display: grid;
@@ -88,4 +98,14 @@ select {
 }
 #Bmlsec , .Wmlsec{
     font-size: 18px;
+}
+.options p {
+    font-size: 25px;
+    width: 17%;
+    height: 70%;
+}
+.options p:hover {
+    cursor: pointer;
+    background-color: aqua;
+    font-size: 30px;
 }
