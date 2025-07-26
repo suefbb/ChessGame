@@ -1,4 +1,5 @@
 const BOARD_DIM = 15;
+let movesPlayed = 0
 const pieceMap = {
   R: "rook",
   E: "elephant",
@@ -24,11 +25,11 @@ var childclass = [
     "bE",
     "bB",
     "bZ",
-    null,
+    "bF",
     "bS",
     "bQ",
     null,
-    null,
+    "bO",
     "bW",
     "bC",
     "bB",
@@ -245,11 +246,11 @@ var childclass = [
     "wE",
     "wB",
     "wZ",
-    null,
+    "wF",
     "wS",
-    null,
     "wQ",
     null,
+    "wO",
     "wW",
     "wC",
     "wB",
@@ -261,6 +262,7 @@ let board = document.querySelector(".board");
 let nextMove = document.querySelector("#nextMove")
 let lastMove = document.querySelector("#lastMove")
 let moveIndex = -1
+let pgnString = ''
 function createBoard() {
   for (let i = 0; i < childclass.length; i++) {
     for (let j = 0; j < childclass.length; j++) {
@@ -672,6 +674,7 @@ render();
 let selectedPiece = null;
 let legalMoves = [];
 let currentTurn = "w";
+let pgn = document.querySelector(".PGN")
 board.addEventListener("click", (e) => {
   let square = e.target.closest(".square");
   if (!square) return;
@@ -785,7 +788,12 @@ board.addEventListener("click", (e) => {
         clearInterval(Wtime)
       }
       else{Wtimer()
-          clearInterval(Btime)}
+          clearInterval(Btime)
+          movesPlayed++}
+      if (childclass[selectedPiece.row][selectedPiece.col][1] !== 'p') {
+        pgnString += ` ${childclass[selectedPiece.row][selectedPiece.col][1]}${childclass[0][col]}${childclass[row][0]}`
+      }else{pgnString += ` ${childclass[0][col]}${childclass[row][0]}`}
+      pgn.innerHTML = pgnString
     }
     if (!isLegalMove) {
       console.log("Not a legal Move");
@@ -972,23 +980,25 @@ lastMove.addEventListener('click', ()=>{
   console.log(pgnMoves);
 })
 nextMove.addEventListener('click', ()=>{
-  childclass[pgnMoves[moveIndex][2][0]][pgnMoves[moveIndex][2][1]] = pgnMoves[moveIndex][3]
-  childclass[pgnMoves[moveIndex][1][0]][pgnMoves[moveIndex][1][1]] = pgnMoves[moveIndex][0]
-  console.log(pgnMoves);
-  render()
-  console.log(currentTurn == 'w');
-  if (currentTurn == 'w') {
-    currentTurn = 'b'
-    BtimeNumbers = pgnMoves[moveIndex][5]
-    Btimer()
-    clearInterval(Wtime)
+  if (moveIndex < pgnMoves.length-1) {
+    moveIndex++
+    childclass[pgnMoves[moveIndex][2][0]][pgnMoves[moveIndex][2][1]] = pgnMoves[moveIndex][3]
+    childclass[pgnMoves[moveIndex][1][0]][pgnMoves[moveIndex][1][1]] = pgnMoves[moveIndex][0]
+    console.log(pgnMoves);
+    render()
+    console.log(currentTurn == 'w');
+    if (currentTurn == 'w') {
+      currentTurn = 'b'
+      BtimeNumbers = pgnMoves[moveIndex][5]
+      Btimer()
+      clearInterval(Wtime)
+    }
+    else{
+      currentTurn = 'w'
+      WtimeNumbers = pgnMoves[moveIndex][4]
+      Wtimer()
+      clearInterval(Btime)}
+    console.log(moveIndex);
+    console.log(pgnMoves);
   }
-  else{
-    currentTurn = 'w'
-    WtimeNumbers = pgnMoves[moveIndex][4]
-    Wtimer()
-    clearInterval(Btime)}
-  moveIndex++
-  console.log(moveIndex);
-  console.log(pgnMoves);
 })

@@ -254,3 +254,7 @@ select{
     background-color: aqua;
     font-size: 30px;
 }
+.PGN{
+    height: 240px;
+    overflow: auto;
+}
