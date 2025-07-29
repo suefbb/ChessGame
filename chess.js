@@ -262,7 +262,11 @@ let board = document.querySelector(".board");
 let nextMove = document.querySelector("#nextMove")
 let lastMove = document.querySelector("#lastMove")
 let moveIndex = -1
+<<<<<<< HEAD
 let pgnArr = []
+=======
+let pgnString = ''
+>>>>>>> be0854e8f187f5b0674eb2d9967a9dfe01873e61
 function createBoard() {
   for (let i = 0; i < childclass.length; i++) {
     for (let j = 0; j < childclass.length; j++) {
@@ -674,8 +678,11 @@ render();
 let selectedPiece = null;
 let legalMoves = [];
 let currentTurn = "w";
+<<<<<<< HEAD
 let promotedPiece = document.querySelector(".choosePromotedPiece")
 console.log(promotedPiece);
+=======
+>>>>>>> be0854e8f187f5b0674eb2d9967a9dfe01873e61
 let pgn = document.querySelector(".PGN")
 board.addEventListener("click", (e) => {
   let square = e.target.closest(".square");
@@ -784,6 +791,7 @@ board.addEventListener("click", (e) => {
             else{break}
           }}
       }
+<<<<<<< HEAD
 
       //the pgn that shown in the pgn square
       if (childclass[selectedPiece.row][selectedPiece.col][1] !== 'p') {
@@ -796,6 +804,20 @@ board.addEventListener("click", (e) => {
         pgnArr[movesPlayed].splice(1,0,'x')}
       pgn.innerHTML = String(pgnArr)
       movesPlayed++
+=======
+      console.log(pgnMoves);
+      if (currentTurn == 'w') {
+        Btimer()
+        clearInterval(Wtime)
+      }
+      else{Wtimer()
+          clearInterval(Btime)
+          movesPlayed++}
+      if (childclass[selectedPiece.row][selectedPiece.col][1] !== 'p') {
+        pgnString += ` ${childclass[selectedPiece.row][selectedPiece.col][1]}${childclass[0][col]}${childclass[row][0]}`
+      }else{pgnString += ` ${childclass[0][col]}${childclass[row][0]}`}
+      pgn.innerHTML = pgnString
+>>>>>>> be0854e8f187f5b0674eb2d9967a9dfe01873e61
     }
     if (!isLegalMove) {
       console.log("Not a legal Move");
@@ -807,6 +829,7 @@ board.addEventListener("click", (e) => {
       return;
     }console.log(selectedPiece);
     movePiece([selectedPiece.row, selectedPiece.col], [row, col], childclass);
+<<<<<<< HEAD
     if (currentTurn == 'w') {
       //promotion
       for (let pawnRow = 0; pawnRow < childclass[1].length; pawnRow++) {
@@ -821,6 +844,8 @@ board.addEventListener("click", (e) => {
         if(childclass[14][pawnRow] == 'bp'){promotedPiece.style.opacity = 1}}
       Wtimer()
       clearInterval(Btime)}
+=======
+>>>>>>> be0854e8f187f5b0674eb2d9967a9dfe01873e61
     clearHints(legalMoves);
     currentTurn = currentTurn == "w" ? "b" : "w";
     selectedPiece = null;
@@ -828,7 +853,11 @@ board.addEventListener("click", (e) => {
     render();
 });
 function showHints(coords) {
+<<<<<<< HEAD
   const squares = getSquaresByCoords(legalMoves);
+=======
+  const squares = getSquaresByCoords(coords);
+>>>>>>> be0854e8f187f5b0674eb2d9967a9dfe01873e61
   squares.forEach((square, index) => {
     const [row, col] = coords[index];
     if (isCapture(row, col, currentTurn)) {
@@ -857,7 +886,11 @@ function getSquaresByCoords(coords) {
     );
   }
   return squares;
+<<<<<<< HEAD
 }getSquaresByCoords(legalMoves)
+=======
+}
+>>>>>>> be0854e8f187f5b0674eb2d9967a9dfe01873e61
 function isCapture(row, col, color) {
   return (
     isValidSquare(row, col) &&
@@ -998,7 +1031,11 @@ lastMove.addEventListener('click', ()=>{
 nextMove.addEventListener('click', ()=>{
   if (moveIndex < pgnMoves.length-1) {
     moveIndex++
+<<<<<<< HEAD
     childclass[pgnMoves[moveIndex][2][0]][pgnMoves[moveIndex][2][1]] = null
+=======
+    childclass[pgnMoves[moveIndex][2][0]][pgnMoves[moveIndex][2][1]] = pgnMoves[moveIndex][3]
+>>>>>>> be0854e8f187f5b0674eb2d9967a9dfe01873e61
     childclass[pgnMoves[moveIndex][1][0]][pgnMoves[moveIndex][1][1]] = pgnMoves[moveIndex][0]
     console.log(pgnMoves);
     render()
@@ -1017,6 +1054,7 @@ nextMove.addEventListener('click', ()=>{
     console.log(moveIndex);
     console.log(pgnMoves);
   }
+<<<<<<< HEAD
 })
 function promotePiece(Prow,pieceKey) {
   console.log(Prow , pieceKey);
@@ -1034,3 +1072,6 @@ function promotePiece(Prow,pieceKey) {
     }}
   render()
 }
+=======
+})
+>>>>>>> be0854e8f187f5b0674eb2d9967a9dfe01873e61
