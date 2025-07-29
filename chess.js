@@ -1,5 +1,5 @@
 const BOARD_DIM = 15;
-let movesPlayed = 0
+let movesPlayed = 0;
 const pieceMap = {
   R: "rook",
   E: "elephant",
@@ -14,9 +14,9 @@ const pieceMap = {
   O: "octopus",
   W: "wall",
   C: "crocodile",
-  P: "pigeon"
+  P: "pigeon",
 };
-let pgnMoves = []
+let pgnMoves = [];
 var childclass = [
   ["", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n"],
   [
@@ -28,7 +28,7 @@ var childclass = [
     "bF",
     "bS",
     "bQ",
-    null,
+    "bK",
     "bO",
     "bW",
     "bC",
@@ -249,7 +249,7 @@ var childclass = [
     "wF",
     "wS",
     "wQ",
-    null,
+    "wK",
     "wO",
     "wW",
     "wC",
@@ -259,10 +259,10 @@ var childclass = [
   ],
 ];
 let board = document.querySelector(".board");
-let nextMove = document.querySelector("#nextMove")
-let lastMove = document.querySelector("#lastMove")
-let moveIndex = -1
-let pgnArr = []
+let nextMove = document.querySelector("#nextMove");
+let lastMove = document.querySelector("#lastMove");
+let moveIndex = -1;
+let pgnArr = [];
 function createBoard() {
   for (let i = 0; i < childclass.length; i++) {
     for (let j = 0; j < childclass.length; j++) {
@@ -299,8 +299,8 @@ function render() {
       pieceDiv.classList.add("piece", `${piece[0]}-${pieceMap[piece[1]]}`);
       const pieceImg = document.createElement("img");
       pieceImg.src = `${piece[0]}-${pieceMap[piece[1]]}.svg`;
-      pieceImg.style.height='100%'
-      pieceImg.style.width='100%'
+      pieceImg.style.height = "100%";
+      pieceImg.style.width = "100%";
       pieceDiv.appendChild(pieceImg);
       square.appendChild(pieceDiv);
     }
@@ -310,48 +310,53 @@ function isValidSquare(row, col) {
   return row >= 1 && row < BOARD_DIM && col >= 1 && col < BOARD_DIM;
 }
 
-
 function getSlideMoves(row, col, directions, board) {
   const pieceColor = board[row][col][0];
   const moves = [];
   // i made the z let becuase dr and dc are the fake directions
-  let z = -1
+  let z = -1;
   for (const [dr, dc] of directions) {
-    z++
+    z++;
     for (let i = 1; ; i++) {
       //when you move a crocodile make the directions let = crocodile direction
-      if(childclass[row][col][1] == 'C'){
+      if (childclass[row][col][1] == "C") {
         directions = [
           [0, 1],
-          [(i-1)/i, 1/i],
-          [(i-1)/i, -1/i],
+          [(i - 1) / i, 1 / i],
+          [(i - 1) / i, -1 / i],
           [0, -1],
-          [(-i+1)/i , -1/i],
-          [(-i+1)/i , 1/i]
-        ];}
+          [(-i + 1) / i, -1 / i],
+          [(-i + 1) / i, 1 / i],
+        ];
+      }
       //when you move an octopus make the directions let = octopus direction
-      if(childclass[row][col][1] == 'O'){
-        if (i == 3) {break}
+      if (childclass[row][col][1] == "O") {
+        if (i == 3) {
+          break;
+        }
         directions = [
-          [-0.5*(i+1), -1/i],
-          [-0.5*(i+1), 1/i],
-          [0.5*(i+1), -1/i],
-          [0.5*(i+1), 1/i],
-          [-1/i ,-0.5*(i+1)],
-          [1/i , -0.5*(i+1)],
-          [-1/i , 0.5*(i+1)],
-          [1/i , 0.5*(i+1)]
-        ];}
+          [-0.5 * (i + 1), -1 / i],
+          [-0.5 * (i + 1), 1 / i],
+          [0.5 * (i + 1), -1 / i],
+          [0.5 * (i + 1), 1 / i],
+          [-1 / i, -0.5 * (i + 1)],
+          [1 / i, -0.5 * (i + 1)],
+          [-1 / i, 0.5 * (i + 1)],
+          [1 / i, 0.5 * (i + 1)],
+        ];
+      }
       // i represents distance from current piece.
       const newRow = row + directions[z][0] * i;
       const newCol = col + directions[z][1] * i;
 
       // If we're getting out of the board's boundaries then stop.
-      if (!isValidSquare(newRow, newCol))break;
+      if (!isValidSquare(newRow, newCol)) break;
 
       const targetPiece = board[newRow][newCol];
       // If it's an empty square then add it to the available moves and continue looping.
-      if (targetPiece == null) {moves.push([newRow, newCol]);}
+      if (targetPiece == null) {
+        moves.push([newRow, newCol]);
+      }
       // It it's of an other color, add it and stop looping.
       // else, it's of the same color. Don't add it and stop looping.
       else {
@@ -364,6 +369,23 @@ function getSlideMoves(row, col, directions, board) {
     }
   }
   return moves;
+}
+function getKingMoves(row, col, board) {
+  return getJumpingMoves(
+    row,
+    col,
+    [
+      [1, 0],
+      [-1, 0],
+      [0, 1],
+      [0, -1],
+      [1, 1],
+      [-1, 1],
+      [-1, -1],
+      [1, -1],
+    ],
+    board
+  );
 }
 function getJumpingMoves(row, col, directions, board) {
   const pieceColor = board[row][col][0];
@@ -384,10 +406,11 @@ function getJumpingMoves(row, col, directions, board) {
 function getZSlideMoves(row, col, directions, board) {
   const pieceColor = board[row][col][0];
   const moves = [];
-  let z = -1
+  let z = -1;
   for (const [dr, dc] of directions) {
     for (let i = 1; ; i++) {
-      if(i==1){z++;
+      if (i == 1) {
+        z++;
         directions = [
           [-1, -1],
           [-1, -1],
@@ -397,25 +420,26 @@ function getZSlideMoves(row, col, directions, board) {
           [1, -1],
           [1, 1],
           [1, 1],
-        ];}
-      if(i>=2 && childclass[row][col][1]=='Z'){
-        directions=[
-          [-1,-1],//main diagonal top left
-          [-1,-(i-1)/i],//second diagonal top left
-          [-1,1],//main diagonal top right
-          [-(i-1)/i,1],//second diagonal top right
-          [1,-1],//main diagonal bottom left
-          [(i-1)/i,-1],//second diagonal bottom left
-          [1,1],//main diagonal bottom right
-          [1,(i-1)/i]//second diagonal bottom right
-        ]
+        ];
+      }
+      if (i >= 2 && childclass[row][col][1] == "Z") {
+        directions = [
+          [-1, -1], //main diagonal top left
+          [-1, -(i - 1) / i], //second diagonal top left
+          [-1, 1], //main diagonal top right
+          [-(i - 1) / i, 1], //second diagonal top right
+          [1, -1], //main diagonal bottom left
+          [(i - 1) / i, -1], //second diagonal bottom left
+          [1, 1], //main diagonal bottom right
+          [1, (i - 1) / i], //second diagonal bottom right
+        ];
       }
       // i represents distance from current piece.
       const newRow = row + directions[z][0] * i;
       const newCol = col + directions[z][1] * i;
-      
+
       // If we're getting out of the board's boundaries then stop.
-      if (!isValidSquare(newRow, newCol))break;
+      if (!isValidSquare(newRow, newCol)) break;
 
       const targetPiece = board[newRow][newCol];
       // If it's an empty square then add it to the available moves and continue looping.
@@ -436,11 +460,11 @@ function getZSlideMoves(row, col, directions, board) {
 function getSSlideMoves(row, col, directions, board) {
   const pieceColor = board[row][col][0];
   const moves = [];
-  let z = -1
+  let z = -1;
   for (const [dr, dc] of directions) {
-    z++
+    z++;
     for (let i = 1; ; i++) {
-      if(i%2==0){
+      if (i % 2 == 0) {
         directions = [
           [-2, 0],
           [-2, 0],
@@ -450,23 +474,24 @@ function getSSlideMoves(row, col, directions, board) {
           [0, -2],
           [2, 0],
           [2, 0],
-        ];}
-      else{
-        directions=[
-          [-2, -1/i],
-          [-2, 1/i],
-          [-1/i, 2],
-          [1/i, 2],
-          [-1/i, -2],
-          [1/i, -2],
-          [2, -1/i],
-          [2, 1/i]
-        ]}
+        ];
+      } else {
+        directions = [
+          [-2, -1 / i],
+          [-2, 1 / i],
+          [-1 / i, 2],
+          [1 / i, 2],
+          [-1 / i, -2],
+          [1 / i, -2],
+          [2, -1 / i],
+          [2, 1 / i],
+        ];
+      }
       // i represents distance from current piece.
       const newRow = row + directions[z][0] * i;
       const newCol = col + directions[z][1] * i;
       // If we're getting out of the board's boundaries then stop.
-      if (!isValidSquare(newRow, newCol))break;
+      if (!isValidSquare(newRow, newCol)) break;
 
       const targetPiece = board[newRow][newCol];
       // If it's an empty square then add it to the available moves and continue looping.
@@ -519,10 +544,38 @@ function getKnightMoves(row, col, board) {
 }
 function getFrogMoves(row, col, board) {
   const directions = [
-    [4, -2], [4, -3], [5, -2], [5, -3], [-2, 4], [-3, 4], [-2, 5], [-3, 5],
-    [-4, -2],[-4, -3],[-5, -2],[-5, -3],[-2, -4],[-3, -4],[-2, -5],[-3, -5],
-    [-4, 2], [-4, 3], [-5, 2], [-5, 3], [2, -4], [3, -4], [2, -5], [3, -5],
-    [4, 2],  [4, 3],  [5, 2],  [5, 3],  [2, 4],  [3, 4],  [2, 5],  [3, 5]
+    [4, -2],
+    [4, -3],
+    [5, -2],
+    [5, -3],
+    [-2, 4],
+    [-3, 4],
+    [-2, 5],
+    [-3, 5],
+    [-4, -2],
+    [-4, -3],
+    [-5, -2],
+    [-5, -3],
+    [-2, -4],
+    [-3, -4],
+    [-2, -5],
+    [-3, -5],
+    [-4, 2],
+    [-4, 3],
+    [-5, 2],
+    [-5, 3],
+    [2, -4],
+    [3, -4],
+    [2, -5],
+    [3, -5],
+    [4, 2],
+    [4, 3],
+    [5, 2],
+    [5, 3],
+    [2, 4],
+    [3, 4],
+    [2, 5],
+    [3, 5],
   ];
   return getJumpingMoves(row, col, directions, board);
 }
@@ -575,27 +628,58 @@ function getQueenMoves(row, col, board) {
 }
 function getCrocodileMoves(row, col, board) {
   //i wrote any directions becuase i can't put the real dircetions here becuase i is not defiend
-  let directions = [[0,1],[1,1],[1,-1],[0,-1],[-1,-1],[-1,1]]
+  let directions = [
+    [0, 1],
+    [1, 1],
+    [1, -1],
+    [0, -1],
+    [-1, -1],
+    [-1, 1],
+  ];
   let moves = [...getSlideMoves(row, col, directions, board)];
   return moves;
 }
 function getWallMoves(row, col, board) {
   let moves = [];
   const directions = [
-    [0,2],
-    [-1,2],
-    [-2,2],
-    [1,2],
-    [2,2],
-    [0,-3],
-    [-1,-3],
-    [-2,-3],
-    [1,-3],
-    [2,-3],
+    [0, 2],
+    [-1, 2],
+    [-2, 2],
+    [1, 2],
+    [2, 2],
+    [0, -3],
+    [-1, -3],
+    [-2, -3],
+    [1, -3],
+    [2, -3],
   ];
-  if (childclass[row][col][0]=='w') {
-    directions.push([-3,-3],[-3,-2],[-3,-1],[-3,0],[-3,1],[-3,2],[2,-2],[2,-1],[2,0],[2,1])    
-  }else{directions.push([3,-3],[3,-2],[3,-1],[3,0],[3,1],[3,2],[-2,-2],[-2,-1],[-2,0],[-2,1])}
+  if (childclass[row][col][0] == "w") {
+    directions.push(
+      [-3, -3],
+      [-3, -2],
+      [-3, -1],
+      [-3, 0],
+      [-3, 1],
+      [-3, 2],
+      [2, -2],
+      [2, -1],
+      [2, 0],
+      [2, 1]
+    );
+  } else {
+    directions.push(
+      [3, -3],
+      [3, -2],
+      [3, -1],
+      [3, 0],
+      [3, 1],
+      [3, 2],
+      [-2, -2],
+      [-2, -1],
+      [-2, 0],
+      [-2, 1]
+    );
+  }
   return [...getJumpingMoves(row, col, directions, board)];
 }
 function getPigeonMoves(row, col, board) {
@@ -605,9 +689,18 @@ function getPigeonMoves(row, col, board) {
   ];
 }
 function getOctopusMoves(row, col, board) {
-  let moves = []
+  let moves = [];
   //i wrote any directions becuase i can't put the real dircetions here becuase i is not defiend
-  let directions = [[0,1],[1,1],[1,-1],[0,-1],[-1,-1],[-1,1],[-1,-1],[-1,1]]
+  let directions = [
+    [0, 1],
+    [1, 1],
+    [1, -1],
+    [0, -1],
+    [-1, -1],
+    [-1, 1],
+    [-1, -1],
+    [-1, 1],
+  ];
   moves = [...getSlideMoves(row, col, directions, board)];
   const Jumpdirections = [
     [-3, -2],
@@ -674,9 +767,9 @@ render();
 let selectedPiece = null;
 let legalMoves = [];
 let currentTurn = "w";
-let promotedPiece = document.querySelector(".choosePromotedPiece")
+let promotedPiece = document.querySelector(".choosePromotedPiece");
 console.log(promotedPiece);
-let pgn = document.querySelector(".PGN")
+let pgn = document.querySelector(".PGN");
 board.addEventListener("click", (e) => {
   let square = e.target.closest(".square");
   if (!square) return;
@@ -717,7 +810,7 @@ board.addEventListener("click", (e) => {
         legalMoves = [
           ...getPawnMoves(selectedPiece.row, selectedPiece.col, childclass),
         ];
-        break
+        break;
       case "S":
         legalMoves = [
           ...getSnakeMoves(selectedPiece.row, selectedPiece.col, childclass),
@@ -730,7 +823,11 @@ board.addEventListener("click", (e) => {
         break;
       case "C":
         legalMoves = [
-          ...getCrocodileMoves(selectedPiece.row, selectedPiece.col, childclass),
+          ...getCrocodileMoves(
+            selectedPiece.row,
+            selectedPiece.col,
+            childclass
+          ),
         ];
         break;
       case "E":
@@ -758,6 +855,11 @@ board.addEventListener("click", (e) => {
           ...getFrogMoves(selectedPiece.row, selectedPiece.col, childclass),
         ];
         break;
+      case "K":
+        legalMoves = [
+          ...getKingMoves(selectedPiece.row, selectedPiece.col, childclass),
+        ];
+        break;
       default:
         console.log("Not programmed yet.");
         break;
@@ -765,67 +867,101 @@ board.addEventListener("click", (e) => {
     showHints(legalMoves);
     return;
   }
-    const isLegalMove = legalMoves.some((move) => {
-      return move[0] == row && move[1] == col;
-    });
-    if (isLegalMove) {
-      moveIndex++
-      pgnMoves.push([childclass[selectedPiece.row][selectedPiece.col],[row,col],[selectedPiece.row,selectedPiece.col],childclass[row][col]])
-      console.log(pgnMoves[moveIndex]);
-      pgnMoves[moveIndex].push(WtimeNumbers,BtimeNumbers)
-      if (moveIndex !== pgnMoves.length-1) {
-        if(pgnMoves !== []){
-          console.log("the loop started");
-          for (let RM = 0; RM < pgnMoves.length; RM++) {
-            if(moveIndex !== pgnMoves.length-1){
-              pgnMoves.splice(pgnMoves.length-2 , 1)
-              console.log(pgnMoves);
-            }
-            else{break}
-          }}
+  const isLegalMove = legalMoves.some((move) => {
+    return move[0] == row && move[1] == col;
+  });
+  if (isLegalMove) {
+    moveIndex++;
+    pgnMoves.push([
+      childclass[selectedPiece.row][selectedPiece.col],
+      [row, col],
+      [selectedPiece.row, selectedPiece.col],
+      childclass[row][col],
+    ]);
+    console.log(pgnMoves[moveIndex]);
+    pgnMoves[moveIndex].push(WtimeNumbers, BtimeNumbers);
+    if (moveIndex !== pgnMoves.length - 1) {
+      if (pgnMoves !== []) {
+        console.log("the loop started");
+        for (let RM = 0; RM < pgnMoves.length; RM++) {
+          if (moveIndex !== pgnMoves.length - 1) {
+            pgnMoves.splice(pgnMoves.length - 2, 1);
+            console.log(pgnMoves);
+          } else {
+            break;
+          }
+        }
       }
+    }
 
-      //the pgn that shown in the pgn square
-      if (childclass[selectedPiece.row][selectedPiece.col][1] !== 'p') {
-        pgnArr.push([childclass[selectedPiece.row][selectedPiece.col][1],childclass[0][col],childclass[row][0]])
-      }else{pgnArr.push([childclass[0][col],childclass[row][0]])}
-      if (isCapture(row , col , childclass[selectedPiece.row][selectedPiece.col][0]) && childclass[selectedPiece.row][selectedPiece.col][1] !== 'p') {
-        pgnArr[movesPlayed].splice(1,0,'x')
-      }else if(isCapture(row , col , childclass[selectedPiece.row][selectedPiece.col][0]) && childclass[selectedPiece.row][selectedPiece.col][1] == 'p'){
-        pgnArr[movesPlayed].splice(0,0,childclass[0][selectedPiece.col])
-        pgnArr[movesPlayed].splice(1,0,'x')}
-      pgn.innerHTML = String(pgnArr)
-      movesPlayed++
+    //the pgn that shown in the pgn square
+    if (childclass[selectedPiece.row][selectedPiece.col][1] !== "p") {
+      pgnArr.push([
+        childclass[selectedPiece.row][selectedPiece.col][1],
+        childclass[0][col],
+        childclass[row][0],
+      ]);
+    } else {
+      pgnArr.push([childclass[0][col], childclass[row][0]]);
     }
-    if (!isLegalMove) {
-      console.log("Not a legal Move");
-      console.log(legalMoves);
-      clearHints(legalMoves);
-      selectedPiece = null;
-      legalMoves = [];
-      render();
-      return;
-    }console.log(selectedPiece);
-    movePiece([selectedPiece.row, selectedPiece.col], [row, col], childclass);
-    if (currentTurn == 'w') {
-      //promotion
-      for (let pawnRow = 0; pawnRow < childclass[1].length; pawnRow++) {
-        if(childclass[1][pawnRow] == 'wp'){promotedPiece.style.opacity = 1}
-      }
-      Btimer()
-      clearInterval(Wtime)
+    if (
+      isCapture(
+        row,
+        col,
+        childclass[selectedPiece.row][selectedPiece.col][0]
+      ) &&
+      childclass[selectedPiece.row][selectedPiece.col][1] !== "p"
+    ) {
+      pgnArr[movesPlayed].splice(1, 0, "x");
+    } else if (
+      isCapture(
+        row,
+        col,
+        childclass[selectedPiece.row][selectedPiece.col][0]
+      ) &&
+      childclass[selectedPiece.row][selectedPiece.col][1] == "p"
+    ) {
+      pgnArr[movesPlayed].splice(0, 0, childclass[0][selectedPiece.col]);
+      pgnArr[movesPlayed].splice(1, 0, "x");
     }
-    else{
-      //promotion
-      for (let pawnRow = 0; pawnRow < childclass[14].length; pawnRow++) {
-        if(childclass[14][pawnRow] == 'bp'){promotedPiece.style.opacity = 1}}
-      Wtimer()
-      clearInterval(Btime)}
+    pgn.innerHTML = String(pgnArr);
+    movesPlayed++;
+  }
+  if (!isLegalMove) {
+    console.log("Not a legal Move");
+    console.log(legalMoves);
     clearHints(legalMoves);
-    currentTurn = currentTurn == "w" ? "b" : "w";
     selectedPiece = null;
     legalMoves = [];
     render();
+    return;
+  }
+  console.log(selectedPiece);
+  movePiece([selectedPiece.row, selectedPiece.col], [row, col], childclass);
+  if (currentTurn == "w") {
+    //promotion
+    for (let pawnRow = 0; pawnRow < childclass[1].length; pawnRow++) {
+      if (childclass[1][pawnRow] == "wp") {
+        promotedPiece.style.opacity = 1;
+      }
+    }
+    Btimer();
+    clearInterval(Wtime);
+  } else {
+    //promotion
+    for (let pawnRow = 0; pawnRow < childclass[14].length; pawnRow++) {
+      if (childclass[14][pawnRow] == "bp") {
+        promotedPiece.style.opacity = 1;
+      }
+    }
+    Wtimer();
+    clearInterval(Btime);
+  }
+  clearHints(legalMoves);
+  currentTurn = currentTurn == "w" ? "b" : "w";
+  selectedPiece = null;
+  legalMoves = [];
+  render();
 });
 function showHints(coords) {
   const squares = getSquaresByCoords(legalMoves);
@@ -852,12 +988,13 @@ function getSquaresByCoords(coords) {
   for (i = 0; i < coords.length; i++) {
     squares.push(
       document.querySelector(
-        `.square[data-row="${coords[i][0]}"][data-col="${coords[i][1]}"]`,
-      ),
+        `.square[data-row="${coords[i][0]}"][data-col="${coords[i][1]}"]`
+      )
     );
   }
   return squares;
-}getSquaresByCoords(legalMoves)
+}
+getSquaresByCoords(legalMoves);
 function isCapture(row, col, color) {
   return (
     isValidSquare(row, col) &&
@@ -886,151 +1023,175 @@ function isEnPassant([fromR, fromC], [toR, toC], board) {
   return false;
 }
 
-let Btime = ''
-let BtimeNumbers = [10,0,0,0]
-let Bmin = document.getElementById("Bmin")
-let Btensec = document.getElementById("Btensec")
-let Bsec = document.getElementById("Bsec")
-let Bmlsec = document.getElementById("Bmlsec")
+let Btime = "";
+let BtimeNumbers = [10, 0, 0, 0];
+let Bmin = document.getElementById("Bmin");
+let Btensec = document.getElementById("Btensec");
+let Bsec = document.getElementById("Bsec");
+let Bmlsec = document.getElementById("Bmlsec");
 function Btimer() {
-  Btime = setInterval(()=>{
-  Bmin.innerHTML= BtimeNumbers[0]
-  Btensec.innerHTML = BtimeNumbers[1]
-  Bsec.innerHTML = BtimeNumbers[2]
-  if (BtimeNumbers[0] == 0 && BtimeNumbers[1] < 4) {
-    Bmlsec.innerHTML = '.' + BtimeNumbers[3]
-  }
-  if (BtimeNumbers[3] !== 0) {
-    BtimeNumbers[3]--
-  }
-  else if (BtimeNumbers[3] == 0 && BtimeNumbers[2] !== 0) {
-    clearInterval(Btime)
-    BtimeNumbers[3] = 9
-    BtimeNumbers[2] --
-    Btimer()
-  }
-  else if (BtimeNumbers[3] == 0 && BtimeNumbers[2] == 0 && BtimeNumbers[1] !== 0) {
-    clearInterval(Btime)
-    BtimeNumbers[3] = 9
-    BtimeNumbers[2] = 9
-    BtimeNumbers[1] --
-    Btimer()
-  }
-  else if (BtimeNumbers[3] == 0 && BtimeNumbers[2] == 0 && BtimeNumbers[1] == 0 && BtimeNumbers[0] !== 0) {
-    clearInterval(Btime)
-    BtimeNumbers[3] = 9
-    BtimeNumbers[2] = 9
-    BtimeNumbers[1] = 5
-    BtimeNumbers[0] --
-    Btimer()
-  }
-  else if(BtimeNumbers[3] == 0 && BtimeNumbers[2] == 0 && BtimeNumbers[1] == 0 && BtimeNumbers[0] == 0) {
-    clearInterval(Btime)
-  }
-  }, 100)
+  Btime = setInterval(() => {
+    Bmin.innerHTML = BtimeNumbers[0];
+    Btensec.innerHTML = BtimeNumbers[1];
+    Bsec.innerHTML = BtimeNumbers[2];
+    if (BtimeNumbers[0] == 0 && BtimeNumbers[1] < 4) {
+      Bmlsec.innerHTML = "." + BtimeNumbers[3];
+    }
+    if (BtimeNumbers[3] !== 0) {
+      BtimeNumbers[3]--;
+    } else if (BtimeNumbers[3] == 0 && BtimeNumbers[2] !== 0) {
+      clearInterval(Btime);
+      BtimeNumbers[3] = 9;
+      BtimeNumbers[2]--;
+      Btimer();
+    } else if (
+      BtimeNumbers[3] == 0 &&
+      BtimeNumbers[2] == 0 &&
+      BtimeNumbers[1] !== 0
+    ) {
+      clearInterval(Btime);
+      BtimeNumbers[3] = 9;
+      BtimeNumbers[2] = 9;
+      BtimeNumbers[1]--;
+      Btimer();
+    } else if (
+      BtimeNumbers[3] == 0 &&
+      BtimeNumbers[2] == 0 &&
+      BtimeNumbers[1] == 0 &&
+      BtimeNumbers[0] !== 0
+    ) {
+      clearInterval(Btime);
+      BtimeNumbers[3] = 9;
+      BtimeNumbers[2] = 9;
+      BtimeNumbers[1] = 5;
+      BtimeNumbers[0]--;
+      Btimer();
+    } else if (
+      BtimeNumbers[3] == 0 &&
+      BtimeNumbers[2] == 0 &&
+      BtimeNumbers[1] == 0 &&
+      BtimeNumbers[0] == 0
+    ) {
+      clearInterval(Btime);
+    }
+  }, 100);
 }
-let Wtime = ''
-let WtimeNumbers = [10,0,0,0]
-let Wmin = document.getElementsByClassName("Wmin")
-let Wtensec = document.getElementsByClassName("Wtensec")
-let Wsec = document.getElementsByClassName("Wsec")
-let Wmlsec = document.getElementsByClassName("Wmlsec")
+let Wtime = "";
+let WtimeNumbers = [10, 0, 0, 0];
+let Wmin = document.getElementsByClassName("Wmin");
+let Wtensec = document.getElementsByClassName("Wtensec");
+let Wsec = document.getElementsByClassName("Wsec");
+let Wmlsec = document.getElementsByClassName("Wmlsec");
 function Wtimer() {
-  Wtime = setInterval(()=>{
-  Wmin[0].innerHTML= WtimeNumbers[0]
-  Wtensec[0].innerHTML = WtimeNumbers[1]
-  Wsec[0].innerHTML = WtimeNumbers[2]
-  if (WtimeNumbers[0] == 0 && WtimeNumbers[1] < 4) {
-    Wmlsec[0].innerHTML = '.' + WtimeNumbers[3]
-  }
-  if (WtimeNumbers[3] !== 0) {
-    WtimeNumbers[3]--
-  }
-  else if (WtimeNumbers[3] == 0 && WtimeNumbers[2] !== 0) {
-    clearInterval(Wtime)
-    WtimeNumbers[3] = 9
-    WtimeNumbers[2] --
-    Wtimer()
-  }
-  else if (WtimeNumbers[3] == 0 && WtimeNumbers[2] == 0 && WtimeNumbers[1] !== 0) {
-    clearInterval(Wtime)
-    WtimeNumbers[3] = 9
-    WtimeNumbers[2] = 9
-    WtimeNumbers[1] --
-    Wtimer()
-  }
-  else if (WtimeNumbers[3] == 0 && WtimeNumbers[2] == 0 && WtimeNumbers[1] == 0 && WtimeNumbers[0] !== 0) {
-    clearInterval(Wtime)
-    WtimeNumbers[3] = 9
-    WtimeNumbers[2] = 9
-    WtimeNumbers[1] = 5
-    WtimeNumbers[0] --
-    Wtimer()
-  }
-  else if(WtimeNumbers[3] == 0 && WtimeNumbers[2] == 0 && WtimeNumbers[1] == 0 && WtimeNumbers[0] == 0) {
-    clearInterval(Wtime)
-  }
-  }, 100)
+  Wtime = setInterval(() => {
+    Wmin[0].innerHTML = WtimeNumbers[0];
+    Wtensec[0].innerHTML = WtimeNumbers[1];
+    Wsec[0].innerHTML = WtimeNumbers[2];
+    if (WtimeNumbers[0] == 0 && WtimeNumbers[1] < 4) {
+      Wmlsec[0].innerHTML = "." + WtimeNumbers[3];
+    }
+    if (WtimeNumbers[3] !== 0) {
+      WtimeNumbers[3]--;
+    } else if (WtimeNumbers[3] == 0 && WtimeNumbers[2] !== 0) {
+      clearInterval(Wtime);
+      WtimeNumbers[3] = 9;
+      WtimeNumbers[2]--;
+      Wtimer();
+    } else if (
+      WtimeNumbers[3] == 0 &&
+      WtimeNumbers[2] == 0 &&
+      WtimeNumbers[1] !== 0
+    ) {
+      clearInterval(Wtime);
+      WtimeNumbers[3] = 9;
+      WtimeNumbers[2] = 9;
+      WtimeNumbers[1]--;
+      Wtimer();
+    } else if (
+      WtimeNumbers[3] == 0 &&
+      WtimeNumbers[2] == 0 &&
+      WtimeNumbers[1] == 0 &&
+      WtimeNumbers[0] !== 0
+    ) {
+      clearInterval(Wtime);
+      WtimeNumbers[3] = 9;
+      WtimeNumbers[2] = 9;
+      WtimeNumbers[1] = 5;
+      WtimeNumbers[0]--;
+      Wtimer();
+    } else if (
+      WtimeNumbers[3] == 0 &&
+      WtimeNumbers[2] == 0 &&
+      WtimeNumbers[1] == 0 &&
+      WtimeNumbers[0] == 0
+    ) {
+      clearInterval(Wtime);
+    }
+  }, 100);
 }
-lastMove.addEventListener('click', ()=>{
-  childclass[pgnMoves[moveIndex][2][0]][pgnMoves[moveIndex][2][1]] =pgnMoves[moveIndex][0]
-  childclass[pgnMoves[moveIndex][1][0]][pgnMoves[moveIndex][1][1]] =pgnMoves[moveIndex][3]
+lastMove.addEventListener("click", () => {
+  childclass[pgnMoves[moveIndex][2][0]][pgnMoves[moveIndex][2][1]] =
+    pgnMoves[moveIndex][0];
+  childclass[pgnMoves[moveIndex][1][0]][pgnMoves[moveIndex][1][1]] =
+    pgnMoves[moveIndex][3];
   console.log(pgnMoves);
-  render()
-  console.log(currentTurn == 'w');
-  if (currentTurn == 'w') {
-    currentTurn = 'b'
-    BtimeNumbers = pgnMoves[moveIndex][5]
+  render();
+  console.log(currentTurn == "w");
+  if (currentTurn == "w") {
+    currentTurn = "b";
+    BtimeNumbers = pgnMoves[moveIndex][5];
     console.log(BtimeNumbers);
-    Btimer()
-    clearInterval(Wtime)
-  }
-  else{
-    currentTurn = 'w'
-    WtimeNumbers = pgnMoves[moveIndex][4]
+    Btimer();
+    clearInterval(Wtime);
+  } else {
+    currentTurn = "w";
+    WtimeNumbers = pgnMoves[moveIndex][4];
     console.log(WtimeNumbers);
-    Wtimer()
-    clearInterval(Btime)}
-  moveIndex--
+    Wtimer();
+    clearInterval(Btime);
+  }
+  moveIndex--;
   console.log(moveIndex);
   console.log(pgnMoves);
-})
-nextMove.addEventListener('click', ()=>{
-  if (moveIndex < pgnMoves.length-1) {
-    moveIndex++
-    childclass[pgnMoves[moveIndex][2][0]][pgnMoves[moveIndex][2][1]] = null
-    childclass[pgnMoves[moveIndex][1][0]][pgnMoves[moveIndex][1][1]] = pgnMoves[moveIndex][0]
+});
+nextMove.addEventListener("click", () => {
+  if (moveIndex < pgnMoves.length - 1) {
+    moveIndex++;
+    childclass[pgnMoves[moveIndex][2][0]][pgnMoves[moveIndex][2][1]] = null;
+    childclass[pgnMoves[moveIndex][1][0]][pgnMoves[moveIndex][1][1]] =
+      pgnMoves[moveIndex][0];
     console.log(pgnMoves);
-    render()
-    console.log(currentTurn == 'w');
-    if (currentTurn == 'w') {
-      currentTurn = 'b'
-      BtimeNumbers = pgnMoves[moveIndex][5]
-      Btimer()
-      clearInterval(Wtime)
+    render();
+    console.log(currentTurn == "w");
+    if (currentTurn == "w") {
+      currentTurn = "b";
+      BtimeNumbers = pgnMoves[moveIndex][5];
+      Btimer();
+      clearInterval(Wtime);
+    } else {
+      currentTurn = "w";
+      WtimeNumbers = pgnMoves[moveIndex][4];
+      Wtimer();
+      clearInterval(Btime);
     }
-    else{
-      currentTurn = 'w'
-      WtimeNumbers = pgnMoves[moveIndex][4]
-      Wtimer()
-      clearInterval(Btime)}
     console.log(moveIndex);
     console.log(pgnMoves);
   }
-})
-function promotePiece(Prow,pieceKey) {
-  console.log(Prow , pieceKey);
+});
+function promotePiece(Prow, pieceKey) {
+  console.log(Prow, pieceKey);
   for (let Pcol = 0; Pcol < childclass[Prow].length; Pcol++) {
     console.log(childclass[Prow][Pcol]);
     if (childclass[Prow][Pcol] == "wp") {
-      childclass[Prow][Pcol]= "w" + pieceKey
-      pgnArr[movesPlayed-1].push('=' , pieceKey)
-      pgn.innerHTML= String(pgnArr)
+      childclass[Prow][Pcol] = "w" + pieceKey;
+      pgnArr[movesPlayed - 1].push("=", pieceKey);
+      pgn.innerHTML = String(pgnArr);
     }
     if (childclass[Prow][Pcol] == "bp") {
-      childclass[Prow][Pcol]= "b" + pieceKey
-      pgnArr[movesPlayed-1].push('=' , pieceKey)
-      pgn.innerHTML= String(pgnArr)
-    }}
-  render()
+      childclass[Prow][Pcol] = "b" + pieceKey;
+      pgnArr[movesPlayed - 1].push("=", pieceKey);
+      pgn.innerHTML = String(pgnArr);
+    }
+  }
+  render();
 }
