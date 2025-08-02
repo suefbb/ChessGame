@@ -1,4 +1,4 @@
-let rows = ['','a','b','c','d','e','f','g','h','i','j','k','l','m','n']
+let colmns = ['','a','b','c','d','e','f','g','h','i','j','k','l','m','n']
 export function changepgnmovestoPGN(moves) { 
   let pgnArr = []
   for (let m = 0; m < moves.length; m++) {
@@ -13,12 +13,12 @@ export function changepgnmovestoPGN(moves) {
     }
     //push pawn colmn if pawn takes
     if (moves[m][0][1] == 'p' && moves[m][3] !== null) {
-      pgnArr[m].push(rows[moves[m][2][1]])
+      pgnArr[m].push(colmns[moves[m][2][1]])
     }
     if (moves[m][3] !== null) {
       pgnArr[m].push('x')
     }
-    pgnArr[m].push(rows[moves[m][1][1]] , 15 - (moves[m][1][0]))
+    pgnArr[m].push(colmns[moves[m][1][1]] , 15 - (moves[m][1][0]))
     pgnArr[m].push(' ')
   }
   return pgnArr

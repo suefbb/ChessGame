@@ -263,11 +263,23 @@ var childclass = [
     "wR",
   ],
 ];
+const promotionRows = {
+  b: 14,
+  w: 1,
+};
+let acceptDraw = [false , false]
 let board = document.querySelector(".board");
 let nextMove = document.querySelector("#nextMove");
 let lastMove = document.querySelector("#lastMove");
 let moveIndex = -1;
 let rightthings = document.querySelector(".rightthings");
+rightthings.children[3].children[2].children[3].addEventListener('click' , ()=>{resign()})
+rightthings.children[3].children[2].children[2].addEventListener('click' , ()=>{drawOffer()})
+for (let child = 0; child < rightthings.children[2].children.length; child++) {
+  if (child % 12 == 11) {
+    rightthings.children[2].children[child].addEventListener('click',()=>{promotePawn(promotionRows[rightthings.children[2].children[child].src[22]],rightthings.children[2].children[child].src[25].toUpperCase())})
+  }else{rightthings.children[2].children[child].addEventListener('click',()=>{promotePawn(promotionRows[rightthings.children[2].children[child].src[22]],rightthings.children[2].children[child].src[24].toUpperCase())})}
+}
 let rotation = document.querySelector("#rotation");
 function createBoard() {
   for (let i = 0; i < childclass.length; i++) {
@@ -312,10 +324,8 @@ function render() {
     }
   });
 }
-
 createBoard();
 render();
-
 let selectedPiece = null;
 let legalMoves = [];
 let currentTurn = "w";
@@ -391,7 +401,6 @@ board.addEventListener("click", (e) => {
     render();
     return;
   }
-  console.log(selectedPiece);
   movePiece([selectedPiece.row, selectedPiece.col], [row, col], childclass);
   if (currentTurn == "w") {
     if (rotation.value == 'True') {
@@ -401,7 +410,6 @@ board.addEventListener("click", (e) => {
       rightthings.children[3].style.transform = 'Rotate(180deg)'
       rightthings.children[4].style.transform = 'Rotate(180deg)'
       rightthings.children[5].style.transform = 'Rotate(180deg)'
-      console.log(rightthings.style);      
     }
     //promotion
     for (let pawnRow = 0; pawnRow < childclass[1].length; pawnRow++) {
@@ -684,7 +692,7 @@ nextMove.addEventListener("click", () => {
     console.log(pgnMoves);
   }
 });
-function promotePiece(Prow, pieceKey) {
+function promotePawn(Prow, pieceKey) {
   console.log(Prow, pieceKey);
   for (let Pcol = 0; Pcol < childclass[Prow].length; Pcol++) {
     console.log(childclass[Prow][Pcol]);
@@ -705,4 +713,25 @@ function resign() {
     if (currentTurn == 'b') {
       console.log('White won');    
     }
+}
+function drawOffer() {
+  if (currentTurn == 'w') {
+    if (acceptDraw[1]) {
+      acceptDraw[0] = true
+      console.log('draw'); 
+    }else if (acceptDraw[0]){
+      acceptDraw[0] = false
+    }
+    else{acceptDraw[0] = true}
+  }
+  if (currentTurn == 'b') {
+    if (acceptDraw[0]) {
+      acceptDraw[1] = true
+      console.log('draw'); 
+    }else if (acceptDraw[1]){
+      acceptDraw[1] = false
+    }
+    else{acceptDraw[1] = true}
+  }
+  console.log(acceptDraw);
 }
