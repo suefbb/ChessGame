@@ -1,9 +1,11 @@
 import { isKingInCheck, isMoveLeavingKingInCheck } from "./kingUtils.js";
 import { getMoves } from "./pieces.js";
 import { isValidSquare, switchTurn } from "./utils.js";
-
+import { changepgnmovestoPGN } from "./extensions.js";
+let result = '*'
 const BOARD_DIM = 15;
 let movesPlayed = 0;
+localStorage.setItem('movesPlayed' , movesPlayed)
 const pieceMap = {
   R: "rook",
   E: "elephant",
@@ -262,14 +264,30 @@ var childclass = [
     "wR",
   ],
 ];
+localStorage.setItem('childclass' , childclass)
+const promotionRows = {
+  b: 14,
+  w: 1,
+};
+let acceptDraw = [false , false]
+localStorage.setItem('acceptDraw' , acceptDraw)
 let board = document.querySelector(".board");
 let nextMove = document.querySelector("#nextMove");
 let lastMove = document.querySelector("#lastMove");
 let moveIndex = -1;
-let pgnArr = [];
-function createBoard() {
-  for (let i = 0; i < childclass.length; i++) {
-    for (let j = 0; j < childclass.length; j++) {
+localStorage.setItem('momoveIndex' ,moveIndex)
+let rightthings = document.querySelector(".rightthings");
+rightthings.children[3].children[2].children[3].addEventListener('click' , ()=>{resign()})
+rightthings.children[3].children[2].children[2].addEventListener('click' , ()=>{drawOffer()})
+for (let child = 0; child < rightthings.children[2].children.length; child++) {
+  if (child % 12 == 11) {
+    rightthings.children[2].children[child].addEventListener('click',()=>{promotePawn(promotionRows[rightthings.children[2].children[child].src[22]],rightthings.children[2].children[child].src[25].toUpperCase())})
+  }else{rightthings.children[2].children[child].addEventListener('click',()=>{promotePawn(promotionRows[rightthings.children[2].children[child].src[22]],rightthings.children[2].children[child].src[24].toUpperCase())})}
+}
+let rotation = document.querySelector("#rotation");
+function createBoard(position) {
+  for (let i = 0; i < childclass.length; i++) {//position
+    for (let j = 0; j < childclass.length; j++) {//position
       let square = document.createElement("div");
       square.dataset.row = i;
       square.dataset.col = j;
@@ -283,7 +301,7 @@ function createBoard() {
     }
   }
 }
-function render() {
+function render(position) {//childclass
   const squares = document.querySelectorAll(".board .square");
   squares.forEach((square, index) => {
     square.innerHTML = "";
@@ -310,15 +328,17 @@ function render() {
     }
   });
 }
-
 createBoard();
 render();
-
 let selectedPiece = null;
+localStorage.setItem('seselectedPiece' ,selectedPiece)
 let legalMoves = [];
+localStorage.setItem('legalMoves' ,legalMoves)
 let currentTurn = "w";
+localStorage.setItem('currentTurn' ,currentTurn)
 let promotedPiece = document.querySelector(".choosePromotedPiece");
 let pgn = document.querySelector(".PGN");
+//--------------------------------------------------------------------------//
 board.addEventListener("click", (e) => {
   let square = e.target.closest(".square");
   if (!square) return;
@@ -359,7 +379,9 @@ board.addEventListener("click", (e) => {
       [selectedPiece.row, selectedPiece.col],
       childclass[row][col],
     ]);
-    console.log(pgnMoves[moveIndex]);
+    changepgnmovestoPGN(pgnMoves)
+    pgn.innerHTML = String(changepgnmovestoPGN(pgnMoves))
+    //console.log(pgnMoves[moveIndex]);
     pgnMoves[moveIndex].push(WtimeNumbers, BtimeNumbers);
     if (moveIndex !== pgnMoves.length - 1) {
       if (pgnMoves.length !== 0) {
@@ -372,40 +394,10 @@ board.addEventListener("click", (e) => {
             break;
           }
         }
+        changepgnmovestoPGN(pgnMoves)
+        pgn.innerHTML = String(changepgnmovestoPGN(pgnMoves))
       }
     }
-
-    //the pgn that shown in the pgn square
-    if (childclass[selectedPiece.row][selectedPiece.col][1] !== "p") {
-      pgnArr.push([
-        childclass[selectedPiece.row][selectedPiece.col][1],
-        childclass[0][col],
-        childclass[row][0],
-      ]);
-    } else {
-      pgnArr.push([childclass[0][col], childclass[row][0]]);
-    }
-    if (
-      isCapture(
-        row,
-        col,
-        childclass[selectedPiece.row][selectedPiece.col][0],
-      ) &&
-      childclass[selectedPiece.row][selectedPiece.col][1] !== "p"
-    ) {
-      pgnArr[movesPlayed].splice(1, 0, "x");
-    } else if (
-      isCapture(
-        row,
-        col,
-        childclass[selectedPiece.row][selectedPiece.col][0],
-      ) &&
-      childclass[selectedPiece.row][selectedPiece.col][1] == "p"
-    ) {
-      pgnArr[movesPlayed].splice(0, 0, childclass[0][selectedPiece.col]);
-      pgnArr[movesPlayed].splice(1, 0, "x");
-    }
-    pgn.innerHTML = String(pgnArr);
     movesPlayed++;
   }
   if (!isLegalMove) {
@@ -417,9 +409,16 @@ board.addEventListener("click", (e) => {
     render();
     return;
   }
-  console.log(selectedPiece);
   movePiece([selectedPiece.row, selectedPiece.col], [row, col], childclass);
   if (currentTurn == "w") {
+    if (rotation.value == 'True') {
+      rightthings.children[0].style.transform = 'Rotate(180deg)'
+      rightthings.children[1].style.transform = 'Rotate(180deg)'
+      rightthings.children[2].style.transform = 'Rotate(180deg)'
+      rightthings.children[3].style.transform = 'Rotate(180deg)'
+      rightthings.children[4].style.transform = 'Rotate(180deg)'
+      rightthings.children[5].style.transform = 'Rotate(180deg)'
+    }
     //promotion
     for (let pawnRow = 0; pawnRow < childclass[1].length; pawnRow++) {
       if (childclass[1][pawnRow] == "wp") {
@@ -429,6 +428,14 @@ board.addEventListener("click", (e) => {
     Btimer();
     clearInterval(Wtime);
   } else {
+    if (rotation.value == 'True') {
+      rightthings.children[0].style.transform = 'Rotate(0deg)'
+      rightthings.children[1].style.transform = 'Rotate(0deg)'
+      rightthings.children[2].style.transform = 'Rotate(0deg)'
+      rightthings.children[3].style.transform = 'Rotate(0deg)'
+      rightthings.children[4].style.transform = 'Rotate(0deg)'
+      rightthings.children[5].style.transform = 'Rotate(0deg)'
+    }
     //promotion
     for (let pawnRow = 0; pawnRow < childclass[14].length; pawnRow++) {
       if (childclass[14][pawnRow] == "bp") {
@@ -493,9 +500,9 @@ export function movePiece([fromR, fromC], [toR, toC], board) {
   }
   board[toR][toC] = board[fromR][fromC];
   board[fromR][fromC] = null;
-  console.log(
-    `Is ${currentTurn} King In Check? ${isKingInCheck(currentTurn, childclass)}`,
-  );
+  //console.log(
+  //  `Is ${currentTurn} King In Check? ${isKingInCheck(currentTurn, childclass)}`,
+  //);
 }
 function isEnPassant([fromR, fromC], [toR, toC], board) {
   const piece = board[fromR][fromC];
@@ -613,6 +620,7 @@ function Wtimer() {
     }
   }, 100);
 }
+
 lastMove.addEventListener("click", () => {
   childclass[pgnMoves[moveIndex][2][0]][pgnMoves[moveIndex][2][1]] =
     pgnMoves[moveIndex][0];
@@ -622,12 +630,28 @@ lastMove.addEventListener("click", () => {
   render();
   console.log(currentTurn == "w");
   if (currentTurn == "w") {
+    if (rotation.value == 'True') {
+      rightthings.children[0].style.transform = 'Rotate(180deg)'
+      rightthings.children[1].style.transform = 'Rotate(180deg)'
+      rightthings.children[2].style.transform = 'Rotate(180deg)'
+      rightthings.children[3].style.transform = 'Rotate(180deg)'
+      rightthings.children[4].style.transform = 'Rotate(180deg)'
+      rightthings.children[5].style.transform = 'Rotate(180deg)'
+    }
     currentTurn = "b";
     BtimeNumbers = pgnMoves[moveIndex][5];
     console.log(BtimeNumbers);
     Btimer();
     clearInterval(Wtime);
   } else {
+    if (rotation.value == 'True') {
+      rightthings.children[0].style.transform = 'Rotate(0deg)'
+      rightthings.children[1].style.transform = 'Rotate(0deg)'
+      rightthings.children[2].style.transform = 'Rotate(0deg)'
+      rightthings.children[3].style.transform = 'Rotate(0deg)'
+      rightthings.children[4].style.transform = 'Rotate(0deg)'
+      rightthings.children[5].style.transform = 'Rotate(0deg)'
+    }
     currentTurn = "w";
     WtimeNumbers = pgnMoves[moveIndex][4];
     console.log(WtimeNumbers);
@@ -648,11 +672,25 @@ nextMove.addEventListener("click", () => {
     render();
     console.log(currentTurn == "w");
     if (currentTurn == "w") {
+      if (rotation.value == 'True') {
+        rightthings.children[0].style.transform = 'Rotate(180deg)'
+        rightthings.children[1].style.transform = 'Rotate(180deg)'
+        rightthings.children[2].style.transform = 'Rotate(180deg)'
+        rightthings.children[3].style.transform = 'Rotate(180deg)'
+        rightthings.children[4].style.transform = 'Rotate(180deg)'
+        rightthings.children[5].style.transform = 'Rotate(180deg)'}
       currentTurn = "b";
       BtimeNumbers = pgnMoves[moveIndex][5];
       Btimer();
       clearInterval(Wtime);
     } else {
+      if (rotation.value == 'True') {
+        rightthings.children[0].style.transform = 'Rotate(0deg)'
+        rightthings.children[1].style.transform = 'Rotate(0deg)'
+        rightthings.children[2].style.transform = 'Rotate(0deg)'
+        rightthings.children[3].style.transform = 'Rotate(0deg)'
+        rightthings.children[4].style.transform = 'Rotate(0deg)'
+        rightthings.children[5].style.transform = 'Rotate(0deg)'}
       currentTurn = "w";
       WtimeNumbers = pgnMoves[moveIndex][4];
       Wtimer();
@@ -662,20 +700,45 @@ nextMove.addEventListener("click", () => {
     console.log(pgnMoves);
   }
 });
-function promotePiece(Prow, pieceKey) {
+function promotePawn(Prow, pieceKey) {
   console.log(Prow, pieceKey);
   for (let Pcol = 0; Pcol < childclass[Prow].length; Pcol++) {
     console.log(childclass[Prow][Pcol]);
     if (childclass[Prow][Pcol] == "wp") {
       childclass[Prow][Pcol] = "w" + pieceKey;
-      pgnArr[movesPlayed - 1].push("=", pieceKey);
-      pgn.innerHTML = String(pgnArr);
     }
     if (childclass[Prow][Pcol] == "bp") {
       childclass[Prow][Pcol] = "b" + pieceKey;
-      pgnArr[movesPlayed - 1].push("=", pieceKey);
-      pgn.innerHTML = String(pgnArr);
     }
   }
   render();
+}
+function resign(turn) {
+    if (turn == 'w') {
+      result = 'Black won'  
+    }
+    if (turn == 'b') {
+      result = 'White won'    
+    }
+}
+function drawOffer(wantsToDraw , turn) {
+  if (turn == 'w') {
+    if (wantsToDraw[1]) {
+      wantsToDraw[0] = true
+      result = 'draw' 
+    }else if (wantsToDraw[0]){
+      wantsToDraw[0] = false
+    }
+    else{wantsToDraw[0] = true}
+  }
+  if (turn == 'b') {
+    if (wantsToDraw[0]) {
+      wantsToDraw[1] = true
+      result = 'draw' 
+    }else if (wantsToDraw[1]){
+      wantsToDraw[1] = false
+    }
+    else{wantsToDraw[1] = true}
+  }
+  console.log(wantsToDraw);
 }

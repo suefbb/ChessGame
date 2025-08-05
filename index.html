@@ -1,87 +1,83 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
-    <title>!Hello, World</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <!--things on the left-->
-    <div>
-      <!--start-->
-      <div class="board" id="pp"></div>
-      <!--end-->
+<head>
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+  <title>!Hello, World</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="chess.js" type="module"></script>
+</head>
+<body>
+  <!--things on the left-->
+  <div>
+    <!--start-->
+    <div class="board" id="pp">
     </div>
-    <!--things on the right-->
-    <div class="rightthings">
-      <div class="btimer">
-        <p id="Bmin">10</p>
-        <p>:</p>
-        <p id="Btensec">0</p>
-        <p id="Bsec">0</p>
-        <p id="Bmlsec"></p>
-      </div>
-      <div>SUEFB(1846)(B)</div>
-      <div class="choosePromotedPiece">
-        <img src="w-queen.svg" onclick="promotePiece(1,'Q',)" />
-        <img src="w-zebra.svg" onclick="promotePiece(1,'Z',)" />
-        <img src="w-crocodile.svg" onclick="promotePiece(1,'C',)" />
-        <img src="w-elephant.svg" onclick="promotePiece(1,'E',)" />
-        <img src="w-pigeon.svg" onclick="promotePiece(1,'P',)" />
-        <img src="w-frog.svg" onclick="promotePiece(1,'F',)" />
-        <img src="w-rook.svg" onclick="promotePiece(1,'R',)" />
-        <img src="w-bishop.svg" onclick="promotePiece(1,'B',)" />
-        <img src="w-wall.svg" onclick="promotePiece(1,'W',)" />
-        <img src="w-octopus.svg" onclick="promotePiece(1,'O',)" />
-        <img src="w-snake.svg" onclick="promotePiece(1,'S',)" />
-        <img src="w-knight.svg" onclick="promotePiece(1,'N',)" />
-        <img src="b-queen.svg" onclick="promotePiece(14,'Q',)" />
-        <img src="b-zebra.svg" onclick="promotePiece(14,'Z',)" />
-        <img src="b-crocodile.svg" onclick="promotePiece(14,'C',)" />
-        <img src="b-elephant.svg" onclick="promotePiece(14,'E',)" />
-        <img src="b-pigeon.svg" onclick="promotePiece(14,'P',)" />
-        <img src="b-frog.svg" onclick="promotePiece(14,'F',)" />
-        <img src="b-rook.svg" onclick="promotePiece(14,'R',)" />
-        <img src="b-bishop.svg" onclick="promotePiece(14,'B',)" />
-        <img src="b-wall.svg" onclick="promotePiece(14,'W',)" />
-        <img src="b-octopus.svg" onclick="promotePiece(14,'O',)" />
-        <img src="b-snake.svg" onclick="promotePiece(14,'S',)" />
-        <img src="b-knight.svg" onclick="promotePiece(14,'N',)" />
-      </div>
-      <div>
-        <div class="PGN"></div>
-        <div style="display: flex">
-          <button onclick="rmv()" id="button1">remove</button>
-          <select name="bc" id="back_color">
-            <option value="gray">gray</option>
-            <option value="red">red</option>
-            <option value="green">green</option>
-            <option value="blue">blue</option>
-          </select>
-          <select name="active" id="is_active">
-            <option value="T">move</option>
-            <option value="F">explain</option>
-          </select>
-        </div>
-        <div
-          class="options"
-          style="height: 70px; display: flex; justify-content: space-around"
-        >
+    <!--end-->
+  </div>
+  <!--things on the right-->
+  <div class="rightthings">
+    <div class="btimer">
+      <p id="Bmin">10</p>
+      <p>:</p>
+      <p id="Btensec">0</p>
+      <p id="Bsec">0</p>
+      <p id="Bmlsec"></p>
+    </div>
+    <div>SUEFB(1846)(B)</div>
+    <div class="choosePromotedPiece">
+      <img src="w-queen.svg">
+      <img src="w-zebra.svg">
+      <img src="w-crocodile.svg">
+      <img src="w-elephant.svg">
+      <img src="w-pigeon.svg">
+      <img src="w-frog.svg">
+      <img src="w-rook.svg">
+      <img src="w-bishop.svg">
+      <img src="w-wall.svg">
+      <img src="w-octopus.svg">
+      <img src="w-snake.svg">
+      <img src="w-knight.svg">
+      <img src="b-queen.svg">
+      <img src="b-zebra.svg">
+      <img src="b-crocodile.svg">
+      <img src="b-elephant.svg">
+      <img src="b-pigeon.svg">
+      <img src="b-frog.svg">
+      <img src="b-rook.svg">
+      <img src="b-bishop.svg">
+      <img src="b-wall.svg">
+      <img src="b-octopus.svg">
+      <img src="b-snake.svg">
+      <img src="b-knight.svg">
+    </div>
+    <div>
+      <div class="PGN"></div>
+      <div style="display: flex;">
+        <button onclick="rmv()" id="button1">remove</button>
+        <select name="bc" id="back_color">
+          <option value="gray">gray</option>
+          <option value="red">red</option>
+          <option value="green">green</option>
+          <option value="blue">blue</option>
+        </select>
+        <select name="active" id="rotation">
+          <option value="True">rotation</option>
+          <option value="False">no rotation</option>
+        </select></div>
+        <div class="options" style="height: 70px; display: flex; justify-content: space-around;">
           <p id="lastMove"><</p>
           <p id="nextMove">></p>
-          <p>D</p>
-          <p>R</p>
-        </div>
+          <p>1/2</p>
+          <p>R</p></div>
       </div>
-      <div class="Wtimer">
-        <p class="Wmin">10</p>
-        <p>:</p>
-        <p class="Wtensec">0</p>
-        <p class="Wsec">0</p>
-        <p class="Wmlsec"></p>
-      </div>
-      <div>MOHAMEDCHESS(1670)(W)</div>
+    <div class="Wtimer">
+      <p class="Wmin">10</p>
+      <p>:</p>
+      <p class="Wtensec">0</p>
+      <p class="Wsec">0</p>
+      <p class="Wmlsec"></p>
     </div>
-    <script defer src="chess.js" type="module"></script>
-  </body>
+    <div>MOHAMEDCHESS(1670)(W)</div>
+  </div>
+</body>
 </html>
