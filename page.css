@@ -1,0 +1,37 @@
+body{background-color: rgb(100, 100, 130);}
+.type{
+    display: flex;
+}
+.types{
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-around;
+}
+.Bullet div{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.Bullet div a{
+    width: 16.5%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    border-radius: 10px;
+    background-color: rgb(20, 20, 35);
+    color: white;
+}
+.Bullet div a:hover{
+    background-color: blue;
+}
+.types h2:hover{
+    background-color: blueviolet;
+}
+.types h2{
+    text-align: center;
+    height: 34px;
+    width: 31.7%;
+    border-radius: 5px;
+}

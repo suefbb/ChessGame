@@ -5,7 +5,7 @@ body div{
 .rightthings{
     flex-grow: 1;
     height: 100vh;
-    grid-template-columns: 1fr 4fr;
+    grid-template-columns: 1fr 3fr;
     grid-template-rows: 1fr 7fr 1fr;
 }
 .board,.board2{
@@ -20,12 +20,6 @@ body div{
     justify-content: center;
     align-items: center;
 
-}
-.move-hint {
-  background-color: aquamarine;
-}
-.capture-hint {
-  background-color: red;
 }
 .Wp{
     position: relative;
@@ -258,3 +252,51 @@ select{
     height: 240px;
     overflow: auto;
 }
+.move-hint {
+  background-color: aquamarine;
+  border: solid 1px black;
+}
+.capture-hint {
+  background-color: red;
+  border: solid 1px black;
+}
+.choosePromotedPiece{
+    opacity: 0;
+    display: grid;
+    grid-template-columns: 50px 50px;
+    grid-template-rows: repeat(12,50px);
+    overflow:auto;
+}
+input{
+    height: 30px;
+    border-radius: 5px;
+    font-size: 15px;
+}
+.resultDiv{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    height: 400px;
+    width: 21%;
+    border-radius: 10px;
+    background-color: bisque;
+    left: 39.5%;
+    top: 112.5px;
+    display: none;
+}
+.resultDiv div{
+    height: 100px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: blue;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    font-size: 30px;
+}
+.mainlink{position: relative;bottom: 36px;}
+.mainlink button:hover{
+    cursor: pointer;}
