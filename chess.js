@@ -3,8 +3,10 @@ import { getMoves } from "./pieces.js";
 import { isValidSquare, switchTurn } from "./utils.js";
 import { changepgnmovestoPGN } from "./extensions.js";
 let result = '*'
+localStorage.setItem('result' , result)
 const BOARD_DIM = 15;
 let movesPlayed = 0;
+localStorage.setItem('movesPlayed' , movesPlayed)
 const pieceMap = {
   R: "rook",
   E: "elephant",
@@ -22,6 +24,7 @@ const pieceMap = {
   P: "pigeon",
 };
 let pgnMoves = [];
+localStorage.setItem('pgnMoves' , JSON.stringfy(pgnMoves))
 var childclass = [
   ["", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n"],
   [
@@ -263,15 +266,18 @@ var childclass = [
     "wR",
   ],
 ];
+localStorage.setItem('childclass' , JSON.stringfy(childclass))
 const promotionRows = {
   b: 14,
   w: 1,
 };
 let acceptDraw = [false , false]
+localStorage.setItem('acceptDraw' , JSON.stringfy(acceptDraw))
 let board = document.querySelector(".board");
 let nextMove = document.querySelector("#nextMove");
 let lastMove = document.querySelector("#lastMove");
 let moveIndex = -1;
+localStorage.setItem('moveIndex' , moveIndex)
 let rightthings = document.querySelector(".rightthings");
 const resultDiv = document.querySelector(".resultDiv")
 rightthings.children[3].children[2].children[3].addEventListener('click' , ()=>{resign(localStorage.currentTurn)})
@@ -330,8 +336,10 @@ render(JSON.parse(localStorage.childclass));
 let selectedPiece = null;
 let legalMoves = [];
 let currentTurn = "w";
+localStorage.setItem('currentTurn' , currentTurn)
 let promotedPiece = document.querySelector(".choosePromotedPiece");
 let pgn = document.querySelector(".PGN");
+localStorage.setItem('pgnArr' , JSON.stringfy(pgnArr))
 pgn.innerHTML = String(JSON.parse(localStorage.pgnArr))
 board.addEventListener("click", (e) => {
   let square = e.target.closest(".square");
@@ -771,4 +779,5 @@ function drawOffer(wantsToDraw , turn) {
     localStorage.acceptDraw = JSON.stringify(wantsToDraw)}
   }
   console.log(wantsToDraw);
+
 }
