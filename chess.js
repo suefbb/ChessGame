@@ -2,6 +2,7 @@ import { isKingInCheck, isMoveLeavingKingInCheck } from "./kingUtils.js";
 import { getMoves } from "./pieces.js";
 import { isValidSquare, switchTurn } from "./utils.js";
 import { changepgnmovestoPGN } from "./extensions.js";
+localStorage.clear()
 let result = '*'
 localStorage.setItem('result' , result)
 const BOARD_DIM = 15;
@@ -781,3 +782,4 @@ function drawOffer(wantsToDraw , turn) {
   console.log(wantsToDraw);
 
 }
+
