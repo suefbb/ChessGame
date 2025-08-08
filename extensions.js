@@ -21,6 +21,7 @@ export function changepgnmovestoPGN(moves) {
     pgnArr[m].push(colmns[moves[m][1][1]] , 15 - (moves[m][1][0]))
     pgnArr[m].push(' ')
   }
+  localStorage.setItem('pgnArr' , JSON.stringify(pgnArr))
   return pgnArr
 }
 //the pgn that shown in the pgn square

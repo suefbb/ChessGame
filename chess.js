@@ -5,7 +5,6 @@ import { changepgnmovestoPGN } from "./extensions.js";
 let result = '*'
 const BOARD_DIM = 15;
 let movesPlayed = 0;
-localStorage.setItem('movesPlayed' , movesPlayed)
 const pieceMap = {
   R: "rook",
   E: "elephant",
@@ -264,21 +263,19 @@ var childclass = [
     "wR",
   ],
 ];
-localStorage.setItem('childclass' , childclass)
 const promotionRows = {
   b: 14,
   w: 1,
 };
 let acceptDraw = [false , false]
-localStorage.setItem('acceptDraw' , acceptDraw)
 let board = document.querySelector(".board");
 let nextMove = document.querySelector("#nextMove");
 let lastMove = document.querySelector("#lastMove");
 let moveIndex = -1;
-localStorage.setItem('momoveIndex' ,moveIndex)
 let rightthings = document.querySelector(".rightthings");
-rightthings.children[3].children[2].children[3].addEventListener('click' , ()=>{resign()})
-rightthings.children[3].children[2].children[2].addEventListener('click' , ()=>{drawOffer()})
+const resultDiv = document.querySelector(".resultDiv")
+rightthings.children[3].children[2].children[3].addEventListener('click' , ()=>{resign(localStorage.currentTurn)})
+rightthings.children[3].children[2].children[2].addEventListener('click' , ()=>{drawOffer(JSON.parse(localStorage.acceptDraw) , localStorage.currentTurn)})
 for (let child = 0; child < rightthings.children[2].children.length; child++) {
   if (child % 12 == 11) {
     rightthings.children[2].children[child].addEventListener('click',()=>{promotePawn(promotionRows[rightthings.children[2].children[child].src[22]],rightthings.children[2].children[child].src[25].toUpperCase())})
@@ -286,8 +283,8 @@ for (let child = 0; child < rightthings.children[2].children.length; child++) {
 }
 let rotation = document.querySelector("#rotation");
 function createBoard(position) {
-  for (let i = 0; i < childclass.length; i++) {//position
-    for (let j = 0; j < childclass.length; j++) {//position
+  for (let i = 0; i < position.length; i++) {//position
+    for (let j = 0; j < position.length; j++) {//position
       let square = document.createElement("div");
       square.dataset.row = i;
       square.dataset.col = j;
@@ -308,14 +305,14 @@ function render(position) {//childclass
     const row = Math.floor(index / BOARD_DIM);
     const col = index % BOARD_DIM;
     if (col == 0) {
-      square.textContent = childclass[row][col];
+      square.textContent = position[row][col];
       return;
     }
     if (row == 0) {
-      square.textContent = childclass[row][col];
+      square.textContent = position[row][col];
       return;
     }
-    const piece = childclass[row][col];
+    const piece = position[row][col];
     if (piece != null) {
       const pieceDiv = document.createElement("div");
       pieceDiv.classList.add("piece", `${piece[0]}-${pieceMap[piece[1]]}`);
@@ -328,17 +325,14 @@ function render(position) {//childclass
     }
   });
 }
-createBoard();
-render();
+createBoard(JSON.parse(localStorage.childclass));
+render(JSON.parse(localStorage.childclass));
 let selectedPiece = null;
-localStorage.setItem('seselectedPiece' ,selectedPiece)
 let legalMoves = [];
-localStorage.setItem('legalMoves' ,legalMoves)
 let currentTurn = "w";
-localStorage.setItem('currentTurn' ,currentTurn)
 let promotedPiece = document.querySelector(".choosePromotedPiece");
 let pgn = document.querySelector(".PGN");
-//--------------------------------------------------------------------------//
+pgn.innerHTML = String(JSON.parse(localStorage.pgnArr))
 board.addEventListener("click", (e) => {
   let square = e.target.closest(".square");
   if (!square) return;
@@ -346,24 +340,25 @@ board.addEventListener("click", (e) => {
   const col = parseInt(square.dataset.col);
   if (!selectedPiece) {
     if (!square.children.length > 0) return;
-    if (childclass[row][col][0] != currentTurn) return;
+    if (JSON.parse(localStorage.childclass)[row][col][0] != localStorage.currentTurn) return;
     selectedPiece = {
       row,
       col,
-      piece: childclass[row][col],
-
-      type: childclass[row][col][1],
+      piece: JSON.parse(localStorage.childclass)[row][col],
+      type: JSON.parse(localStorage.childclass)[row][col][1],
     };
-    legalMoves = getMoves(selectedPiece.row, selectedPiece.col, childclass);
-    legalMoves = legalMoves.filter(
-      (move) =>
+    legalMoves = getMoves(selectedPiece.row, selectedPiece.col, JSON.parse(localStorage.childclass));
+    //FIX ME
+      legalMoves = legalMoves.filter(
+        (move) =>
         !isMoveLeavingKingInCheck(
           [selectedPiece.row, selectedPiece.col],
           move,
-          childclass,
-          currentTurn,
-        ),
-    );
+          JSON.parse(localStorage.childclass),
+          localStorage.currentTurn,
+          square
+        )
+      );
     showHints(legalMoves);
     return;
   }
@@ -372,33 +367,37 @@ board.addEventListener("click", (e) => {
   });
   isLegalMove;
   if (isLegalMove) {
-    moveIndex++;
-    pgnMoves.push([
-      childclass[selectedPiece.row][selectedPiece.col],
-      [row, col],
-      [selectedPiece.row, selectedPiece.col],
-      childclass[row][col],
-    ]);
-    changepgnmovestoPGN(pgnMoves)
-    pgn.innerHTML = String(changepgnmovestoPGN(pgnMoves))
-    //console.log(pgnMoves[moveIndex]);
-    pgnMoves[moveIndex].push(WtimeNumbers, BtimeNumbers);
-    if (moveIndex !== pgnMoves.length - 1) {
-      if (pgnMoves.length !== 0) {
+    localStorage.moveIndex = String(Number(localStorage.moveIndex)+1)
+    let storedpgnMoves = JSON.parse(localStorage.getItem('pgnMoves'))
+    console.log(JSON.parse(localStorage.childclass)[selectedPiece.row]);
+    let pushingDatatoit = storedpgnMoves.push([
+        JSON.parse(localStorage.childclass)[selectedPiece.row][selectedPiece.col],
+        [row, col],
+        [selectedPiece.row, selectedPiece.col],
+        JSON.parse(localStorage.childclass)[row][col],
+        WtimeNumbers,
+        BtimeNumbers
+      ])
+    localStorage.pgnMoves = JSON.stringify(storedpgnMoves)
+    changepgnmovestoPGN(JSON.parse(localStorage.pgnMoves))
+    pgn.innerHTML = String(changepgnmovestoPGN(JSON.parse(localStorage.pgnMoves)))
+    if (Number(localStorage.moveIndex) !== JSON.parse(localStorage.pgnMoves).length - 1) {
+      if (JSON.parse(localStorage.pgnMoves).length !== 0) {
         console.log("the loop started");
-        for (let RM = 0; RM < pgnMoves.length; RM++) {
-          if (moveIndex !== pgnMoves.length - 1) {
-            pgnMoves.splice(pgnMoves.length - 2, 1);
-            console.log(pgnMoves);
+        for (let RM = 0; RM < JSON.parse(localStorage.pgnMoves).length; RM++) {
+          if (Number(localStorage.moveIndex) !== JSON.parse(localStorage.pgnMoves).length - 1) {
+            let j = JSON.parse(localStorage.pgnMoves)
+            j.splice(j.length - 2, 1);
+            localStorage.pgnMoves = JSON.stringify(j)
           } else {
             break;
           }
         }
-        changepgnmovestoPGN(pgnMoves)
-        pgn.innerHTML = String(changepgnmovestoPGN(pgnMoves))
+        changepgnmovestoPGN(JSON.parse(localStorage.pgnMoves))
+        pgn.innerHTML = String(changepgnmovestoPGN(JSON.parse(localStorage.pgnMoves)))
       }
     }
-    movesPlayed++;
+    localStorage.movesPlayed = String(Number(localStorage.movesPlayed)+1)
   }
   if (!isLegalMove) {
     console.log("Not a legal Move");
@@ -409,8 +408,8 @@ board.addEventListener("click", (e) => {
     render();
     return;
   }
-  movePiece([selectedPiece.row, selectedPiece.col], [row, col], childclass);
-  if (currentTurn == "w") {
+  movePiece([selectedPiece.row, selectedPiece.col], [row, col], JSON.parse(localStorage.childclass) , square);
+  if (localStorage.currentTurn == "w") {
     if (rotation.value == 'True') {
       rightthings.children[0].style.transform = 'Rotate(180deg)'
       rightthings.children[1].style.transform = 'Rotate(180deg)'
@@ -420,8 +419,8 @@ board.addEventListener("click", (e) => {
       rightthings.children[5].style.transform = 'Rotate(180deg)'
     }
     //promotion
-    for (let pawnRow = 0; pawnRow < childclass[1].length; pawnRow++) {
-      if (childclass[1][pawnRow] == "wp") {
+    for (let pawnRow = 0; pawnRow < JSON.parse(localStorage.childclass)[1].length; pawnRow++) {
+      if (JSON.parse(localStorage.childclass)[1][pawnRow] == "wp") {
         promotedPiece.style.opacity = 1;
       }
     }
@@ -437,8 +436,8 @@ board.addEventListener("click", (e) => {
       rightthings.children[5].style.transform = 'Rotate(0deg)'
     }
     //promotion
-    for (let pawnRow = 0; pawnRow < childclass[14].length; pawnRow++) {
-      if (childclass[14][pawnRow] == "bp") {
+    for (let pawnRow = 0; pawnRow < JSON.parse(localStorage.childclass)[14].length; pawnRow++) {
+      if (JSON.parse(localStorage.childclass)[14][pawnRow] == "bp") {
         promotedPiece.style.opacity = 1;
       }
     }
@@ -446,16 +445,16 @@ board.addEventListener("click", (e) => {
     clearInterval(Btime);
   }
   clearHints(legalMoves);
-  currentTurn = switchTurn(currentTurn);
+  localStorage.currentTurn = switchTurn(localStorage.currentTurn);
   selectedPiece = null;
   legalMoves = [];
-  render();
+  render(JSON.parse(localStorage.childclass));
 });
 function showHints(coords) {
   const squares = getSquaresByCoords(legalMoves);
   squares.forEach((square, index) => {
     const [row, col] = coords[index];
-    if (isCapture(row, col, currentTurn)) {
+    if (isCapture(row, col, localStorage.currentTurn)) {
       square.classList.add("capture-hint");
     } else {
       square.classList.add("move-hint");
@@ -486,32 +485,29 @@ getSquaresByCoords(legalMoves);
 function isCapture(row, col, color) {
   return (
     isValidSquare(row, col) &&
-    childclass[row][col] &&
-    childclass[row][col][0] != color
+    JSON.parse(localStorage.childclass)[row][col] &&
+    JSON.parse(localStorage.childclass)[row][col][0] != color
   );
 }
 function getPieceType(r, c, board) {
+  console.log(board[r][c][1]);
   return board[r][c][1];
 }
 
-export function movePiece([fromR, fromC], [toR, toC], board) {
-  if (isEnPassant([fromR, fromC], [toR, toC], board)) {
-    board[fromR][toC] = null;
-  }
+export function movePiece([fromR, fromC], [toR, toC], board , square) {
   board[toR][toC] = board[fromR][fromC];
   board[fromR][fromC] = null;
+  console.log(1);
+  if(square !== null){
+    console.log(Number(square.getAttribute('data-row')) , JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][0] , Number(square.getAttribute('data-col')) , JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][1]);
+    if(Number(square.getAttribute('data-row')) == JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][0] && Number(square.getAttribute('data-col')) == JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][1]){
+      console.log(1);
+      localStorage.setItem('childclass' , JSON.stringify(board))
+      render(JSON.parse(localStorage.childclass))
+    }}
   //console.log(
   //  `Is ${currentTurn} King In Check? ${isKingInCheck(currentTurn, childclass)}`,
   //);
-}
-function isEnPassant([fromR, fromC], [toR, toC], board) {
-  const piece = board[fromR][fromC];
-  const isPawn = getPieceType(fromR, fromC, board) == "P";
-  const forwardDirection = piece[0] == "w" ? -1 : 1;
-  if (isPawn && Math.abs(fromC - toC) == 1 && toR - fromR == forwardDirection) {
-    return true;
-  }
-  return false;
 }
 
 let Btime = "";
@@ -622,14 +618,12 @@ function Wtimer() {
 }
 
 lastMove.addEventListener("click", () => {
-  childclass[pgnMoves[moveIndex][2][0]][pgnMoves[moveIndex][2][1]] =
-    pgnMoves[moveIndex][0];
-  childclass[pgnMoves[moveIndex][1][0]][pgnMoves[moveIndex][1][1]] =
-    pgnMoves[moveIndex][3];
-  console.log(pgnMoves);
-  render();
-  console.log(currentTurn == "w");
-  if (currentTurn == "w") {
+  let h = JSON.parse(localStorage.childclass)
+  h[JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][2][0]][JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][2][1]] =JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][0]
+  h[JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][0]][JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][1]] =JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][3]
+  localStorage.setItem('childclass' , JSON.stringify(h))
+  render(JSON.parse(localStorage.childclass));
+  if (localStorage.currentTurn == "w") {
     if (rotation.value == 'True') {
       rightthings.children[0].style.transform = 'Rotate(180deg)'
       rightthings.children[1].style.transform = 'Rotate(180deg)'
@@ -638,8 +632,8 @@ lastMove.addEventListener("click", () => {
       rightthings.children[4].style.transform = 'Rotate(180deg)'
       rightthings.children[5].style.transform = 'Rotate(180deg)'
     }
-    currentTurn = "b";
-    BtimeNumbers = pgnMoves[moveIndex][5];
+    localStorage.currentTurn = "b";
+    BtimeNumbers = JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][5];
     console.log(BtimeNumbers);
     Btimer();
     clearInterval(Wtime);
@@ -652,26 +646,23 @@ lastMove.addEventListener("click", () => {
       rightthings.children[4].style.transform = 'Rotate(0deg)'
       rightthings.children[5].style.transform = 'Rotate(0deg)'
     }
-    currentTurn = "w";
-    WtimeNumbers = pgnMoves[moveIndex][4];
+    localStorage.currentTurn = "w";
+    WtimeNumbers = JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][4];
     console.log(WtimeNumbers);
     Wtimer();
     clearInterval(Btime);
   }
-  moveIndex--;
-  console.log(moveIndex);
-  console.log(pgnMoves);
+  localStorage.moveIndex = String(Number(localStorage.moveIndex)-1);
 });
 nextMove.addEventListener("click", () => {
-  if (moveIndex < pgnMoves.length - 1) {
-    moveIndex++;
-    childclass[pgnMoves[moveIndex][2][0]][pgnMoves[moveIndex][2][1]] = null;
-    childclass[pgnMoves[moveIndex][1][0]][pgnMoves[moveIndex][1][1]] =
-      pgnMoves[moveIndex][0];
-    console.log(pgnMoves);
-    render();
-    console.log(currentTurn == "w");
-    if (currentTurn == "w") {
+  if (Number(localStorage.moveIndex) < JSON.parse(localStorage.pgnMoves).length - 1) {
+    localStorage.moveIndex = String(Number(localStorage.moveIndex)+1)
+    let d = JSON.parse(localStorage.childclass)
+    d[JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][0]][JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][1]] = JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][0];
+    d[JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][2][0]][JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][2][1]] = null;
+    localStorage.setItem('childclass' , JSON.stringify(d))
+    render(JSON.parse(localStorage.childclass));
+    if (localStorage.currentTurn == "w") {
       if (rotation.value == 'True') {
         rightthings.children[0].style.transform = 'Rotate(180deg)'
         rightthings.children[1].style.transform = 'Rotate(180deg)'
@@ -679,8 +670,8 @@ nextMove.addEventListener("click", () => {
         rightthings.children[3].style.transform = 'Rotate(180deg)'
         rightthings.children[4].style.transform = 'Rotate(180deg)'
         rightthings.children[5].style.transform = 'Rotate(180deg)'}
-      currentTurn = "b";
-      BtimeNumbers = pgnMoves[moveIndex][5];
+      localStorage.currentTurn = "b";
+      BtimeNumbers = JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][5];
       Btimer();
       clearInterval(Wtime);
     } else {
@@ -691,54 +682,93 @@ nextMove.addEventListener("click", () => {
         rightthings.children[3].style.transform = 'Rotate(0deg)'
         rightthings.children[4].style.transform = 'Rotate(0deg)'
         rightthings.children[5].style.transform = 'Rotate(0deg)'}
-      currentTurn = "w";
-      WtimeNumbers = pgnMoves[moveIndex][4];
+      localStorage.currentTurn = "w";
+      WtimeNumbers = JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][4];
       Wtimer();
       clearInterval(Btime);
     }
-    console.log(moveIndex);
-    console.log(pgnMoves);
   }
 });
 function promotePawn(Prow, pieceKey) {
   console.log(Prow, pieceKey);
-  for (let Pcol = 0; Pcol < childclass[Prow].length; Pcol++) {
-    console.log(childclass[Prow][Pcol]);
-    if (childclass[Prow][Pcol] == "wp") {
-      childclass[Prow][Pcol] = "w" + pieceKey;
+  for (let Pcol = 0; Pcol < JSON.parse(localStorage.childclass)[Prow].length; Pcol++) {
+    console.log(JSON.parse(localStorage.childclass)[Prow][Pcol]);
+    if (JSON.parse(localStorage.childclass)[Prow][Pcol] == "wp") {
+      JSON.parse(localStorage.childclass)[Prow][Pcol] = "w" + pieceKey;
     }
-    if (childclass[Prow][Pcol] == "bp") {
-      childclass[Prow][Pcol] = "b" + pieceKey;
+    if (JSON.parse(localStorage.childclass)[Prow][Pcol] == "bp") {
+      JSON.parse(localStorage.childclass)[Prow][Pcol] = "b" + pieceKey;
     }
   }
   render();
 }
 function resign(turn) {
     if (turn == 'w') {
-      result = 'Black won'  
+      localStorage.result = 'Black won'
+      clearInterval(Wtime);
     }
     if (turn == 'b') {
-      result = 'White won'    
+      localStorage.result = 'White won'
+      clearInterval(Btime);
     }
+    resultDiv.style.display = 'flex'
+    resultDiv.children[0].innerHTML = localStorage.result
+    localStorage.result = '*'
+    localStorage.acceptDraw = JSON.stringify([false , false])
+    localStorage.movesPlayed = '0'
+    localStorage.moveIndex = '-1'
+    localStorage.pgnMoves = JSON.stringify([])
+    localStorage.currentTurn = 'w'   
+    localStorage.childclass = JSON.stringify(JSON.parse(localStorage.start))
+    localStorage.pgnArr = JSON.stringify([])
+    render(JSON.parse(localStorage.start))
 }
 function drawOffer(wantsToDraw , turn) {
   if (turn == 'w') {
-    if (wantsToDraw[1]) {
-      wantsToDraw[0] = true
-      result = 'draw' 
-    }else if (wantsToDraw[0]){
-      wantsToDraw[0] = false
-    }
-    else{wantsToDraw[0] = true}
+  if (wantsToDraw[1]) {
+    wantsToDraw[0] = true
+    localStorage.acceptDraw = JSON.stringify(wantsToDraw)
+    localStorage.result = 'Draw'
+    resultDiv.style.display = 'flex'
+    resultDiv.children[0].innerHTML = localStorage.result
+    localStorage.result = '*'
+    localStorage.acceptDraw = JSON.stringify([false , false])
+    localStorage.movesPlayed = '0'
+    localStorage.moveIndex = '-1'
+    localStorage.pgnMoves = JSON.stringify([])
+    localStorage.currentTurn = 'w'
+    localStorage.childclass = JSON.stringify(JSON.parse(localStorage.start))
+    localStorage.pgnArr = JSON.stringify([])
+    clearInterval(Wtime);
+  }else if (wantsToDraw[0]){
+    wantsToDraw[0] = false
+    localStorage.acceptDraw = JSON.stringify(wantsToDraw)
+  }
+  else{wantsToDraw[0] = true
+    localStorage.acceptDraw = JSON.stringify(wantsToDraw)}
   }
   if (turn == 'b') {
-    if (wantsToDraw[0]) {
-      wantsToDraw[1] = true
-      result = 'draw' 
-    }else if (wantsToDraw[1]){
-      wantsToDraw[1] = false
-    }
-    else{wantsToDraw[1] = true}
+  if (wantsToDraw[0]) {
+    wantsToDraw[1] = true
+    localStorage.acceptDraw = JSON.stringify(wantsToDraw)
+    localStorage.result = 'Draw'
+    resultDiv.style.display = 'flex'
+    resultDiv.children[0].innerHTML = localStorage.result
+    localStorage.result = '*'
+    localStorage.acceptDraw = JSON.stringify([false , false])
+    localStorage.movesPlayed = '0'
+    localStorage.moveIndex = '-1'
+    localStorage.pgnMoves = JSON.stringify([])
+    localStorage.currentTurn = 'w'   
+    localStorage.childclass = JSON.stringify(JSON.parse(localStorage.start))
+    localStorage.pgnArr = JSON.stringify([])
+    clearInterval(Btime);
+  }else if (wantsToDraw[1]){
+    wantsToDraw[1] = false
+    localStorage.acceptDraw = JSON.stringify(wantsToDraw)
+  }
+  else{wantsToDraw[1] = true
+    localStorage.acceptDraw = JSON.stringify(wantsToDraw)}
   }
   console.log(wantsToDraw);
 }

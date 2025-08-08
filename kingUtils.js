@@ -25,16 +25,10 @@ export function isKingInCheck(kingColor, board) {
   const dangerSquares = calcDangerSquares(opponentColor, board);
   return dangerSquares.some(([r, c]) => r == row && c == col);
 }
-
-export function isMoveLeavingKingInCheck(
-  [fromR, fromC],
-  [toR, toC],
-  board,
-  kingColor,
-) {
-  let tempBoard = JSON.parse(JSON.stringify(board));
+export function isMoveLeavingKingInCheck([fromR, fromC],[toR, toC],board,kingColor,square) {
+  let tempBoard = board;
   // Perform the hypothetical move on the temporary board.
-  movePiece([fromR, fromC], [toR, toC], tempBoard);
+  movePiece([fromR, fromC], [toR, toC], tempBoard , null);
   // Check if the king of the 'kingColor' (current player's color) is in check on the tempBoard.
   return isKingInCheck(kingColor, tempBoard);
 }

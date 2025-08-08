@@ -458,7 +458,6 @@ function getPawnCaptures(row, col, board) {
   }
   return moves;
 }
-
 export function getCaptures(row, col, board) {
   let moves = [];
   let selectedPiece = board[row][col];
@@ -506,14 +505,14 @@ export function getCaptures(row, col, board) {
       moves = [...getKingMoves(row, col, board)];
       break;
     default:
-      console.log("Not programmed yet.");
+      console.log("Not found.");
       break;
   }
   return moves;
 }
-
 export function getMoves(row, col, board) {
   let moves = getCaptures(row, col, board);
   if (board[row][col][1] == "p") moves.push(...getPawnMoves(row, col, board));
+  console.log(moves);
   return moves;
 }

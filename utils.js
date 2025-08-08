@@ -19,5 +19,6 @@ export function findPiece(pieceType, pieceColor, board) {
   }
 }
 export function switchTurn(currentTurn) {
+  localStorage.setItem('currentTurn' , currentTurn)
   return currentTurn == "w" ? "b" : "w";
 }
