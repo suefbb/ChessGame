@@ -449,7 +449,7 @@ board.addEventListener("click", (e) => {
     clearHints(legalMoves);
     selectedPiece = null;
     legalMoves = [];
-    render();
+    render(JSON.parse(localStorage.childclass));
     return;
   }
   movePiece(
@@ -869,5 +869,6 @@ function drawOffer(wantsToDraw, turn) {
   }
   console.log(wantsToDraw);
 }
+
 
 
