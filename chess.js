@@ -268,6 +268,7 @@ var childclass = [
   ],
 ];
 localStorage.setItem("childclass", JSON.stringify(childclass));
+localStorage.setItem("start", JSON.stringify(childclass));
 const promotionRows = {
   b: 14,
   w: 1,
@@ -878,3 +879,4 @@ function drawOffer(wantsToDraw, turn) {
   }
   console.log(wantsToDraw);
 }
+
