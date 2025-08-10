@@ -3,7 +3,7 @@
 // import Board from "./Board";
 // import { GameContext } from "../context/GameContext";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   type Color,
   initialBoard,
@@ -24,13 +24,35 @@ interface ISelectedPiece {
 }
 
 export default function Game() {
-  const [board, setBoard] = useState(initialBoard);
-  const [currentTurn, setCurrentTurn] = useState<Color>("w");
+  const [board, setBoard] = useState(
+    localStorage.getItem("board")
+      ? JSON.parse(localStorage.getItem("board")!)
+      : initialBoard
+  );
+  const [currentTurn, setCurrentTurn] = useState<Color>(
+    localStorage.getItem("currentTurn")
+      ? (localStorage.getItem("currentTurn") as Color)
+      : "w"
+  );
+  // const [selectedPiece, setSelectedPiece] = useState<ISelectedPiece | null>(
+  //   localStorage.getItem("selectedPiece")
+  //     ? JSON.parse(localStorage.getItem("selectedPiece")!)
+  //     : null
+  // );
   const [selectedPiece, setSelectedPiece] = useState<ISelectedPiece | null>(
     null
   );
-  const [moveIndex, setMoveIndex] = useState(-1);
-  const [history, setHistory] = useState<Move[]>([]);
+  const [moveIndex, setMoveIndex] = useState(
+    localStorage.getItem("moveIndex")
+      ? Number(JSON.parse(localStorage.getItem("moveIndex")!))
+      : -1
+  );
+  const [history, setHistory] = useState<Move[]>(
+    localStorage.getItem("history")
+      ? JSON.parse(localStorage.getItem("history")!)
+      : []
+  );
+
   const [legalMoves, setLegalMoves] = useState<Coords>([]);
   const handleSquareClick = (row: number, col: number) => {
     const clickedPiece = board[row][col];
@@ -61,18 +83,18 @@ export default function Game() {
       board
     );
     if (moveIndex < history.length) {
-      const newHistory = history.slice(0, moveIndex + 1);
-      setHistory([
-        ...newHistory,
+      const newHistory = [
+        ...history.slice(0, moveIndex + 1),
         {
           from: [selectedPiece.row, selectedPiece.col],
           to: [row, col],
           capturedPiece: board[row][col],
           piece: board[selectedPiece.row][selectedPiece.col]!,
         },
-      ]);
+      ];
+      setHistory(newHistory as Move[]);
     } else {
-      setHistory([
+      const newHistory = [
         ...(history as Move[]),
         {
           from: [selectedPiece.row, selectedPiece.col],
@@ -80,38 +102,55 @@ export default function Game() {
           capturedPiece: board[row][col],
           piece: board[selectedPiece.row][selectedPiece.col]!,
         },
-      ]);
+      ];
+      setHistory(newHistory as Move[]);
     }
-    setCurrentTurn(switchTurn(currentTurn));
+    const newTurn = switchTurn(currentTurn);
+    setCurrentTurn(newTurn);
     setSelectedPiece(null);
     setLegalMoves([]);
     setBoard(newBoard);
-    setMoveIndex(moveIndex + 1);
-    console.log(history);
-    console.log(moveIndex);
+    const newMoveIndex = moveIndex + 1;
+    setMoveIndex(newMoveIndex);
   };
   function handleUndo() {
     if (moveIndex < 0) return;
-    setBoard(undoMove(history[moveIndex], board).newBoard);
-    // setHistory([...history.slice(0, length - 1)]);
+    const newBoard = undoMove(history[moveIndex], board).newBoard;
+    setBoard(newBoard);
     const newMoveIndex = moveIndex - 1;
+    const newTurn = switchTurn(currentTurn);
     setMoveIndex(newMoveIndex);
-    setCurrentTurn(switchTurn(currentTurn));
-    console.log(history);
-    console.log(moveIndex);
+    setCurrentTurn(newTurn);
   }
   function handleRedo() {
     if (history.length == moveIndex + 1) return;
-    setBoard(
-      applyMove(history[moveIndex + 1].from, history[moveIndex + 1].to, board)
+    const newBoard = applyMove(
+      history[moveIndex + 1].from,
+      history[moveIndex + 1].to,
+      board
     );
-    // setHistory([...history.slice(0, length - 1)]);
+    setBoard(newBoard);
     const newMoveIndex = moveIndex + 1;
     setMoveIndex(newMoveIndex);
-    setCurrentTurn(switchTurn(currentTurn));
-    console.log(history);
-    console.log(moveIndex);
+    const newTurn = switchTurn(currentTurn);
+    setCurrentTurn(newTurn);
   }
+  useEffect(() => {
+    localStorage.setItem("board", JSON.stringify(board));
+  }, [board]);
+
+  useEffect(() => {
+    localStorage.setItem("history", JSON.stringify(history));
+  }, [history]);
+
+  useEffect(() => {
+    localStorage.setItem("currentTurn", currentTurn);
+  }, [currentTurn]);
+
+  useEffect(() => {
+    localStorage.setItem("moveIndex", JSON.stringify(moveIndex));
+  }, [moveIndex]);
+
   return (
     <>
       <BoardWrapper>
