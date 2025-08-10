@@ -224,26 +224,6 @@ export function getSSlideMoves(
   }
   return moves;
 }
-export function getSnakeDirections(): Coords {
-  const directions: Coords = [];
-
-  // Generate directions for 'i=1' (odd case)
-  directions.push(
-    [-2, -1],
-    [-2, 1],
-    [-1, 2],
-    [1, 2],
-    [-1, -2],
-    [1, -2],
-    [2, -1],
-    [2, 1]
-  );
-
-  // Generate directions for 'i=2' (even case)
-  directions.push([-2, 0], [0, 2], [0, -2], [2, 0]);
-
-  return directions;
-}
 export function getRookMoves(row: number, col: number, board: Board) {
   const directions: Coords = [
     [-1, 0],
@@ -329,18 +309,17 @@ export function getZebraMoves(row: number, col: number, board: Board) {
   return moves;
 }
 export function getSnakeMoves(row: number, col: number, board: Board) {
-  // const directions: Coords = [
-  //   [-2, -1],
-  //   [-2, 1],
-  //   [-1, 2],
-  //   [1, 2],
-  //   [-1, -2],
-  //   [1, -2],
-  //   [2, -1],
-  //   [2, 1],
-  // ];
-  // const moves = [...getSSlideMoves(row, col, directions, board)];
-  const moves = [...getJumpingMoves(row, col, getSnakeDirections(), board)];
+  const directions: Coords = [
+    [-2, -1],
+    [-2, 1],
+    [-1, 2],
+    [1, 2],
+    [-1, -2],
+    [1, -2],
+    [2, -1],
+    [2, 1],
+  ]; // Fake, btw
+  const moves = [...getSSlideMoves(row, col, directions, board)];
   return moves;
 }
 export function getElephantMoves(row: number, col: number, board: Board) {

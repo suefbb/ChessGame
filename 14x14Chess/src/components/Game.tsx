@@ -8,14 +8,15 @@ import {
   type Color,
   initialBoard,
   type Coords,
-  type Board as BoardT,
+  type Move,
 } from "../core/types";
 import BoardWrapper from "./BoardWrapper";
 import Board from "./Board";
 import { getMoves } from "../core/pieces";
-import { applyMove } from "../core/chess";
+import { applyMove, undoMove } from "../core/chess";
 import { isMoveLeavingKingInCheck } from "../core/kingUtils";
 import { switchTurn } from "../core/utils";
+import MovesControls from "./Controls/MovesControls";
 interface ISelectedPiece {
   row: number;
   col: number;
@@ -28,8 +29,8 @@ export default function Game() {
   const [selectedPiece, setSelectedPiece] = useState<ISelectedPiece | null>(
     null
   );
-
-  const [history, setHistory] = useState<BoardT[]>([]);
+  const [moveIndex, setMoveIndex] = useState(-1);
+  const [history, setHistory] = useState<Move[]>([]);
   const [legalMoves, setLegalMoves] = useState<Coords>([]);
   const handleSquareClick = (row: number, col: number) => {
     const clickedPiece = board[row][col];
@@ -53,18 +54,64 @@ export default function Game() {
       setLegalMoves([]);
       return;
     }
+
     const newBoard = applyMove(
       [selectedPiece.row, selectedPiece.col],
       [row, col],
       board
     );
-    setHistory([...(history as BoardT[]), board]);
-    setBoard(newBoard);
+    if (moveIndex < history.length) {
+      const newHistory = history.slice(0, moveIndex + 1);
+      setHistory([
+        ...newHistory,
+        {
+          from: [selectedPiece.row, selectedPiece.col],
+          to: [row, col],
+          capturedPiece: board[row][col],
+          piece: board[selectedPiece.row][selectedPiece.col]!,
+        },
+      ]);
+    } else {
+      setHistory([
+        ...(history as Move[]),
+        {
+          from: [selectedPiece.row, selectedPiece.col],
+          to: [row, col],
+          capturedPiece: board[row][col],
+          piece: board[selectedPiece.row][selectedPiece.col]!,
+        },
+      ]);
+    }
     setCurrentTurn(switchTurn(currentTurn));
     setSelectedPiece(null);
     setLegalMoves([]);
+    setBoard(newBoard);
+    setMoveIndex(moveIndex + 1);
     console.log(history);
+    console.log(moveIndex);
   };
+  function handleUndo() {
+    if (moveIndex < 0) return;
+    setBoard(undoMove(history[moveIndex], board).newBoard);
+    // setHistory([...history.slice(0, length - 1)]);
+    const newMoveIndex = moveIndex - 1;
+    setMoveIndex(newMoveIndex);
+    setCurrentTurn(switchTurn(currentTurn));
+    console.log(history);
+    console.log(moveIndex);
+  }
+  function handleRedo() {
+    if (history.length == moveIndex + 1) return;
+    setBoard(
+      applyMove(history[moveIndex + 1].from, history[moveIndex + 1].to, board)
+    );
+    // setHistory([...history.slice(0, length - 1)]);
+    const newMoveIndex = moveIndex + 1;
+    setMoveIndex(newMoveIndex);
+    setCurrentTurn(switchTurn(currentTurn));
+    console.log(history);
+    console.log(moveIndex);
+  }
   return (
     <>
       <BoardWrapper>
@@ -72,6 +119,10 @@ export default function Game() {
           board={board}
           onSquareClick={handleSquareClick}
           legalMoves={legalMoves}
+        />
+        <MovesControls
+          onBackwardClick={handleUndo}
+          onForwardClick={handleRedo}
         />
       </BoardWrapper>
     </>

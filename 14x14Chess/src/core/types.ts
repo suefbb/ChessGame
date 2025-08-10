@@ -15,6 +15,13 @@ export type PieceType =
   | "Z"
   | "p";
 export type Piece = Color & PieceType;
+
+export type Move = {
+  from: Coord;
+  to: Coord;
+  capturedPiece: null | string;
+  piece: string;
+};
 export type Board = (Piece | null)[][];
 export type Coords = Coord[];
 export type Coord = [number, number];
