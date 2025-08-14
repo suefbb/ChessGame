@@ -1,34 +1,17 @@
 import type { Board, Coords } from "../core/types";
 import Square from "./Square";
 
-interface IBoardProps extends React.PropsWithChildren {
+interface BoardProps extends React.PropsWithChildren {
   board: Board;
   onSquareClick(row: number, col: number): void;
   legalMoves: Coords;
 }
 
-// const FILES = [
-//   "a",
-//   "b",
-//   "c",
-//   "d",
-//   "e",
-//   "f",
-//   "g",
-//   "h",
-//   "i",
-//   "j",
-//   "k",
-//   "l",
-//   "m",
-//   "n",
-// ];
-
 export default function Board({
   board,
   onSquareClick,
   legalMoves,
-}: IBoardProps) {
+}: BoardProps) {
   return (
     <div className="board">
       {board.map((row, rowIndex) => {

@@ -14,13 +14,23 @@ export type PieceType =
   | "O"
   | "Z"
   | "p";
-export type Piece = Color & PieceType;
+// export type Piece = Color & PieceType;
+export type Piece = {
+  type: PieceType;
+  color: Color;
+  hasMoved: boolean;
+};
 
+export interface SelectedPiece {
+  row: number;
+  col: number;
+  piece: Piece;
+}
 export type Move = {
   from: Coord;
   to: Coord;
   capturedPiece: null | string;
-  piece: string;
+  piece: Piece;
 };
 export type Board = (Piece | null)[][];
 export type Coords = Coord[];
@@ -30,20 +40,76 @@ export const initialBoard: Board = [
   //   ["", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n"],
   [
     // 14,
-    "bR" as Piece,
-    "bE" as Piece,
-    "bB" as Piece,
-    "bZ" as Piece,
-    "bF" as Piece,
-    "bS" as Piece,
-    "bQ" as Piece,
-    "bK" as Piece,
-    "bO" as Piece,
-    "bW" as Piece,
-    "bC" as Piece,
-    "bB" as Piece,
-    "bP" as Piece,
-    "bR" as Piece,
+    {
+      color: "b",
+      type: "R",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "E",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "B",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "Z",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "F",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "S",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "Q",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "K",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "O",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "W",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "C",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "B",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "P",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "R",
+      hasMoved: false,
+    },
   ],
   [
     // 13,
@@ -66,7 +132,11 @@ export const initialBoard: Board = [
     // 12,
     null,
     null,
-    "bN" as Piece,
+    {
+      color: "b",
+      type: "N",
+      hasMoved: false,
+    },
     null,
     null,
     null,
@@ -75,26 +145,86 @@ export const initialBoard: Board = [
     null,
     null,
     null,
-    "bN" as Piece,
+    {
+      color: "b",
+      type: "N",
+      hasMoved: false,
+    },
     null,
     null,
   ],
   [
     // 11,
-    "bp" as Piece,
-    "bp" as Piece,
-    "bp" as Piece,
-    "bp" as Piece,
-    "bp" as Piece,
-    "bp" as Piece,
-    "bp" as Piece,
-    "bp" as Piece,
-    "bp" as Piece,
-    "bp" as Piece,
-    "bp" as Piece,
-    "bp" as Piece,
-    "bp" as Piece,
-    "bp" as Piece,
+    {
+      color: "b",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "b",
+      type: "p",
+      hasMoved: false,
+    },
   ],
   [
     // 10,
@@ -200,26 +330,86 @@ export const initialBoard: Board = [
   ],
   [
     // 4,
-    "wp" as Piece,
-    "wp" as Piece,
-    "wp" as Piece,
-    "wp" as Piece,
-    "wp" as Piece,
-    "wp" as Piece,
-    "wp" as Piece,
-    "wp" as Piece,
-    "wp" as Piece,
-    "wp" as Piece,
-    "wp" as Piece,
-    "wp" as Piece,
-    "wp" as Piece,
-    "wp" as Piece,
+    {
+      color: "w",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "p",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "p",
+      hasMoved: false,
+    },
   ],
   [
     // 3,
     null,
     null,
-    "wN" as Piece,
+    {
+      color: "w",
+      type: "N",
+      hasMoved: false,
+    },
     null,
     null,
     null,
@@ -228,7 +418,11 @@ export const initialBoard: Board = [
     null,
     null,
     null,
-    "wN" as Piece,
+    {
+      color: "w",
+      type: "N",
+      hasMoved: false,
+    },
     null,
     null,
   ],
@@ -251,19 +445,75 @@ export const initialBoard: Board = [
   ],
   [
     // 1,
-    "wR" as Piece,
-    "wE" as Piece,
-    "wB" as Piece,
-    "wZ" as Piece,
-    "wF" as Piece,
-    "wS" as Piece,
-    "wQ" as Piece,
-    "wK" as Piece,
-    "wO" as Piece,
-    "wW" as Piece,
-    "wC" as Piece,
-    "wB" as Piece,
-    "wP" as Piece,
-    "wR" as Piece,
+    {
+      color: "w",
+      type: "R",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "E",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "B",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "Z",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "F",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "S",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "Q",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "K",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "O",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "W",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "C",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "B",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "P",
+      hasMoved: false,
+    },
+    {
+      color: "w",
+      type: "R",
+      hasMoved: false,
+    },
   ],
 ];

@@ -9,7 +9,7 @@ function calcDangerSquares(attackerColor: Color, board: Board) {
     for (let j = 0; j < BOARD_DIM; j++) {
       const targetPiece = board[i][j];
       if (!targetPiece) continue;
-      if (targetPiece[0] !== attackerColor) continue;
+      if (targetPiece.color !== attackerColor) continue;
       squares.push(...getCaptures(i, j, board));
     }
   }

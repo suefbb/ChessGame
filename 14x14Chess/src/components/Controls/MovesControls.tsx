@@ -1,16 +1,25 @@
-interface IMovesControls extends React.PropsWithChildren {
+interface MovesControls {
   onForwardClick(): void;
   onBackwardClick(): void;
+  onResetClick(): void;
 }
 
 export default function MovesControls({
   onBackwardClick,
   onForwardClick,
-}: IMovesControls) {
+  onResetClick,
+}: MovesControls) {
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        gap: "10px",
+      }}
+    >
       <button onClick={onBackwardClick}>&lt;</button>
       <button onClick={onForwardClick}>&gt;</button>
+      <button onClick={onResetClick}>Reset</button>
     </div>
   );
 }

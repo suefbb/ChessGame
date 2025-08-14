@@ -19,7 +19,7 @@ export function findPiece(
     for (let j = 0; j < BOARD_DIM; j++) {
       const targetPiece = board[i][j];
       if (!targetPiece) continue;
-      if (targetPiece[1] == pieceType && targetPiece[0] == pieceColor)
+      if (targetPiece.type == pieceType && targetPiece.color == pieceColor)
         return [i, j];
     }
   }

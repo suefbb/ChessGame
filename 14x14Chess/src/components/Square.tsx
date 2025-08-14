@@ -1,12 +1,12 @@
-import type { PieceType } from "../core/types";
+import type { Piece, PieceType } from "../core/types";
 
-interface ISquareProps extends React.PropsWithChildren {
-  piece?: string | null;
+interface SquareProps extends React.PropsWithChildren {
+  piece?: Piece | null;
   row: number;
   col: number;
   color: "light" | "dark";
   onSquareClick(row: number, col: number): void;
-  isLegalSquare: boolean;
+  isLegalSquare?: boolean;
 }
 export default function Square({
   piece,
@@ -15,7 +15,7 @@ export default function Square({
   color,
   onSquareClick,
   isLegalSquare,
-}: ISquareProps) {
+}: SquareProps) {
   const pieceMap: Record<PieceType, string> = {
     R: "rook",
     E: "elephant",
@@ -42,8 +42,8 @@ export default function Square({
       {piece && (
         <img
           className={`piece ${piece}`}
-          src={`${piece[0]}-${pieceMap[piece[1] as PieceType]}.svg`}
-          alt={piece}
+          src={`${piece.color}-${pieceMap[piece.type]}.svg`}
+          alt={`${piece.color} ${pieceMap[piece.type]}`}
         />
       )}
     </div>

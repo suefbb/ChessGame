@@ -1,14 +1,15 @@
+import { isKingInCheck, isMoveLeavingKingInCheck } from "./kingUtils";
 import type { Board, Color, Coords, PieceType } from "./types";
-import { isValidSquare } from "./utils";
+import { BOARD_DIM, isValidSquare } from "./utils";
 export function getSlideMoves(
   row: number,
   col: number,
   directions: Coords,
   board: Board
 ) {
-  if (!board[row][col]![0])
+  if (!board[row][col]?.color)
     throw new Error("Color not found (improper format).");
-  const pieceColor: Color = board[row][col]![0] as Color;
+  const pieceColor: Color = board[row][col]?.color as Color;
   const moves = [];
   // i made the z let becuase dr and dc are the fake directions
   let z = -1;
@@ -17,7 +18,7 @@ export function getSlideMoves(
     z++;
     for (let i = 1; ; i++) {
       //when you move a crocodile make the directions let = crocodile direction
-      if ((board[row][col]![1] as PieceType) == "C") {
+      if ((board[row][col]?.type as PieceType) == "C") {
         directions = [
           [0, 1],
           [(i - 1) / i, 1 / i],
@@ -28,7 +29,7 @@ export function getSlideMoves(
         ];
       }
       //when you move an octopus make the directions let = octopus direction
-      if ((board[row][col]![1] as PieceType) == "O") {
+      if ((board[row][col]?.type as PieceType) == "O") {
         if (i == 3) {
           break;
         }
@@ -58,7 +59,7 @@ export function getSlideMoves(
       // It it's of an other color, add it and stop looping.
       // else, it's of the same color. Don't add it and stop looping.
       else {
-        if (targetPiece[0] != pieceColor) {
+        if (targetPiece.color != pieceColor) {
           moves.push([newRow, newCol]);
           break;
         }
@@ -91,7 +92,7 @@ export function getJumpingMoves(
   directions: Coords,
   board: Board
 ) {
-  const pieceColor = board[row][col]![0] as Color;
+  const pieceColor = board[row][col]?.color as Color;
   const moves = [] as Coords;
   for (const [dr, dc] of directions) {
     const newRow = row + dr;
@@ -99,7 +100,7 @@ export function getJumpingMoves(
 
     if (isValidSquare(newRow, newCol)) {
       const targetSquare = board[newRow][newCol];
-      if (targetSquare == null || targetSquare[0] != pieceColor) {
+      if (targetSquare == null || targetSquare.color != pieceColor) {
         moves.push([newRow, newCol]);
       }
     }
@@ -112,7 +113,7 @@ export function getZSlideMoves(
   directions: Coords,
   board: Board
 ) {
-  const pieceColor = board[row][col]![0];
+  const pieceColor = board[row][col]?.color;
   const moves = [];
   let z = -1;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -131,7 +132,7 @@ export function getZSlideMoves(
           [1, 1],
         ];
       }
-      if (i >= 2 && (board[row][col]![1] as PieceType) == "Z") {
+      if (i >= 2 && (board[row][col]?.type as PieceType) == "Z") {
         directions = [
           [-1, -1], //main diagonal top left
           [-1, -(i - 1) / i], //second diagonal top left
@@ -156,7 +157,7 @@ export function getZSlideMoves(
       // It it's of an other color, add it and stop looping.
       // else, it's of the same color. Don't add it and stop looping.
       else {
-        if (targetPiece[0] != pieceColor) {
+        if (targetPiece.color != pieceColor) {
           moves.push([newRow, newCol]);
           break;
         }
@@ -172,7 +173,7 @@ export function getSSlideMoves(
   directions: Coords,
   board: Board
 ) {
-  const pieceColor = board[row][col]![0] as Color;
+  const pieceColor = board[row][col]?.color as Color;
   const moves = [];
   let z = -1;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -214,7 +215,7 @@ export function getSSlideMoves(
       // It it's of an other color, add it and stop looping.
       // else, it's of the same color. Don't add it and stop looping.
       else {
-        if (targetPiece[0] != pieceColor) {
+        if (targetPiece.color != pieceColor) {
           moves.push([newRow, newCol]);
           break;
         }
@@ -367,7 +368,7 @@ export function getWallMoves(row: number, col: number, board: Board) {
     [1, -3],
     [2, -3],
   ];
-  if (board[row][col]![0] == "w") {
+  if (board[row][col]?.color == "w") {
     directions.push(
       [-3, -3],
       [-3, -2],
@@ -431,7 +432,7 @@ export function getOctopusMoves(row: number, col: number, board: Board) {
 }
 export function getPawnMoves(row: number, col: number, board: Board) {
   const moves: Coords = [];
-  const pieceColor = board[row][col]![0];
+  const pieceColor = board[row][col]?.color;
   const direction = pieceColor == "w" ? -1 : 1;
   if (isValidSquare(row + direction, col) && !board[row + direction][col]) {
     moves.push([row + direction, col]);
@@ -447,27 +448,27 @@ export function getPawnMoves(row: number, col: number, board: Board) {
 
 function getPawnCaptures(row: number, col: number, board: Board) {
   const moves: Coords = [];
-  const pieceColor = board[row][col]![0];
+  const pieceColor = board[row][col]?.color;
   const direction = pieceColor == "w" ? -1 : 1;
   const enPassantRow = pieceColor == "w" ? 9 : 6;
   if (
     isValidSquare(row + direction, col - 1) &&
     board[row + direction][col - 1]! &&
-    board[row + direction][col - 1]![0] !== pieceColor
+    board[row + direction][col - 1]?.color !== pieceColor
   ) {
     moves.push([row + direction, col - 1]);
   }
   if (
     isValidSquare(row + direction, col + 1) &&
     board[row + direction][col + 1] &&
-    board[row + direction][col + 1]![0] !== pieceColor
+    board[row + direction][col + 1]?.color !== pieceColor
   ) {
     moves.push([row + direction, col + 1]);
   }
   if (
     isValidSquare(row, col - 1) &&
     board[row][col - 1] &&
-    board[row][col - 1]![0] !== pieceColor &&
+    board[row][col - 1]?.color !== pieceColor &&
     row == enPassantRow
   ) {
     moves.push([row + direction, col - 1]);
@@ -475,7 +476,7 @@ function getPawnCaptures(row: number, col: number, board: Board) {
   if (
     isValidSquare(row, col + 1) &&
     board[row][col + 1] &&
-    board[row][col + 1]![0] !== pieceColor &&
+    board[row][col + 1]?.color !== pieceColor &&
     row == enPassantRow
   ) {
     moves.push([row + direction, col + 1]);
@@ -485,7 +486,7 @@ function getPawnCaptures(row: number, col: number, board: Board) {
 
 export function getCaptures(row: number, col: number, board: Board) {
   let moves: Coords = [];
-  const selectedPiece = board[row][col]![1];
+  const selectedPiece = board[row][col]?.type;
 
   switch (selectedPiece) {
     case "R":
@@ -539,7 +540,108 @@ export function getCaptures(row: number, col: number, board: Board) {
 
 export function getMoves(row: number, col: number, board: Board) {
   const moves = getCaptures(row, col, board);
-  if ((board[row][col]![1] as PieceType) == "p")
+  if ((board[row][col]?.type as PieceType) == "p")
     moves.push(...(getPawnMoves(row, col, board) as Coords));
   return moves;
+}
+
+export function getShortCastle(color: Color, board: Board) {
+  const startingRow = color == "w" ? BOARD_DIM - 1 : 0;
+  const kingCol = 7;
+  let rook = false;
+  let king = false;
+  for (let i = BOARD_DIM - 1; i >= kingCol; i--) {
+    const piece = board[startingRow][i];
+    if (piece && piece.type != "K" && piece.type != "R") {
+      console.log(piece);
+      console.log("You can't short castle while other pieces are in the way.");
+      return null;
+    }
+    if (piece && piece.type == "K" && !piece.hasMoved) king = true;
+    if (piece && piece.type == "R" && !piece.hasMoved) rook = true;
+    if (isKingInCheck(color, board)) {
+      console.log("You can't short castle while king is in check.");
+      return null;
+    }
+    if (
+      isMoveLeavingKingInCheck(
+        [startingRow, kingCol],
+        [startingRow, kingCol + 1],
+        board,
+        color
+      )
+    ) {
+      console.log("There can't be a piece controlling the way of castling");
+      return null;
+    }
+    if (
+      isMoveLeavingKingInCheck(
+        [startingRow, kingCol],
+        [startingRow, kingCol + 2],
+        board,
+        color
+      )
+    ) {
+      console.log("Short Castling cannot leave you in check.");
+      return null;
+    }
+    if (rook && king) {
+      return [startingRow, kingCol + 3];
+    }
+  }
+  return null;
+}
+
+export function getLongCastle(color: Color, board: Board) {
+  const startingRow = color == "w" ? BOARD_DIM - 1 : 0;
+  const kingCol = 7;
+  let rook = false;
+  let king = false;
+  for (let i = 0; i <= kingCol; i++) {
+    const piece = board[startingRow][i];
+    if (piece && piece.type != "K" && piece.type != "R") {
+      console.log("You can't long castle while other pieces are in the way.");
+      return null;
+    }
+    if (piece && piece.type == "K" && !piece.hasMoved) king = true;
+    if (piece && piece.type == "R" && !piece.hasMoved) rook = true;
+    if (isKingInCheck(color, board)) {
+      console.log("You can't long castle while in check.");
+      return null;
+    }
+    if (
+      isMoveLeavingKingInCheck(
+        [startingRow, kingCol],
+        [startingRow, kingCol - 1],
+        board,
+        color
+      )
+    ) {
+      console.log("There can't be a piece controlling the way of castling");
+      return null;
+    }
+    if (
+      isMoveLeavingKingInCheck(
+        [startingRow, kingCol],
+        [startingRow, kingCol - 2],
+        board,
+        color
+      )
+    ) {
+      console.log("You can't long castle while in check.");
+      return null;
+    }
+    if (rook && king) {
+      return [startingRow, kingCol - 4];
+    }
+  }
+  return null;
+}
+
+export function getCastleMoves(color: Color, board: Board): Coords {
+  const castleMoves: Coords = [
+    getShortCastle(color, board),
+    getLongCastle(color, board),
+  ].filter((move) => move !== null) as Coords;
+  return castleMoves as Coords;
 }
