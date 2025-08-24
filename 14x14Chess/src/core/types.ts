@@ -21,11 +21,11 @@ export type Piece = {
   hasMoved: boolean;
 };
 
-export interface SelectedPiece {
+export type SelectedPiece = {
   row: number;
   col: number;
   piece: Piece;
-}
+};
 export type Move = {
   from: Coord;
   to: Coord;
@@ -35,6 +35,14 @@ export type Move = {
 export type Board = (Piece | null)[][];
 export type Coords = Coord[];
 export type Coord = [number, number];
+
+export type Time = {
+  days: number;
+  hours: number;
+  mins: number;
+  secs: number;
+  tenthS: number;
+};
 
 export const initialBoard: Board = [
   //   ["", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n"],

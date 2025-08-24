@@ -14,7 +14,7 @@ import { switchTurn } from "../core/utils";
 
 /**
  * An easy to use hook that handles multiple things like making moves, undo and redo.
- * @returns A bunch on useful game state you might want or need
+ * @returns A bunch of useful game state you might want or need
  */
 export function useGameState() {
   const [board, setBoard] = useState<Board>(
