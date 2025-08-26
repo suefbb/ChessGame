@@ -27,6 +27,7 @@ export default function Board({
               piece={col}
               onSquareClick={onSquareClick}
               isLegalSquare={isLegalMove}
+              key={rowIndex + colIndex}
             />
           );
         });
