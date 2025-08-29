@@ -30,7 +30,7 @@ export function isMoveLeavingKingInCheck(
   [fromR, fromC],
   [toR, toC],
   board,
-  kingColor,
+  kingColor
 ) {
   let tempBoard = board;
   // Perform the hypothetical move on the temporary board.

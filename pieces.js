@@ -73,7 +73,7 @@ export function getKingMoves(row, col, board) {
       [-1, -1],
       [1, -1],
     ],
-    board,
+    board
   );
 }
 export function getJumpingMoves(row, col, directions, board) {
@@ -353,7 +353,7 @@ export function getWallMoves(row, col, board) {
       [2, -2],
       [2, -1],
       [2, 0],
-      [2, 1],
+      [2, 1]
     );
   } else {
     directions.push(
@@ -366,7 +366,7 @@ export function getWallMoves(row, col, board) {
       [-2, -2],
       [-2, -1],
       [-2, 0],
-      [-2, 1],
+      [-2, 1]
     );
   }
   return [...getJumpingMoves(row, col, directions, board)];

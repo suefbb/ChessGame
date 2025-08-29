@@ -2,7 +2,7 @@ import { isKingInCheck, isMoveLeavingKingInCheck } from "./kingUtils.js";
 import { getMoves } from "./pieces.js";
 import { isValidSquare, switchTurn } from "./utils.js";
 import { changepgnmovestoPGN } from "./extensions.js";
-let result = '*'
+let result = "*";
 const BOARD_DIM = 15;
 let movesPlayed = 0;
 const pieceMap = {
@@ -267,24 +267,48 @@ const promotionRows = {
   b: 14,
   w: 1,
 };
-let acceptDraw = [false , false]
+let acceptDraw = [false, false];
 let board = document.querySelector(".board");
 let nextMove = document.querySelector("#nextMove");
 let lastMove = document.querySelector("#lastMove");
 let moveIndex = -1;
 let rightthings = document.querySelector(".rightthings");
-const resultDiv = document.querySelector(".resultDiv")
-rightthings.children[3].children[2].children[3].addEventListener('click' , ()=>{resign(localStorage.currentTurn)})
-rightthings.children[3].children[2].children[2].addEventListener('click' , ()=>{drawOffer(JSON.parse(localStorage.acceptDraw) , localStorage.currentTurn)})
+const resultDiv = document.querySelector(".resultDiv");
+rightthings.children[3].children[2].children[3].addEventListener(
+  "click",
+  () => {
+    resign(localStorage.currentTurn);
+  }
+);
+rightthings.children[3].children[2].children[2].addEventListener(
+  "click",
+  () => {
+    drawOffer(JSON.parse(localStorage.acceptDraw), localStorage.currentTurn);
+  }
+);
 for (let child = 0; child < rightthings.children[2].children.length; child++) {
   if (child % 12 == 11) {
-    rightthings.children[2].children[child].addEventListener('click',()=>{promotePawn(promotionRows[rightthings.children[2].children[child].src[22]],rightthings.children[2].children[child].src[25].toUpperCase())})
-  }else{rightthings.children[2].children[child].addEventListener('click',()=>{promotePawn(promotionRows[rightthings.children[2].children[child].src[22]],rightthings.children[2].children[child].src[24].toUpperCase())})}
+    rightthings.children[2].children[child].addEventListener("click", () => {
+      promotePawn(
+        promotionRows[rightthings.children[2].children[child].src[22]],
+        rightthings.children[2].children[child].src[25].toUpperCase()
+      );
+    });
+  } else {
+    rightthings.children[2].children[child].addEventListener("click", () => {
+      promotePawn(
+        promotionRows[rightthings.children[2].children[child].src[22]],
+        rightthings.children[2].children[child].src[24].toUpperCase()
+      );
+    });
+  }
 }
 let rotation = document.querySelector("#rotation");
 function createBoard(position) {
-  for (let i = 0; i < position.length; i++) {//position
-    for (let j = 0; j < position.length; j++) {//position
+  for (let i = 0; i < position.length; i++) {
+    //position
+    for (let j = 0; j < position.length; j++) {
+      //position
       let square = document.createElement("div");
       square.dataset.row = i;
       square.dataset.col = j;
@@ -298,7 +322,8 @@ function createBoard(position) {
     }
   }
 }
-function render(position) {//childclass
+function render(position) {
+  //childclass
   const squares = document.querySelectorAll(".board .square");
   squares.forEach((square, index) => {
     square.innerHTML = "";
@@ -328,11 +353,13 @@ function render(position) {//childclass
 createBoard(JSON.parse(localStorage.childclass));
 render(JSON.parse(localStorage.childclass));
 let selectedPiece = null;
+localStorage.setItem("seselectedPiece", selectedPiece);
 let legalMoves = [];
+localStorage.setItem("legalMoves", legalMoves);
 let currentTurn = "w";
 let promotedPiece = document.querySelector(".choosePromotedPiece");
 let pgn = document.querySelector(".PGN");
-pgn.innerHTML = String(JSON.parse(localStorage.pgnArr))
+pgn.innerHTML = String(JSON.parse(localStorage.pgnArr));
 board.addEventListener("click", (e) => {
   let square = e.target.closest(".square");
   if (!square) return;
@@ -340,17 +367,25 @@ board.addEventListener("click", (e) => {
   const col = parseInt(square.dataset.col);
   if (!selectedPiece) {
     if (!square.children.length > 0) return;
-    if (JSON.parse(localStorage.childclass)[row][col][0] != localStorage.currentTurn) return;
+    if (
+      JSON.parse(localStorage.childclass)[row][col][0] !=
+      localStorage.currentTurn
+    )
+      return;
     selectedPiece = {
       row,
       col,
       piece: JSON.parse(localStorage.childclass)[row][col],
       type: JSON.parse(localStorage.childclass)[row][col][1],
     };
-    legalMoves = getMoves(selectedPiece.row, selectedPiece.col, JSON.parse(localStorage.childclass));
+    legalMoves = getMoves(
+      selectedPiece.row,
+      selectedPiece.col,
+      JSON.parse(localStorage.childclass)
+    );
     //FIX ME
-      legalMoves = legalMoves.filter(
-        (move) =>
+    legalMoves = legalMoves.filter(
+      (move) =>
         !isMoveLeavingKingInCheck(
           [selectedPiece.row, selectedPiece.col],
           move,
@@ -358,7 +393,7 @@ board.addEventListener("click", (e) => {
           localStorage.currentTurn,
           square
         )
-      );
+    );
     showHints(legalMoves);
     return;
   }
@@ -367,37 +402,47 @@ board.addEventListener("click", (e) => {
   });
   isLegalMove;
   if (isLegalMove) {
-    localStorage.moveIndex = String(Number(localStorage.moveIndex)+1)
-    let storedpgnMoves = JSON.parse(localStorage.getItem('pgnMoves'))
+    localStorage.moveIndex = String(Number(localStorage.moveIndex) + 1);
+    let storedpgnMoves = JSON.parse(localStorage.getItem("pgnMoves"));
     console.log(JSON.parse(localStorage.childclass)[selectedPiece.row]);
     let pushingDatatoit = storedpgnMoves.push([
-        JSON.parse(localStorage.childclass)[selectedPiece.row][selectedPiece.col],
-        [row, col],
-        [selectedPiece.row, selectedPiece.col],
-        JSON.parse(localStorage.childclass)[row][col],
-        WtimeNumbers,
-        BtimeNumbers
-      ])
-    localStorage.pgnMoves = JSON.stringify(storedpgnMoves)
-    changepgnmovestoPGN(JSON.parse(localStorage.pgnMoves))
-    pgn.innerHTML = String(changepgnmovestoPGN(JSON.parse(localStorage.pgnMoves)))
-    if (Number(localStorage.moveIndex) !== JSON.parse(localStorage.pgnMoves).length - 1) {
+      JSON.parse(localStorage.childclass)[selectedPiece.row][selectedPiece.col],
+      [row, col],
+      [selectedPiece.row, selectedPiece.col],
+      JSON.parse(localStorage.childclass)[row][col],
+      WtimeNumbers,
+      BtimeNumbers,
+    ]);
+    localStorage.pgnMoves = JSON.stringify(storedpgnMoves);
+    changepgnmovestoPGN(JSON.parse(localStorage.pgnMoves));
+    pgn.innerHTML = String(
+      changepgnmovestoPGN(JSON.parse(localStorage.pgnMoves))
+    );
+    if (
+      Number(localStorage.moveIndex) !==
+      JSON.parse(localStorage.pgnMoves).length - 1
+    ) {
       if (JSON.parse(localStorage.pgnMoves).length !== 0) {
         console.log("the loop started");
         for (let RM = 0; RM < JSON.parse(localStorage.pgnMoves).length; RM++) {
-          if (Number(localStorage.moveIndex) !== JSON.parse(localStorage.pgnMoves).length - 1) {
-            let j = JSON.parse(localStorage.pgnMoves)
+          if (
+            Number(localStorage.moveIndex) !==
+            JSON.parse(localStorage.pgnMoves).length - 1
+          ) {
+            let j = JSON.parse(localStorage.pgnMoves);
             j.splice(j.length - 2, 1);
-            localStorage.pgnMoves = JSON.stringify(j)
+            localStorage.pgnMoves = JSON.stringify(j);
           } else {
             break;
           }
         }
-        changepgnmovestoPGN(JSON.parse(localStorage.pgnMoves))
-        pgn.innerHTML = String(changepgnmovestoPGN(JSON.parse(localStorage.pgnMoves)))
+        changepgnmovestoPGN(JSON.parse(localStorage.pgnMoves));
+        pgn.innerHTML = String(
+          changepgnmovestoPGN(JSON.parse(localStorage.pgnMoves))
+        );
       }
     }
-    localStorage.movesPlayed = String(Number(localStorage.movesPlayed)+1)
+    localStorage.movesPlayed = String(Number(localStorage.movesPlayed) + 1);
   }
   if (!isLegalMove) {
     console.log("Not a legal Move");
@@ -408,18 +453,27 @@ board.addEventListener("click", (e) => {
     render(JSON.parse(localStorage.childclass));
     return;
   }
-  movePiece([selectedPiece.row, selectedPiece.col], [row, col], JSON.parse(localStorage.childclass) , square);
+  movePiece(
+    [selectedPiece.row, selectedPiece.col],
+    [row, col],
+    JSON.parse(localStorage.childclass),
+    square
+  );
   if (localStorage.currentTurn == "w") {
-    if (rotation.value == 'True') {
-      rightthings.children[0].style.transform = 'Rotate(180deg)'
-      rightthings.children[1].style.transform = 'Rotate(180deg)'
-      rightthings.children[2].style.transform = 'Rotate(180deg)'
-      rightthings.children[3].style.transform = 'Rotate(180deg)'
-      rightthings.children[4].style.transform = 'Rotate(180deg)'
-      rightthings.children[5].style.transform = 'Rotate(180deg)'
+    if (rotation.value == "True") {
+      rightthings.children[0].style.transform = "Rotate(180deg)";
+      rightthings.children[1].style.transform = "Rotate(180deg)";
+      rightthings.children[2].style.transform = "Rotate(180deg)";
+      rightthings.children[3].style.transform = "Rotate(180deg)";
+      rightthings.children[4].style.transform = "Rotate(180deg)";
+      rightthings.children[5].style.transform = "Rotate(180deg)";
     }
     //promotion
-    for (let pawnRow = 0; pawnRow < JSON.parse(localStorage.childclass)[1].length; pawnRow++) {
+    for (
+      let pawnRow = 0;
+      pawnRow < JSON.parse(localStorage.childclass)[1].length;
+      pawnRow++
+    ) {
       if (JSON.parse(localStorage.childclass)[1][pawnRow] == "wp") {
         promotedPiece.style.opacity = 1;
       }
@@ -427,16 +481,20 @@ board.addEventListener("click", (e) => {
     Btimer();
     clearInterval(Wtime);
   } else {
-    if (rotation.value == 'True') {
-      rightthings.children[0].style.transform = 'Rotate(0deg)'
-      rightthings.children[1].style.transform = 'Rotate(0deg)'
-      rightthings.children[2].style.transform = 'Rotate(0deg)'
-      rightthings.children[3].style.transform = 'Rotate(0deg)'
-      rightthings.children[4].style.transform = 'Rotate(0deg)'
-      rightthings.children[5].style.transform = 'Rotate(0deg)'
+    if (rotation.value == "True") {
+      rightthings.children[0].style.transform = "Rotate(0deg)";
+      rightthings.children[1].style.transform = "Rotate(0deg)";
+      rightthings.children[2].style.transform = "Rotate(0deg)";
+      rightthings.children[3].style.transform = "Rotate(0deg)";
+      rightthings.children[4].style.transform = "Rotate(0deg)";
+      rightthings.children[5].style.transform = "Rotate(0deg)";
     }
     //promotion
-    for (let pawnRow = 0; pawnRow < JSON.parse(localStorage.childclass)[14].length; pawnRow++) {
+    for (
+      let pawnRow = 0;
+      pawnRow < JSON.parse(localStorage.childclass)[14].length;
+      pawnRow++
+    ) {
       if (JSON.parse(localStorage.childclass)[14][pawnRow] == "bp") {
         promotedPiece.style.opacity = 1;
       }
@@ -475,8 +533,8 @@ function getSquaresByCoords(coords) {
   for (let i = 0; i < coords.length; i++) {
     squares.push(
       document.querySelector(
-        `.square[data-row="${coords[i][0]}"][data-col="${coords[i][1]}"]`,
-      ),
+        `.square[data-row="${coords[i][0]}"][data-col="${coords[i][1]}"]`
+      )
     );
   }
   return squares;
@@ -494,17 +552,30 @@ function getPieceType(r, c, board) {
   return board[r][c][1];
 }
 
-export function movePiece([fromR, fromC], [toR, toC], board , square) {
+export function movePiece([fromR, fromC], [toR, toC], board, square) {
   board[toR][toC] = board[fromR][fromC];
   board[fromR][fromC] = null;
   console.log(1);
-  if(square !== null){
-    console.log(Number(square.getAttribute('data-row')) , JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][0] , Number(square.getAttribute('data-col')) , JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][1]);
-    if(Number(square.getAttribute('data-row')) == JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][0] && Number(square.getAttribute('data-col')) == JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][1]){
+  if (square !== null) {
+    console.log(
+      Number(square.getAttribute("data-row")),
+      JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][0],
+      Number(square.getAttribute("data-col")),
+      JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][1]
+    );
+    if (
+      Number(square.getAttribute("data-row")) ==
+        JSON.parse(localStorage.pgnMoves)[
+          Number(localStorage.moveIndex)
+        ][1][0] &&
+      Number(square.getAttribute("data-col")) ==
+        JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][1]
+    ) {
       console.log(1);
-      localStorage.setItem('childclass' , JSON.stringify(board))
-      render(JSON.parse(localStorage.childclass))
-    }}
+      localStorage.setItem("childclass", JSON.stringify(board));
+      render(JSON.parse(localStorage.childclass));
+    }
+  }
   //console.log(
   //  `Is ${currentTurn} King In Check? ${isKingInCheck(currentTurn, childclass)}`,
   //);
@@ -618,72 +689,93 @@ function Wtimer() {
 }
 
 lastMove.addEventListener("click", () => {
-  let h = JSON.parse(localStorage.childclass)
-  h[JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][2][0]][JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][2][1]] =JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][0]
-  h[JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][0]][JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][1]] =JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][3]
-  localStorage.setItem('childclass' , JSON.stringify(h))
+  let h = JSON.parse(localStorage.childclass);
+  h[JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][2][0]][
+    JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][2][1]
+  ] = JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][0];
+  h[JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][0]][
+    JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][1]
+  ] = JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][3];
+  localStorage.setItem("childclass", JSON.stringify(h));
   render(JSON.parse(localStorage.childclass));
   if (localStorage.currentTurn == "w") {
-    if (rotation.value == 'True') {
-      rightthings.children[0].style.transform = 'Rotate(180deg)'
-      rightthings.children[1].style.transform = 'Rotate(180deg)'
-      rightthings.children[2].style.transform = 'Rotate(180deg)'
-      rightthings.children[3].style.transform = 'Rotate(180deg)'
-      rightthings.children[4].style.transform = 'Rotate(180deg)'
-      rightthings.children[5].style.transform = 'Rotate(180deg)'
+    if (rotation.value == "True") {
+      rightthings.children[0].style.transform = "Rotate(180deg)";
+      rightthings.children[1].style.transform = "Rotate(180deg)";
+      rightthings.children[2].style.transform = "Rotate(180deg)";
+      rightthings.children[3].style.transform = "Rotate(180deg)";
+      rightthings.children[4].style.transform = "Rotate(180deg)";
+      rightthings.children[5].style.transform = "Rotate(180deg)";
     }
     localStorage.currentTurn = "b";
-    BtimeNumbers = JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][5];
+    BtimeNumbers = JSON.parse(localStorage.pgnMoves)[
+      Number(localStorage.moveIndex)
+    ][5];
     console.log(BtimeNumbers);
     Btimer();
     clearInterval(Wtime);
   } else {
-    if (rotation.value == 'True') {
-      rightthings.children[0].style.transform = 'Rotate(0deg)'
-      rightthings.children[1].style.transform = 'Rotate(0deg)'
-      rightthings.children[2].style.transform = 'Rotate(0deg)'
-      rightthings.children[3].style.transform = 'Rotate(0deg)'
-      rightthings.children[4].style.transform = 'Rotate(0deg)'
-      rightthings.children[5].style.transform = 'Rotate(0deg)'
+    if (rotation.value == "True") {
+      rightthings.children[0].style.transform = "Rotate(0deg)";
+      rightthings.children[1].style.transform = "Rotate(0deg)";
+      rightthings.children[2].style.transform = "Rotate(0deg)";
+      rightthings.children[3].style.transform = "Rotate(0deg)";
+      rightthings.children[4].style.transform = "Rotate(0deg)";
+      rightthings.children[5].style.transform = "Rotate(0deg)";
     }
     localStorage.currentTurn = "w";
-    WtimeNumbers = JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][4];
+    WtimeNumbers = JSON.parse(localStorage.pgnMoves)[
+      Number(localStorage.moveIndex)
+    ][4];
     console.log(WtimeNumbers);
     Wtimer();
     clearInterval(Btime);
   }
-  localStorage.moveIndex = String(Number(localStorage.moveIndex)-1);
+  localStorage.moveIndex = String(Number(localStorage.moveIndex) - 1);
 });
 nextMove.addEventListener("click", () => {
-  if (Number(localStorage.moveIndex) < JSON.parse(localStorage.pgnMoves).length - 1) {
-    localStorage.moveIndex = String(Number(localStorage.moveIndex)+1)
-    let d = JSON.parse(localStorage.childclass)
-    d[JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][0]][JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][1]] = JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][0];
-    d[JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][2][0]][JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][2][1]] = null;
-    localStorage.setItem('childclass' , JSON.stringify(d))
+  if (
+    Number(localStorage.moveIndex) <
+    JSON.parse(localStorage.pgnMoves).length - 1
+  ) {
+    localStorage.moveIndex = String(Number(localStorage.moveIndex) + 1);
+    let d = JSON.parse(localStorage.childclass);
+    d[JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][0]][
+      JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][1][1]
+    ] = JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][0];
+    d[JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][2][0]][
+      JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][2][1]
+    ] = null;
+    localStorage.setItem("childclass", JSON.stringify(d));
     render(JSON.parse(localStorage.childclass));
     if (localStorage.currentTurn == "w") {
-      if (rotation.value == 'True') {
-        rightthings.children[0].style.transform = 'Rotate(180deg)'
-        rightthings.children[1].style.transform = 'Rotate(180deg)'
-        rightthings.children[2].style.transform = 'Rotate(180deg)'
-        rightthings.children[3].style.transform = 'Rotate(180deg)'
-        rightthings.children[4].style.transform = 'Rotate(180deg)'
-        rightthings.children[5].style.transform = 'Rotate(180deg)'}
+      if (rotation.value == "True") {
+        rightthings.children[0].style.transform = "Rotate(180deg)";
+        rightthings.children[1].style.transform = "Rotate(180deg)";
+        rightthings.children[2].style.transform = "Rotate(180deg)";
+        rightthings.children[3].style.transform = "Rotate(180deg)";
+        rightthings.children[4].style.transform = "Rotate(180deg)";
+        rightthings.children[5].style.transform = "Rotate(180deg)";
+      }
       localStorage.currentTurn = "b";
-      BtimeNumbers = JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][5];
+      BtimeNumbers = JSON.parse(localStorage.pgnMoves)[
+        Number(localStorage.moveIndex)
+      ][5];
       Btimer();
       clearInterval(Wtime);
     } else {
-      if (rotation.value == 'True') {
-        rightthings.children[0].style.transform = 'Rotate(0deg)'
-        rightthings.children[1].style.transform = 'Rotate(0deg)'
-        rightthings.children[2].style.transform = 'Rotate(0deg)'
-        rightthings.children[3].style.transform = 'Rotate(0deg)'
-        rightthings.children[4].style.transform = 'Rotate(0deg)'
-        rightthings.children[5].style.transform = 'Rotate(0deg)'}
+      if (rotation.value == "True") {
+        rightthings.children[0].style.transform = "Rotate(0deg)";
+        rightthings.children[1].style.transform = "Rotate(0deg)";
+        rightthings.children[2].style.transform = "Rotate(0deg)";
+        rightthings.children[3].style.transform = "Rotate(0deg)";
+        rightthings.children[4].style.transform = "Rotate(0deg)";
+        rightthings.children[5].style.transform = "Rotate(0deg)";
+      }
       localStorage.currentTurn = "w";
-      WtimeNumbers = JSON.parse(localStorage.pgnMoves)[Number(localStorage.moveIndex)][4];
+      WtimeNumbers = JSON.parse(localStorage.pgnMoves)[
+        Number(localStorage.moveIndex)
+      ][4];
       Wtimer();
       clearInterval(Btime);
     }
@@ -691,7 +783,11 @@ nextMove.addEventListener("click", () => {
 });
 function promotePawn(Prow, pieceKey) {
   console.log(Prow, pieceKey);
-  for (let Pcol = 0; Pcol < JSON.parse(localStorage.childclass)[Prow].length; Pcol++) {
+  for (
+    let Pcol = 0;
+    Pcol < JSON.parse(localStorage.childclass)[Prow].length;
+    Pcol++
+  ) {
     console.log(JSON.parse(localStorage.childclass)[Prow][Pcol]);
     if (JSON.parse(localStorage.childclass)[Prow][Pcol] == "wp") {
       JSON.parse(localStorage.childclass)[Prow][Pcol] = "w" + pieceKey;
@@ -703,72 +799,74 @@ function promotePawn(Prow, pieceKey) {
   render();
 }
 function resign(turn) {
-    if (turn == 'w') {
-      localStorage.result = 'Black won'
-      clearInterval(Wtime);
-    }
-    if (turn == 'b') {
-      localStorage.result = 'White won'
-      clearInterval(Btime);
-    }
-    resultDiv.style.display = 'flex'
-    resultDiv.children[0].innerHTML = localStorage.result
-    localStorage.result = '*'
-    localStorage.acceptDraw = JSON.stringify([false , false])
-    localStorage.movesPlayed = '0'
-    localStorage.moveIndex = '-1'
-    localStorage.pgnMoves = JSON.stringify([])
-    localStorage.currentTurn = 'w'   
-    localStorage.childclass = JSON.stringify(JSON.parse(localStorage.start))
-    localStorage.pgnArr = JSON.stringify([])
-    render(JSON.parse(localStorage.start))
-}
-function drawOffer(wantsToDraw , turn) {
-  if (turn == 'w') {
-  if (wantsToDraw[1]) {
-    wantsToDraw[0] = true
-    localStorage.acceptDraw = JSON.stringify(wantsToDraw)
-    localStorage.result = 'Draw'
-    resultDiv.style.display = 'flex'
-    resultDiv.children[0].innerHTML = localStorage.result
-    localStorage.result = '*'
-    localStorage.acceptDraw = JSON.stringify([false , false])
-    localStorage.movesPlayed = '0'
-    localStorage.moveIndex = '-1'
-    localStorage.pgnMoves = JSON.stringify([])
-    localStorage.currentTurn = 'w'
-    localStorage.childclass = JSON.stringify(JSON.parse(localStorage.start))
-    localStorage.pgnArr = JSON.stringify([])
+  if (turn == "w") {
+    localStorage.result = "Black won";
     clearInterval(Wtime);
-  }else if (wantsToDraw[0]){
-    wantsToDraw[0] = false
-    localStorage.acceptDraw = JSON.stringify(wantsToDraw)
   }
-  else{wantsToDraw[0] = true
-    localStorage.acceptDraw = JSON.stringify(wantsToDraw)}
-  }
-  if (turn == 'b') {
-  if (wantsToDraw[0]) {
-    wantsToDraw[1] = true
-    localStorage.acceptDraw = JSON.stringify(wantsToDraw)
-    localStorage.result = 'Draw'
-    resultDiv.style.display = 'flex'
-    resultDiv.children[0].innerHTML = localStorage.result
-    localStorage.result = '*'
-    localStorage.acceptDraw = JSON.stringify([false , false])
-    localStorage.movesPlayed = '0'
-    localStorage.moveIndex = '-1'
-    localStorage.pgnMoves = JSON.stringify([])
-    localStorage.currentTurn = 'w'   
-    localStorage.childclass = JSON.stringify(JSON.parse(localStorage.start))
-    localStorage.pgnArr = JSON.stringify([])
+  if (turn == "b") {
+    localStorage.result = "White won";
     clearInterval(Btime);
-  }else if (wantsToDraw[1]){
-    wantsToDraw[1] = false
-    localStorage.acceptDraw = JSON.stringify(wantsToDraw)
   }
-  else{wantsToDraw[1] = true
-    localStorage.acceptDraw = JSON.stringify(wantsToDraw)}
+  resultDiv.style.display = "flex";
+  resultDiv.children[0].innerHTML = localStorage.result;
+  localStorage.result = "*";
+  localStorage.acceptDraw = JSON.stringify([false, false]);
+  localStorage.movesPlayed = "0";
+  localStorage.moveIndex = "-1";
+  localStorage.pgnMoves = JSON.stringify([]);
+  localStorage.currentTurn = "w";
+  localStorage.childclass = JSON.stringify(JSON.parse(localStorage.start));
+  localStorage.pgnArr = JSON.stringify([]);
+  render(JSON.parse(localStorage.start));
+}
+function drawOffer(wantsToDraw, turn) {
+  if (turn == "w") {
+    if (wantsToDraw[1]) {
+      wantsToDraw[0] = true;
+      localStorage.acceptDraw = JSON.stringify(wantsToDraw);
+      localStorage.result = "Draw";
+      resultDiv.style.display = "flex";
+      resultDiv.children[0].innerHTML = localStorage.result;
+      localStorage.result = "*";
+      localStorage.acceptDraw = JSON.stringify([false, false]);
+      localStorage.movesPlayed = "0";
+      localStorage.moveIndex = "-1";
+      localStorage.pgnMoves = JSON.stringify([]);
+      localStorage.currentTurn = "w";
+      localStorage.childclass = JSON.stringify(JSON.parse(localStorage.start));
+      localStorage.pgnArr = JSON.stringify([]);
+      clearInterval(Wtime);
+    } else if (wantsToDraw[0]) {
+      wantsToDraw[0] = false;
+      localStorage.acceptDraw = JSON.stringify(wantsToDraw);
+    } else {
+      wantsToDraw[0] = true;
+      localStorage.acceptDraw = JSON.stringify(wantsToDraw);
+    }
+  }
+  if (turn == "b") {
+    if (wantsToDraw[0]) {
+      wantsToDraw[1] = true;
+      localStorage.acceptDraw = JSON.stringify(wantsToDraw);
+      localStorage.result = "Draw";
+      resultDiv.style.display = "flex";
+      resultDiv.children[0].innerHTML = localStorage.result;
+      localStorage.result = "*";
+      localStorage.acceptDraw = JSON.stringify([false, false]);
+      localStorage.movesPlayed = "0";
+      localStorage.moveIndex = "-1";
+      localStorage.pgnMoves = JSON.stringify([]);
+      localStorage.currentTurn = "w";
+      localStorage.childclass = JSON.stringify(JSON.parse(localStorage.start));
+      localStorage.pgnArr = JSON.stringify([]);
+      clearInterval(Btime);
+    } else if (wantsToDraw[1]) {
+      wantsToDraw[1] = false;
+      localStorage.acceptDraw = JSON.stringify(wantsToDraw);
+    } else {
+      wantsToDraw[1] = true;
+      localStorage.acceptDraw = JSON.stringify(wantsToDraw);
+    }
   }
   console.log(wantsToDraw);
 }
