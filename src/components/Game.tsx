@@ -1,8 +1,12 @@
 import BoardWrapper from "./BoardWrapper";
 import Board from "./Board";
-import MovesControls from "./Controls/MovesControls";
-import { useGameState } from "../hooks/useGameState";
+import ResultDiv from "./ResultDiv";
 import { Timer } from "./Timer";
+import {WhitePromotion} from "./Promotion";
+import {BlackPromotion} from "./Promotion";
+import { useGameState } from "../hooks/useGameState";
+import PGN from "./Controls/MovesList";
+import MovesControls from "./Controls/MovesControls";
 
 export default function Game() {
   const {
@@ -11,9 +15,21 @@ export default function Game() {
     legalMoves,
     handleUndo,
     handleRedo,
-    handleReset,
+    resignClick,
+    promotePawn,
+    history,
     currentTurn,
   } = useGameState();
+  function clearLS(){
+    localStorage.setItem('board' , JSON.stringify(initialBoard))
+    localStorage.setItem('pgnArr' , JSON.stringify([]))
+    localStorage.setItem('history' , JSON.stringify([]))
+    localStorage.setItem('currentTurn' , 'w')
+    localStorage.setItem('result' , '*')
+    localStorage.setItem('moveIndex' , '-1')
+    localStorage.setItem('Wtm' , JSON.stringify([20 , 0 , 0 , 0]))
+    localStorage.setItem('Btm' , JSON.stringify([20 , 0 , 0 , 0]))
+  }
 
   return (
     <>
@@ -38,7 +54,7 @@ export default function Game() {
         <MovesControls
           onBackwardClick={handleUndo}
           onForwardClick={handleRedo}
-          onResetClick={handleReset}
+          onResignClick={resignClick}
         />
       </BoardWrapper>
     </>
