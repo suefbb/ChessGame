@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import {
   initialBoard,
   type Board,
+  type results,
   type Color,
   type Coords,
   type SelectedPiece,
   type Move,
 } from "../core/types";
+import { cloneboard } from "../core/chess";
 import { getCastleMoves, getMoves } from "../core/pieces";
 import { isMoveLeavingKingInCheck } from "../core/kingUtils";
 import { applyMove, buildBoardFromHistory } from "../core/chess";
@@ -27,8 +29,18 @@ export function useGameState() {
       ? (localStorage.getItem("currentTurn") as Color)
       : "w"
   );
+  const [result, setresult] = useState<results>(
+    localStorage.getItem("result")
+      ? (localStorage.getItem("result") as results)
+      : "*"
+  );
   const [selectedPiece, setSelectedPiece] = useState<SelectedPiece | null>(
     null
+  );
+  const [pgnArr, setpgnArr] = useState<Move[]>(
+    localStorage.getItem("pgnArr")
+      ? JSON.parse(localStorage.getItem("pgnArr")!)
+      : []
   );
   const [moveIndex, setMoveIndex] = useState(
     localStorage.getItem("moveIndex")
@@ -149,13 +161,62 @@ export function useGameState() {
     localStorage.setItem("currentTurn", currentTurn);
     localStorage.setItem("moveIndex", JSON.stringify(moveIndex));
   }, [board, history, currentTurn, moveIndex]);
+  const [isBPromotion , setisBPromotion] = useState<boolean>(false)
+  const [isWPromotion , setisWPromotion] = useState<boolean>(false)
+  function promotePawn(Prow:number , pieceKey:string , board:Board){
+    console.log(Prow , pieceKey , board);
+  }
+  useEffect(()=>{
+    let pgn2 = []
+    for (let m = 0; m < history.length; m++) {
+      pgn2.push([])
+      if (m % 2 == 0){
+        pgn2[m].push(((m/2)+1) + '.')
+        console.log(pgn2);
+      }
+      if (history[m].piece[1] !== 'p'){
+        pgn2[m].push(history[m].piece[1])
+        console.log(pgn2);
+      }
+      if (history[m].piece[1] == 'p' && history[m].capturedPiece !== null){
+        pgn2[m].push(colmns[history[m].from[1]])
+        console.log(pgn2);  
+      }
+      if (history[m].capturedPiece !== null){
+        pgn2[m].push('x')
+        console.log(pgn2);  
+      }
+      pgn2[m].push(colmns[history[m].to[1]] + String(14 - history[m].to[0]))
+      pgn2[m].push(' ')
+      console.log(history[m]);
+      if (pgn2[pgn2.length-1] == []) {
+        pgn2.pop()
+      }
+    }
+    setpgnArr(pgn2)
+    localStorage.setItem('pgnArr' , JSON.stringify(pgnArr))
+    console.log(pgnArr);
+  } , [board])
+  function resignClick(turn:Color){
+    if (turn == 'w') {
+      setresult('Black won')
+      console.log(result);
+    }
+    if (turn == 'b') {
+      setresult('White won')
+      console.log(result);
+    }
+  }
   return {
     board,
     currentTurn,
     legalMoves,
     moveIndex,
+    history,
+    promotePawn,
     handleRedo,
     handleUndo,
+    resignClick,
     handleReset,
     handleSquareClick,
   };
