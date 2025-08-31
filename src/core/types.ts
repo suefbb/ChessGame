@@ -1,4 +1,5 @@
 export type Color = "w" | "b";
+export type results = '*' | 'White won' | 'Black won' | 'Draw';
 export type PieceType =
   | "P"
   | "K"
