@@ -585,6 +585,17 @@ export function getShortCastle(color: Color, board: Board) {
       console.log("Short Castling cannot leave you in check.");
       return null;
     }
+    if (
+      isMoveLeavingKingInCheck(
+        [startingRow, kingCol],
+        [startingRow, kingCol + 3],
+        board,
+        color
+      )
+    ) {
+      console.log("Short Castling cannot leave you in check.");
+      return null;
+    }
     if (rook && king) {
       return [startingRow, kingCol + 3];
     }
@@ -624,6 +635,28 @@ export function getLongCastle(color: Color, board: Board) {
       isMoveLeavingKingInCheck(
         [startingRow, kingCol],
         [startingRow, kingCol - 2],
+        board,
+        color
+      )
+    ) {
+      console.log("You can't long castle while in check.");
+      return null;
+    }
+    if (
+      isMoveLeavingKingInCheck(
+        [startingRow, kingCol],
+        [startingRow, kingCol - 3],
+        board,
+        color
+      )
+    ) {
+      console.log("You can't long castle while in check.");
+      return null;
+    }
+    if (
+      isMoveLeavingKingInCheck(
+        [startingRow, kingCol],
+        [startingRow, kingCol - 4],
         board,
         color
       )
