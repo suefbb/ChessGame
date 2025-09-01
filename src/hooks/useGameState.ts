@@ -167,6 +167,7 @@ export function useGameState() {
     console.log(Prow , pieceKey , board);
   }
   useEffect(()=>{
+    const colmns = ['a' , 'b' , 'c' , 'd' , 'e' , 'f' , 'g' , 'h' , 'i' , 'j' , 'k' , 'l' , 'm' , 'n']
     let pgn2 = []
     for (let m = 0; m < history.length; m++) {
       pgn2.push([])
