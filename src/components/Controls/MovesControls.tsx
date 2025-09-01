@@ -1,25 +1,23 @@
-interface MovesControls {
-  onForwardClick(): void;
-  onBackwardClick(): void;
-  onResetClick(): void;
+import type { Color } from "../../core/types";
+import { ResignBTN } from "./Controls";
+interface IMovesControls extends React.PropsWithChildren {
+  onForwardClick(): void,
+  onBackwardClick(): void,
+  onResignClick(turn:Color): void,
+  turn: Color
 }
 
 export default function MovesControls({
   onBackwardClick,
   onForwardClick,
-  onResetClick,
-}: MovesControls) {
+  onResignClick,
+  turn
+}: IMovesControls) {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        gap: "10px",
-      }}
-    >
+    <div>
       <button onClick={onBackwardClick}>&lt;</button>
       <button onClick={onForwardClick}>&gt;</button>
-      <button onClick={onResetClick}>Reset</button>
+      <ResignBTN onResignClick={onResignClick} turn={turn}/>
     </div>
   );
 }
