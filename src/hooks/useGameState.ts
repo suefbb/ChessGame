@@ -8,6 +8,7 @@ import {
   type SelectedPiece,
   type Move,
 } from "../core/types";
+import { isKingInCheck } from "../core/kingUtils";
 import { cloneboard } from "../core/chess";
 import { getCastleMoves, getMoves } from "../core/pieces";
 import { isMoveLeavingKingInCheck } from "../core/kingUtils";
@@ -18,6 +19,8 @@ import { switchTurn } from "../core/utils";
  * An easy to use hook that handles multiple things like making moves, undo and redo.
  * @returns A bunch of useful game state you might want or need
  */
+let pgn2 = []; let casltingMove = false
+let m = 0;
 export function useGameState() {
   const [board, setBoard] = useState<Board>(
     localStorage.getItem("board")
@@ -163,58 +166,75 @@ export function useGameState() {
   }, [board, history, currentTurn, moveIndex]);
   const [isBPromotion , setisBPromotion] = useState<boolean>(false)
   const [isWPromotion , setisWPromotion] = useState<boolean>(false)
-  function promotePawn(Prow:number , pieceKey:string , board:Board){
+  useEffect(()=>{
+    for (let Pcol = 0; Pcol < board[0].length; Pcol++) {
+      if(board[0][Pcol]?.color == 'w' && board[0][Pcol]?.type == 'p'){
+        setisWPromotion(true)
+      }
+    }
+    for (let Pcol = 0; Pcol < board[13].length; Pcol++) {
+      if(board[13][Pcol]?.color == 'b' && board[13][Pcol]?.type == 'p'){
+        setisBPromotion(true)
+      }
+    }
+  },[board])
+  const promotePawn = (Prow:number , pieceKey:string , board:Board)=>{
     console.log(Prow , pieceKey , board);
   }
   useEffect(()=>{
     const colmns = ['a' , 'b' , 'c' , 'd' , 'e' , 'f' , 'g' , 'h' , 'i' , 'j' , 'k' , 'l' , 'm' , 'n']
-    let pgn2 = []
-    for (let m = 0; m < history.length; m++) {
+    if(moveIndex !== -1){
       pgn2.push([])
       if (m % 2 == 0){
         pgn2[m].push(((m/2)+1) + '.')
         console.log(pgn2);
       }
-      if (history[m].piece[1] !== 'p'){
-        pgn2[m].push(history[m].piece[1])
+      if (history[m].piece.type == 'K' && history[m].from[1] - history[m].to[1] == 4) {
+        pgn2[m].push('O-O-O-O')
+        casltingMove = true
+      }
+      if (history[m].piece.type !== 'p' && !casltingMove){
+        pgn2[m].push(history[m].piece.type)
         console.log(pgn2);
       }
-      if (history[m].piece[1] == 'p' && history[m].capturedPiece !== null){
+      if (history[m].piece.type == 'p' && history[m].capturedPiece !== null && !casltingMove){
         pgn2[m].push(colmns[history[m].from[1]])
         console.log(pgn2);  
       }
-      if (history[m].capturedPiece !== null){
+      if (history[m].capturedPiece !== null && !casltingMove){
         pgn2[m].push('x')
         console.log(pgn2);  
       }
-      pgn2[m].push(colmns[history[m].to[1]] + String(14 - history[m].to[0]))
+      if (!casltingMove){pgn2[m].push(colmns[history[m].to[1]] + String(14 - history[m].to[0]))}
+      if (isKingInCheck(currentTurn , board)){pgn2[m].push('+')}
       pgn2[m].push(' ')
-      console.log(history[m]);
-      if (pgn2[pgn2.length-1] == []) {
-        pgn2.pop()
-      }
+      casltingMove = false
+      setpgnArr(pgn2)
+      localStorage.setItem('pgnArr' , JSON.stringify(pgnArr))
+      console.log(pgnArr);
+      m++
     }
-    setpgnArr(pgn2)
-    localStorage.setItem('pgnArr' , JSON.stringify(pgnArr))
-    console.log(pgnArr);
   } , [board])
-  function resignClick(turn:Color){
+  const resignClick = (turn: string)=>{
     if (turn == 'w') {
       setresult('Black won')
-      console.log(result);
+      localStorage.setItem('result' , 'Black won')
     }
     if (turn == 'b') {
       setresult('White won')
-      console.log(result);
+      localStorage.setItem('result' , 'White won')
     }
   }
   return {
     board,
     currentTurn,
+    result,
     legalMoves,
     moveIndex,
     history,
     promotePawn,
+    isBPromotion,
+    isWPromotion,
     handleRedo,
     handleUndo,
     resignClick,
