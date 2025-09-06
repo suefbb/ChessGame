@@ -1,5 +1,5 @@
 export type Color = "w" | "b";
-export type results = '*' | 'White won' | 'Black won' | 'Draw';
+export type results = "*" | "White won" | "Black won" | "Draw";
 export type PieceType =
   | "P"
   | "K"
@@ -30,7 +30,7 @@ export type SelectedPiece = {
 export type Move = {
   from: Coord;
   to: Coord;
-  capturedPiece: null | string;
+  capturedPiece?: string;
   piece: Piece;
 };
 export type Board = (Piece | null)[][];

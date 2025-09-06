@@ -8,8 +8,6 @@ import {
   type SelectedPiece,
   type Move,
 } from "../core/types";
-import { isKingInCheck } from "../core/kingUtils";
-import { cloneboard } from "../core/chess";
 import { getCastleMoves, getMoves } from "../core/pieces";
 import { isMoveLeavingKingInCheck } from "../core/kingUtils";
 import { applyMove, buildBoardFromHistory } from "../core/chess";
@@ -19,8 +17,6 @@ import { switchTurn } from "../core/utils";
  * An easy to use hook that handles multiple things like making moves, undo and redo.
  * @returns A bunch of useful game state you might want or need
  */
-let pgn2 = []; let casltingMove = false
-let m = 0;
 export function useGameState() {
   const [board, setBoard] = useState<Board>(
     localStorage.getItem("board")
@@ -40,11 +36,6 @@ export function useGameState() {
   const [selectedPiece, setSelectedPiece] = useState<SelectedPiece | null>(
     null
   );
-  const [pgnArr, setpgnArr] = useState<Move[]>(
-    localStorage.getItem("pgnArr")
-      ? JSON.parse(localStorage.getItem("pgnArr")!)
-      : []
-  );
   const [moveIndex, setMoveIndex] = useState(
     localStorage.getItem("moveIndex")
       ? Number(JSON.parse(localStorage.getItem("moveIndex")!))
@@ -55,7 +46,6 @@ export function useGameState() {
       ? JSON.parse(localStorage.getItem("history")!)
       : []
   );
-
   const [legalMoves, setLegalMoves] = useState<Coords>([]);
   /**
    * This function handles selecting pieces, highlighting legal moves, and performing the selected move.
@@ -164,67 +154,33 @@ export function useGameState() {
     localStorage.setItem("currentTurn", currentTurn);
     localStorage.setItem("moveIndex", JSON.stringify(moveIndex));
   }, [board, history, currentTurn, moveIndex]);
-  const [isBPromotion , setisBPromotion] = useState<boolean>(false)
-  const [isWPromotion , setisWPromotion] = useState<boolean>(false)
-  useEffect(()=>{
+  const [isBPromotion, setisBPromotion] = useState<boolean>(false);
+  const [isWPromotion, setisWPromotion] = useState<boolean>(false);
+  useEffect(() => {
     for (let Pcol = 0; Pcol < board[0].length; Pcol++) {
-      if(board[0][Pcol]?.color == 'w' && board[0][Pcol]?.type == 'p'){
-        setisWPromotion(true)
+      if (board[0][Pcol]?.color == "w" && board[0][Pcol]?.type == "p") {
+        setisWPromotion(true);
       }
     }
     for (let Pcol = 0; Pcol < board[13].length; Pcol++) {
-      if(board[13][Pcol]?.color == 'b' && board[13][Pcol]?.type == 'p'){
-        setisBPromotion(true)
+      if (board[13][Pcol]?.color == "b" && board[13][Pcol]?.type == "p") {
+        setisBPromotion(true);
       }
     }
-  },[board])
-  const promotePawn = (Prow:number , pieceKey:string , board:Board)=>{
-    console.log(Prow , pieceKey , board);
-  }
-  useEffect(()=>{
-    const colmns = ['a' , 'b' , 'c' , 'd' , 'e' , 'f' , 'g' , 'h' , 'i' , 'j' , 'k' , 'l' , 'm' , 'n']
-    if(moveIndex !== -1){
-      pgn2.push([])
-      if (m % 2 == 0){
-        pgn2[m].push(((m/2)+1) + '.')
-        console.log(pgn2);
-      }
-      if (history[m].piece.type == 'K' && history[m].from[1] - history[m].to[1] == 4) {
-        pgn2[m].push('O-O-O-O')
-        casltingMove = true
-      }
-      if (history[m].piece.type !== 'p' && !casltingMove){
-        pgn2[m].push(history[m].piece.type)
-        console.log(pgn2);
-      }
-      if (history[m].piece.type == 'p' && history[m].capturedPiece !== null && !casltingMove){
-        pgn2[m].push(colmns[history[m].from[1]])
-        console.log(pgn2);  
-      }
-      if (history[m].capturedPiece !== null && !casltingMove){
-        pgn2[m].push('x')
-        console.log(pgn2);  
-      }
-      if (!casltingMove){pgn2[m].push(colmns[history[m].to[1]] + String(14 - history[m].to[0]))}
-      if (isKingInCheck(currentTurn , board)){pgn2[m].push('+')}
-      pgn2[m].push(' ')
-      casltingMove = false
-      setpgnArr(pgn2)
-      localStorage.setItem('pgnArr' , JSON.stringify(pgnArr))
-      console.log(pgnArr);
-      m++
+  }, [board]);
+  const promotePawn = (Prow: number, pieceKey: string, board: Board) => {
+    console.log(Prow, pieceKey, board);
+  };
+  const resignClick = (turn: string) => {
+    if (turn == "w") {
+      setresult("Black won");
+      localStorage.setItem("result", "Black won");
     }
-  } , [board])
-  const resignClick = (turn: string)=>{
-    if (turn == 'w') {
-      setresult('Black won')
-      localStorage.setItem('result' , 'Black won')
+    if (turn == "b") {
+      setresult("White won");
+      localStorage.setItem("result", "White won");
     }
-    if (turn == 'b') {
-      setresult('White won')
-      localStorage.setItem('result' , 'White won')
-    }
-  }
+  };
   return {
     board,
     currentTurn,

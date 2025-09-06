@@ -28,8 +28,16 @@
 }
 .board-wrapper {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   height: fit-content;
+}
+
+.pgn-display {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 400px;
+  height: 400px;
+  overflow-y: scroll;
 }

@@ -2,13 +2,12 @@ import BoardWrapper from "./BoardWrapper";
 import Board from "./Board";
 import ResultDiv from "./ResultDiv";
 import { Timer } from "./Timer";
-import {WhitePromotion} from "./Promotion";
-import {BlackPromotion} from "./Promotion";
+import { WhitePromotion } from "./Promotion";
+import { BlackPromotion } from "./Promotion";
 import { useGameState } from "../hooks/useGameState";
-import PGN from "./Controls/MovesList";
 import MovesControls from "./Controls/MovesControls";
 import { initialBoard } from "../core/types";
-import { useEffect } from "react";
+import { Pgn } from "./Pgn";
 export default function Game() {
   const {
     board,
@@ -24,15 +23,15 @@ export default function Game() {
     currentTurn,
     result,
   } = useGameState();
-  function clearLS(){
-    localStorage.setItem('board' , JSON.stringify(initialBoard))
-    localStorage.setItem('pgnArr' , JSON.stringify([]))
-    localStorage.setItem('history' , JSON.stringify([]))
-    localStorage.setItem('currentTurn' , 'w')
-    localStorage.setItem('result' , '*')
-    localStorage.setItem('moveIndex' , '-1')
-    localStorage.setItem('Wtm' , JSON.stringify([20 , 0 , 0 , 0]))
-    localStorage.setItem('Btm' , JSON.stringify([20 , 0 , 0 , 0]))
+  function clearLS() {
+    localStorage.setItem("board", JSON.stringify(initialBoard));
+    localStorage.setItem("pgnArr", JSON.stringify([]));
+    localStorage.setItem("history", JSON.stringify([]));
+    localStorage.setItem("currentTurn", "w");
+    localStorage.setItem("result", "*");
+    localStorage.setItem("moveIndex", "-1");
+    localStorage.setItem("Wtm", JSON.stringify([20, 0, 0, 0]));
+    localStorage.setItem("Btm", JSON.stringify([20, 0, 0, 0]));
   }
   return (
     <>
@@ -60,10 +59,19 @@ export default function Game() {
           onResignClick={resignClick}
           turn={currentTurn}
         />
+        <Pgn history={history} />
       </BoardWrapper>
-      <ResultDiv result={result} clearLocal={clearLS}/>
-      <WhitePromotion boarda={board} Pclick={promotePawn} showWhitePieces={isWPromotion}/>
-      <WhitePromotion boarda={board} Pclick={promotePawn} showBlackPieces={isBPromotion}/>
+      <ResultDiv result={result} clearLocal={clearLS} />
+      <WhitePromotion
+        boarda={board}
+        Pclick={promotePawn}
+        showWhitePieces={isWPromotion}
+      />
+      <BlackPromotion
+        boarda={board}
+        Pclick={promotePawn}
+        showBlackPieces={isBPromotion}
+      />
     </>
   );
 }

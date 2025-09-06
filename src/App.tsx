@@ -1,17 +1,17 @@
 import "./App.css";
 import Game from "./components/Game";
-import {Routes , Route , BrowserRouter} from "react-router-dom"
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import OnBoardChooseTime from "./components/OBCT";
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/onBoardGame" element={<Game />}/>
-          <Route path="/onBoardTime" element={<OnBoardChooseTime />}/>
+          <Route path="/onBoardGame" element={<Game />} />
+          <Route path="/onBoardTime" element={<OnBoardChooseTime />} />
         </Routes>
       </BrowserRouter>
-      
     </>
   );
 }

@@ -3,6 +3,8 @@ import { BOARD_DIM } from "./utils";
 export function cloneBoard(b: Board): Board {
   return JSON.parse(JSON.stringify(b));
 }
+const SHORT_CASTLE = -3;
+const LONG_CASTLE = 4;
 /**
  * This function applies moves to a given chess board by returning a new board variable.
  * This funcion handles normal moves, but also handles castling.
@@ -17,12 +19,13 @@ export function applyMove(
   board: Board
 ) {
   const newBoard = cloneBoard(board);
-  //                                                          7       10    -3
-  const isShortCastle =
-    newBoard[fromR][fromC]?.type == "K" && fromC - toC == -3;
-  //                                                          7       3     4
-  const isLongCastle = newBoard[fromR][fromC]?.type == "K" && fromC - toC == 4;
-
+  let isShortCastle: boolean = false;
+  let isLongCastle: boolean = false;
+  if (newBoard[fromR][fromC]?.type == "K") {
+    const result = isCastlingMove([fromR, fromC], [toR, toC]);
+    isLongCastle = result.isLongCastle;
+    isShortCastle = result.isShortCastle;
+  }
   // Execute move
   newBoard[toR][toC] = newBoard[fromR][fromC];
   newBoard[fromR][fromC] = null;
@@ -56,4 +59,17 @@ export function buildBoardFromHistory(history: Move[], upto: number): Board {
     board = applyMove(history[i].from, history[i].to, board);
   }
   return board;
+}
+
+/**
+ * THIS FUNCTION DOESN'T CHECK IF IT'S A KING OR NOT IT'S THE RESPONSIBILITY OF THE CALLER.
+ * @param param0
+ * @param param1
+ * @returns
+ */
+export function isCastlingMove([, fromC]: Coord, [, toC]: Coord) {
+  return {
+    isShortCastle: fromC - toC == SHORT_CASTLE,
+    isLongCastle: fromC - toC == LONG_CASTLE,
+  };
 }
